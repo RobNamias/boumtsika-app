@@ -4,8 +4,6 @@ import Header from './components/Header';
 import Menu from './components/Menu';
 import Home from './components/Home';
 
-import './styles/App.css';
-
 function App() {
   return (
     <div className="App">

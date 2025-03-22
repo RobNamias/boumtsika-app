@@ -1,8 +1,27 @@
-     .titre {
-         background-color: aliceblue;
-     }
+.main_container_header {
+    width: 100%;
+    top: 0;
+    background-color: var(--main-bg-color);
+    height: 15vh;
 
-     h1 {
-         margin: 0;
-         padding: 0;
-     }
+}
+
+.container_header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%
+}
+
+.titre {
+    font-size: 2rem;
+}
+
+
+
+
+@media screen and (orientation: portrait) {
+    .main_container_header {
+        height: 5vh;
+    }
+}

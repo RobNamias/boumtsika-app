@@ -4,7 +4,7 @@ import "../styles/components/header.css";
 const Header = () => {
     return (
         <div className='container_header'>
-            <h1>Header</h1>
+            <div className='titre'>Boum Tsi Kla v0.00001</div>
         </div>
     );
 };

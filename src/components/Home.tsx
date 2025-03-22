@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from '../logo.svg';
 import "../styles/components/home.css";
+
 const toggleHeader = () => {
 
     var elem = document.querySelector(".App-header");
@@ -9,18 +10,24 @@ const toggleHeader = () => {
 
         elem.setAttribute("style", ("min-height: 0px; height: 0px"));
         // elem.setAttribute("style", "height: 0px");
-        console.log(elem);
     }
 };
 
 const Home = () => {
     return (
+        <>
+            <div className='unable_orientation'>
+                <div className='mess_orientation'>Merci de passer en mode paysage pour une meilleure expérience</div>
+            </div>
+            <div className="App-header">
 
-        <div className="App-header">
-            <button onClick={toggleHeader}>TEST</button>
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>TA MERE ELLE VA JUMPER !</p>
-        </div>
+
+                <button onClick={toggleHeader}>
+                    <img src={logo} className="App-logo" alt="logo" />
+                </button>
+                <p>TA MERE ELLE VA JUMPER !</p>
+            </div>
+        </>
     );
 };
 

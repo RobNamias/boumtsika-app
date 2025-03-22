@@ -1,7 +1,5 @@
 .App {
   text-align: center;
-  /* min-height: 100vh; */
-  /* background-color: blue; */
 }
 
 .App-logo {
@@ -29,26 +27,10 @@
   }
 }
 
-.main_container_header {
-  width: 100%;
-  top: 0;
-  background-color: green;
-  height: 20vh;
-  min-height: 150px;
 
-}
-
-.main_container_menu {
-  float: left;
-  width: 20%;
-  height: 80vh;
-  background-color: yellow;
-}
-
-.main_container_drumbox {
-  float: right;
-  width: 80%;
-  height: 80vh;
-  overflow-y: scroll;
-  background-color: brown;
+/* @media screen and (orientation: landscape) { */
+@media screen and (max-width: 1280px) {
+  article {
+    display: flex;
+  }
 }

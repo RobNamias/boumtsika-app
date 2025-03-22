@@ -1,3 +1,17 @@
+:root {
+  --main-bg-color: rgb(54, 54, 54);
+  --scnd-bg-color: rgb(102, 102, 102);
+  --button-color: rgb(102, 102, 102);
+  --button-color-active: green;
+  /* --menu-height: ""; */
+}
+
+@import "./App";
+@import "./components/drumbox";
+@import "./components/header";
+@import "./components/home";
+@import "./components/menu";
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,6 +19,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 code {

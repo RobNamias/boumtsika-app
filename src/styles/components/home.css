@@ -12,4 +12,31 @@
     color: white;
     overflow: hidden;
     transition: height 1s ease-in-out;
+    z-index: 99;
+}
+
+.unable_orientation {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.541);
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+}
+
+
+
+@media screen and (orientation: portrait) {
+    .unable_orientation {
+        display: block;
+        position: fixed;
+        /* background-color: aqua; */
+    }
+
+    .mess_orientation {
+        margin-top: 20vh;
+        /* color: black; */
+        background-color: red;
+        color: white;
+    }
+
 }

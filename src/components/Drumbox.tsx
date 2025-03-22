@@ -1,12 +1,14 @@
 import React from 'react';
 import "../styles/components/drumbox.css";
+import TestDrumBox from './TestDrumbox';
 
 const Drumbox = () => {
     return (
         <div className='container_drumbox'>
-            <h1>BOOOOUMBOX
-            </h1>
+            BOOOOUMBOX
+            <TestDrumBox />
         </div>
+
     );
 };
 
