@@ -6,23 +6,18 @@ const Menu = () => {
 
     const [num_DrumKit, setNumDrumKit] = useState("808");
 
-    const getElementId = (event: React.MouseEvent<HTMLButtonElement>) => {
-        const buttonId = event.currentTarget.id; // Récupère l'ID du bouton cliqué
-        return (buttonId)
-    }
-
     const choixDrumkit = (event: React.MouseEvent<HTMLButtonElement>) => {
 
         var num_drum_kit = num_DrumKit;
-        const elemId = document.getElementById(getElementId(event));
+        const elem = event.currentTarget;
         var listButton = document.getElementsByClassName("button_kit_menu");
 
-        if (elemId !== null && listButton !== null) {
+        if (elem.id !== null && listButton !== null) {
             for (let pas = 0; pas < listButton.length; pas++) {
                 listButton[pas].setAttribute("style", ("background-color: var(--button-color)"))
             }
-            elemId.setAttribute("style", ("background-color:var(--button-color-active)"))
-            num_drum_kit = getElementId(event).replace("button_", "");
+            elem.setAttribute("style", ("background-color:var(--button-color-active)"))
+            num_drum_kit = elem.id.replace("button_", "");
             setNumDrumKit(num_drum_kit)
         }
         console.log("le num_drum_kit que j'envois dans ma fonction setDrumSet via mon bouton : ", num_drum_kit)
@@ -35,8 +30,10 @@ const Menu = () => {
 
 
     const toggleMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-        const elemId = document.getElementById(getElementId(event));
-        var elem = elemId?.parentElement?.children[1];
+
+        //passer par les classes
+        const elemId = document.getElementById(event.currentTarget.id);
+        var elem = event.currentTarget?.parentElement?.children[1];
         if (isMenuDeployed === false) {
             elemId?.parentElement?.parentElement?.setAttribute("style", "height:100%")
             elem?.setAttribute("style", ("display:block"));
@@ -50,11 +47,11 @@ const Menu = () => {
     };
 
     const toggleChildMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-        const elemId = getElementId(event)
-        const elem = document.getElementById(elemId);
+
+        const elem = event.currentTarget;
         var elemChild = elem?.parentElement?.children[1];
 
-        if (elemId === "button_cache_kit") {
+        if (event.currentTarget.id === "button_cache_kit") {
             if (isKitMenuDeployed === false) {
                 elemChild?.setAttribute("style", ("display:block"));
                 setIsKitMenuDeployed(true);
@@ -65,7 +62,7 @@ const Menu = () => {
             }
         }
         else {
-            if (elemId === "button_cache_file" && isFileMenuDeployed === false) {
+            if (elem.id === "button_cache_file" && isFileMenuDeployed === false) {
                 elemChild?.setAttribute("style", ("display:block"));
                 setIsFileMenuDeployed(true);
             }
@@ -87,6 +84,7 @@ const Menu = () => {
                     <button onClick={toggleChildMenu} className="button_menu" id='button_cache_kit'>Kit</button>
                     <div className='child_menu' id='kit_menu'>
                         <button onClick={choixDrumkit} className="button_menu button_kit_menu" id="button_707">707</button>
+                        {/* changer id */}
                         <button onClick={choixDrumkit} className="button_menu button_kit_menu" id="button_808">808</button>
                         <button onClick={choixDrumkit} className="button_menu button_kit_menu" id="button_909">909</button>
                         <div> {num_DrumKit} </div>

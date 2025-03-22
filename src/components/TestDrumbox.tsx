@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 // Components
 import Drum from './Drum';
-import drumKit from '../utilities/loadDrumSet';
+import drumSet from '../utilities/loadDrumSet';
 
 const PadsWrapper = styled.main`
 //   padding: 5rem 0;
@@ -17,12 +17,12 @@ const PadsWrapper = styled.main`
 `;
 
 const Home: React.FC = () => {
-  const [drums] = useState(drumKit); //On récup drumKit de loadDrumSet et on s'en sert pour mapper les boutons.
+  const [drums] = useState(drumSet); //On récup drumSet de loadDrumSet et on s'en sert pour mapper les boutons.
 
   const handlePlayDrum = (sound: string): void => {
     const audio = new Audio(sound);
     audio.play();
-    console.log("tableau du drum kit quand on clique sur un instrument: ", drumKit);
+    console.log("tableau du drum kit quand on clique sur un instrument: ", drumSet);
   };
 
   return (

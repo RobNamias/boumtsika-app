@@ -1,4 +1,3 @@
-
 var num_Drum_Kit = "808";
 
 export function setDrumSet(string) //je récupère le string via mon onclick sur les bouton du menu.
