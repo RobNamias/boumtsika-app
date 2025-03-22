@@ -1,6 +1,6 @@
 import Drumbox from './components/Drumbox';
 import Header from './components/Header';
-import Menu from './components/Menu';
+// import Menu from './components/Menu';
 import Home from './components/Home';
 
 function App() {
@@ -10,9 +10,9 @@ function App() {
       <div className="main_container_header">
         <Header />
       </div>
-      <div className="main_container_menu">
+      {/* <div className="main_container_menu">
         <Menu />
-      </div>
+      </div> */}
       <div className='main_container_drumbox'>
         <Drumbox />
       </div>

@@ -1,15 +1,44 @@
 .main_container_drumbox {
     float: right;
-    width: 80%;
+    width: 100%;
     height: 85vh;
     overflow-y: scroll;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(100, 100, 100);
 }
 
 .container_drumbox {
-    background-color: var(--scnd-bg-color);
+    /* background-color: var(--scnd-bg-color); */
+    background-color: rgb(97, 24, 24);
     height: 500px;
+    width: 80%;
     margin: auto;
+}
+
+.drum_line {
+    float: left;
+    width: 100%;
+    display: block;
+    background-color: blue;
+    margin: 2px 0;
+    height: fit-content;
+}
+
+.drum_box_line {
+    display: flex;
+    height: 80px;
+    background-color: orange;
+    margin: 2px 20px;
+}
+
+.drum_kit_line_src {
+    float: left;
+}
+
+.span_drum {
+    height: 100%;
+    width: 6%;
+    background-color: grey;
+    margin: 1px;
 }
 
 @media screen and (max-width: 1280px) {

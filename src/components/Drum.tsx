@@ -7,7 +7,7 @@ const StyledDrum = styled.div`
   background: darkslategrey;
   filter: drop-shadow(2px 2px 2px black);
   cursor: pointer;
-  border: 5px solid black;
+  // border: 2px solid black;
   transition: all 0.1s;
   color: white;
   display: flex;
@@ -20,11 +20,6 @@ const StyledDrum = styled.div`
     background: darkgrey;
     transform: scale(0.9);
   }
-
-  @media (max-width: 700px) {
-    width: 100px;
-    height: 100px;
-  }
 `;
 
 type Props = {
@@ -33,9 +28,11 @@ type Props = {
 };
 
 const Drum: React.FC<Props> = ({ drumType, onClick }) => (
-  <StyledDrum onClick={onClick}>
-    <p>{drumType}</p>
-  </StyledDrum>
+  <div className='drum_kit_line_src'>
+    <StyledDrum onClick={onClick}>
+      <p>{drumType}</p>
+    </StyledDrum>
+  </div>
 );
 
 export default Drum;
