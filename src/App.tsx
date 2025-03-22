@@ -1,4 +1,3 @@
-import React from 'react';
 import Drumbox from './components/Drumbox';
 import Header from './components/Header';
 import Menu from './components/Menu';

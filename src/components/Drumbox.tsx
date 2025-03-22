@@ -8,7 +8,6 @@ const Drumbox = () => {
             BOOOOUMBOX
             <TestDrumBox />
         </div>
-
     );
 };
 
