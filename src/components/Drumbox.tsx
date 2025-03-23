@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -32,7 +33,15 @@ const DrumBox: React.FC = () => {
     setDrums([...drumSet]); // Update state with the loaded drum set
   }, []);
 
-  const handleSwitchDrumSet = (numDrumKit: string) => {
+  const handleSwitchDrumSet = (numDrumKit: string, idClicked: string) => {
+
+    const elem = document.getElementById(idClicked)
+    const listeButton = document.getElementsByClassName("button_kit_menu");
+
+    for (let i = 0; i < listeButton.length; i++) {
+      listeButton[i].classList.remove("drum_active");
+    }
+    elem?.classList.add("drum_active");
     drumSet = switchDrumSet(numDrumKit);
     setDrums([...drumSet]); // Update state to trigger re-render
     // console.log("voir l'array DrumSet : ", drumSet);
@@ -46,29 +55,46 @@ const DrumBox: React.FC = () => {
 
   return (
     <div className='container_drumbox'>
-      <div>
-        <button onClick={() => handleSwitchDrumSet("707")}>707</button>
-        <button onClick={() => handleSwitchDrumSet("808")}>808</button>
-        <button onClick={() => handleSwitchDrumSet("909")}>909</button>
+      <div id="container_button_setDrum">
+        <button
+          className="button_kit_menu"
+          id="button_707"
+          onClick={() => handleSwitchDrumSet("707", "button_707")}>
+          707
+        </button>
+        <button
+          className="button_kit_menu drum_active"
+          id="button_808"
+          onClick={() => handleSwitchDrumSet("808", "button_808")}>
+          808
+        </button>
+        <button
+          className="button_kit_menu"
+          id="button_909"
+          onClick={() => handleSwitchDrumSet("909", "button_909")}>
+          909
+        </button>
       </div>
-      <PadsWrapper>
-        {drums.length > 0 ? (
-          drums.map(drum => (
-            <div
-              className="drum_line" id={drum.type}
-            >
-              <Drum
-                key={drum.type}
-                drumType={drum.type}
-                onClick={() => handlePlayDrum(drum.sound)}
-              />
-              <DrumBoxLine />
-            </div>
-          ))) : (
-          <p>No drums available. Please load a drum set.</p>
-        )}
-      </PadsWrapper >
-    </div>
+      <div id="veritable_boite_a_rythme">
+        <PadsWrapper>
+          {drums.length > 0 ? (
+            drums.map(drum => (
+              <div
+                className="drum_line" id={drum.type}
+              >
+                <Drum
+                  key={drum.type}
+                  drumType={drum.type}
+                  onClick={() => handlePlayDrum(drum.sound)}
+                />
+                <DrumBoxLine />
+              </div>
+            ))) : (
+            <p>No drums available. Please load a drum set.</p>
+          )}
+        </PadsWrapper >
+      </div>
+    </div >
   );
 };
 

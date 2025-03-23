@@ -1,4 +1,4 @@
-import logo from '../logo.svg';
+import logo from '../assets/img/logo192.png';
 import "../styles/components/home.css";
 
 const toggleHeader = () => {

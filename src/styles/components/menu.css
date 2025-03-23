@@ -1,4 +1,4 @@
-.main_container_menu {
+/* .main_container_menu {
     transition: width 0.5s ease-in;
     background-color: var(--main-bg-color)
 }
@@ -27,7 +27,7 @@
 .child_menu {
     display: inline-flex;
     /* background-color: brown; */
-}
+/* }
 
 #kit_menu {
     display: none;
@@ -93,7 +93,7 @@
             top: 0;
             height: 5vh;
             /* background-color: rgb(119, 128, 0); */
-        }
+/* }
 
         #button_cache_menu {
             display: block;
@@ -102,9 +102,9 @@
             width: 25px;
         }
     }
-}
+} */
 
-@media screen and (min-width: 1280px) {
+/* @media screen and (min-width: 1280px) {
 
     .main_container_menu {
         float: left;
@@ -115,4 +115,4 @@
     #button_cache_menu {
         display: none;
     }
-}
+} */
