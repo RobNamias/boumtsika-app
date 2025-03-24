@@ -1,0 +1,18 @@
+.span_drum_div {
+    /* height: 100%; */
+    width: 6%;
+    background-color: grey;
+    margin: 0 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.span_drum {
+    height: 20px;
+    width: 20px;
+}
+
+.span_active {
+    background-color: red;
+}

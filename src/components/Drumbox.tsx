@@ -44,11 +44,12 @@ const DrumBox: React.FC = () => {
     elem?.classList.add("drum_active");
     drumSet = switchDrumSet(numDrumKit);
     setDrums([...drumSet]); // Update state to trigger re-render
-    // console.log("voir l'array DrumSet : ", drumSet);
+    console.log("voir l'array DrumSet : ", drumSet);
   };
 
   const handlePlayDrum = (sound: string): void => {
     const audio = new Audio(sound);
+    audio.volume = 0.9
     audio.play();
   };
 
@@ -87,7 +88,7 @@ const DrumBox: React.FC = () => {
                   drumType={drum.type}
                   onClick={() => handlePlayDrum(drum.sound)}
                 />
-                <DrumBoxLine />
+                <DrumBoxLine drumType={drum.type} />
               </div>
             ))) : (
             <p>No drums available. Please load a drum set.</p>

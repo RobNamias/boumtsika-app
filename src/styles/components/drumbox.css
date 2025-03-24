@@ -69,12 +69,6 @@
     float: left;
 }
 
-.span_drum {
-    height: 100%;
-    width: 6%;
-    background-color: grey;
-    margin: 0 1px;
-}
 
 @media screen and (max-width: 1280px) {
     .main_container_drumbox {
@@ -84,7 +78,7 @@
     }
 
     .drum_box_line {
-        padding: 0;
+        height: 50px;
     }
 
     .button_kit_menu {
@@ -98,9 +92,7 @@
         left: 0;
         width: 50vh;
         display: flex;
-
         align-items: center;
         justify-content: center;
-
     }
 }

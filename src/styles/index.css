@@ -11,6 +11,9 @@
 @import "./components/header";
 @import "./components/home";
 @import "./components/menu";
+@import "./components/spanDrum";
+@import "./components/drum";
+@import "./components/sliderVolumeComponent";
 
 body {
   margin: 0;

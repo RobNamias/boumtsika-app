@@ -1,7 +1,37 @@
+.App-link {
+    color: #61dafb;
+}
+
+
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+    z-index: 100;
+    /* background-color: #61dafb; */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .App-header {
     position: fixed;
     width: 100%;
-    background-color: #282c34;
+    background-color: #282c34ee;
     min-height: 100vh;
     height: 100vh;
     display: flex;
@@ -12,25 +42,34 @@
     color: white;
     overflow: hidden;
     transition: height 1s ease-in-out;
-    z-index: 99;
+    z-index: 1;
+}
+
+.App-header button {
+    background-color: #282c3400;
+    border: none;
+    z-index: 2;
 }
 
 .unable_orientation {
     display: none;
-    background-color: rgba(0, 0, 0, 0.541);
-    height: 100%;
-    width: 100%;
-    z-index: 100;
-    backdrop-filter: blur(3px);
 }
 
 
 
 @media screen and (orientation: portrait) {
+
+
+
     .unable_orientation {
         display: block;
         position: fixed;
-        /* background-color: aqua; */
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.541);
+        height: 100%;
+        width: 100%;
+        z-index: 100;
+        backdrop-filter: blur(3px);
     }
 
     .mess_orientation {
