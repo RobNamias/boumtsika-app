@@ -20,8 +20,9 @@ export function switchDrumSet(numDrumKit: string) {
     var idDossier = "./" + numDrumKit + " - ";
 
     var drumSet = audioFiles.keys().map((file) => ({
-        type: file.replace(idDossier, "").replace(".mp3", ""), // Extract filename without extension
+        type: file.replace(idDossier, "").replace(" ", "").replace(".mp3", ""), // Extract filename without extension
         sound: audioFiles(file),
+        volumeSound: 1
     }));
 
     return drumSet;

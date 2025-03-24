@@ -2,12 +2,13 @@ input[type=range][orient=vertical] {
     appearance: slider-vertical;
     -webkit-appearance: slider-vertical;
     width: 16px;
-    height: 50px;
-    padding: 0 5px;
+    height: 70px;
+    padding: 5px 5px;
+    initial-value: 80;
 }
 
 .vertical {
-    width: 50px;
+    width: 70px;
     height: 16px;
     transform: rotate(-90deg);
     transform-origin: left;
@@ -17,9 +18,10 @@ input[type=range][orient=vertical] {
 }
 
 .vertical-wrapper {
-    display: inline-block;
+    display: flex;
+    float: left;
     width: 16px;
-    height: 50px;
+    height: 70px;
     position: relative;
     padding: 0 5px;
 }

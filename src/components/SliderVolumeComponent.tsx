@@ -1,11 +1,14 @@
 import React from 'react';
 
-const SliderVolumeComponent = () => {
-    return (
-        <div className='vertical-wrapper'>
-            <input type="range" className='vertical' />
-        </div>
-    );
+type Props = {
+    volume: number;
 };
+
+const SliderVolumeComponent: React.FC<Props> = (volume) => (
+    <div className='vertical-wrapper'>
+        <input type="range" className='vertical' id="volume" />
+    </div>
+);
+
 
 export default SliderVolumeComponent;

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import SliderVolumeComponent from './SliderVolumeComponent';
+// import SliderVolumeComponent from './SliderVolumeComponent';
 
 const StyledDrum = styled.div`
   width: 80px;
@@ -33,10 +33,10 @@ type Props = {
 };
 
 const Drum: React.FC<Props> = ({ drumType, onClick }) => (
-  <div className={'drum_kit_line_src ' + drumType}>
+  <div className='drum_kit_line_src' id={'dkl_src' + { drumType }}>
     <StyledDrum onClick={onClick}>
       <p>{drumType}</p>
-      <SliderVolumeComponent />
+      {/* <SliderVolumeComponent volume={volume} /> */}
     </StyledDrum>
   </div>
 );

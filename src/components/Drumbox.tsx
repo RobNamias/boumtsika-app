@@ -1,11 +1,13 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { switchDrumSet } from '../utilities/loadDrumSet';
+import { getValue } from '@testing-library/user-event/dist/utils';
 
 // Components
 import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
-import { switchDrumSet } from '../utilities/loadDrumSet';
+
 
 interface DrumSet {
   type: string;
@@ -26,11 +28,11 @@ const PadsWrapper = styled.main`
 const DrumBox: React.FC = () => {
   var drumSet: DrumSet[] = [];
   const [drums, setDrums] = useState(drumSet);
-
   // Load a default drum set on component mount
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     drumSet = switchDrumSet("808"); // Load the default drum set
-    setDrums([...drumSet]); // Update state with the loaded drum set
+    setDrums([...drumSet]); // Update state to trigger re-render
   }, []);
 
   const handleSwitchDrumSet = (numDrumKit: string, idClicked: string) => {
@@ -47,12 +49,58 @@ const DrumBox: React.FC = () => {
     console.log("voir l'array DrumSet : ", drumSet);
   };
 
-  const handlePlayDrum = (sound: string): void => {
+
+  var volumeSoundArray: number[] = [0.8, 0.8, 0.8, 0.8];
+
+  var volumeSound: number;
+
+  const setVolumeSound = (event: React.MouseEvent) => {
+    const e = event?.currentTarget;
+    volumeSound = Number(getValue(e)) / 100;
+    switch (e.id.replace("vol", "")) {
+      case 'ClosedHat':
+        volumeSoundArray[0] = volumeSound;
+        break;
+      case 'Kick':
+        volumeSoundArray[1] = volumeSound;
+        console.log("Le volume du " + e.id.replace("vol", "") + " est mainteant à " + volumeSoundArray[1])
+        break;
+      case 'OpenHat':
+        volumeSoundArray[2] = volumeSound;
+        break;
+      case 'Snare':
+        volumeSoundArray[3] = volumeSound;
+        break;
+      default: break;
+    }
+
+
+    console.log("le volume est à " + volumeSound)
+  }
+
+
+  const handlePlayDrum = (sound: string, drumType: string): void => {
     const audio = new Audio(sound);
-    audio.volume = 0.9
+    switch (drumType) {
+      case 'ClosedHat':
+        audio.volume = volumeSoundArray[0]
+        break;
+      case 'Kick':
+        audio.volume = volumeSoundArray[1]
+        break;
+      case 'OpenHat':
+        audio.volume = volumeSoundArray[2]
+        break;
+      case 'Snare':
+        audio.volume = volumeSoundArray[3]
+        break;
+      default:
+        console.log("Ca coince sur le slecteur de Volume");
+        break;
+    }
+    console.log("Le volume du " + drumType + " est lu à " + audio.volume)
     audio.play();
   };
-
 
   return (
     <div className='container_drumbox'>
@@ -86,9 +134,15 @@ const DrumBox: React.FC = () => {
                 <Drum
                   key={drum.type}
                   drumType={drum.type}
-                  onClick={() => handlePlayDrum(drum.sound)}
+                  onClick={() => handlePlayDrum(drum.sound, drum.type)}
                 />
-                <DrumBoxLine drumType={drum.type} />
+                <div className='vertical-wrapper'>
+                  <input type="range" className='vertical' id={"vol" + drum.type}
+                    step="5"
+                    onClick={setVolumeSound}
+                  />
+                </div>
+                <DrumBoxLine drumType={'b' + drum.type} />
               </div>
             ))) : (
             <p>No drums available. Please load a drum set.</p>
