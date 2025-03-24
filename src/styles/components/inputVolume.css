@@ -1,0 +1,50 @@
+input[type=range][orient=vertical] {
+    appearance: slider-vertical;
+    -webkit-appearance: slider-vertical;
+    width: 30px;
+    height: 60px;
+    /* padding: 5px 0 10px 0; */
+    /* initial-value: 80; */
+    background-color: var(--scnd-bg-color);
+    color: var(--main-bg-color);
+    background-color: var(--scnd-bg-color);
+}
+
+.vertical:hover {
+    cursor: pointer;
+}
+
+
+.vertical {
+    width: 60px;
+    height: 30px;
+    transform: rotate(-90deg);
+    transform-origin: left;
+    position: absolute;
+    left: 50%;
+    bottom: -0.5em;
+}
+
+.vertical-wrapper {
+    display: flex;
+    float: left;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 80px;
+    position: relative;
+}
+
+@media screen and (max-width: 1280px) {
+    .vertical-wrapper {
+        display: none;
+        height: 50px;
+    }
+
+    .vertical {
+        width: 40px;
+        bottom: -1em;
+    }
+
+}

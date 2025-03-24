@@ -13,7 +13,7 @@
 @import "./components/menu";
 @import "./components/spanDrum";
 @import "./components/drum";
-@import "./components/sliderVolumeComponent";
+@import "./components/inputVolume";
 
 body {
   margin: 0;

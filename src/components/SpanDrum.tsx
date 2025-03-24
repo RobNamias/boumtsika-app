@@ -2,8 +2,8 @@ import React from 'react';
 
 const setSpan = (event: React.MouseEvent) => {
     const classList = event?.currentTarget?.children[0].classList;
-    console.log(classList.length)
     console.log(event?.currentTarget?.classList)
+    console.log(event?.currentTarget?.children[0].id)
 
     switch (classList.contains("drum_active")) {
         case false: {
@@ -24,13 +24,13 @@ const setSpan = (event: React.MouseEvent) => {
 
 type Props = {
     drumType: string;
+    index: number
 };
 
 const SpanDrum: React.FC<Props> = (drumType) => {
     return (
-        <div className={'span_drum_div ' + drumType} onClick={setSpan}>
-            {/* <div className='span_drum_div' onClick={setSpan}> */}
-            <span className={'span_drum span_' + drumType} id={drumType + '_(x/16)'} ></span>
+        <div className={'span_drum_div sdd_' + drumType.drumType} id={'sdd_' + drumType.drumType} onClick={setSpan}>
+            <span className={'span_drum span_' + drumType.drumType} id={drumType.drumType + '_' + drumType.index} ></span>
         </div>
     );
 };

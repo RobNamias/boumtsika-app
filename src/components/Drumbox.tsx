@@ -50,13 +50,11 @@ const DrumBox: React.FC = () => {
   };
 
 
-  var volumeSoundArray: number[] = [0.8, 0.8, 0.8, 0.8];
-
-  var volumeSound: number;
+  var volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5];
 
   const setVolumeSound = (event: React.MouseEvent) => {
     const e = event?.currentTarget;
-    volumeSound = Number(getValue(e)) / 100;
+    var volumeSound = Number(getValue(e)) / 100;
     switch (e.id.replace("vol", "")) {
       case 'ClosedHat':
         volumeSoundArray[0] = volumeSound;
@@ -73,8 +71,6 @@ const DrumBox: React.FC = () => {
         break;
       default: break;
     }
-
-
     console.log("le volume est à " + volumeSound)
   }
 
@@ -95,7 +91,7 @@ const DrumBox: React.FC = () => {
         audio.volume = volumeSoundArray[3]
         break;
       default:
-        console.log("Ca coince sur le slecteur de Volume");
+        console.log("Ca coince sur le selecteur de Volume");
         break;
     }
     console.log("Le volume du " + drumType + " est lu à " + audio.volume)
@@ -142,7 +138,7 @@ const DrumBox: React.FC = () => {
                     onClick={setVolumeSound}
                   />
                 </div>
-                <DrumBoxLine drumType={'b' + drum.type} />
+                <DrumBoxLine drumType={drum.type} />
               </div>
             ))) : (
             <p>No drums available. Please load a drum set.</p>

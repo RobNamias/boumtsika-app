@@ -53,7 +53,7 @@
     float: left;
     width: 100%;
     display: block;
-    background-color: blue;
+    /* background-color: blue; */
     margin: 2px 0;
     height: fit-content;
 }
@@ -61,7 +61,12 @@
 .drum_box_line {
     display: flex;
     height: 80px;
-    background-color: orange;
+    /* background-color: orange; */
+}
+
+.separation {
+    width: 3px;
+    background-color: black;
 }
 
 .drum_kit_line_src {
