@@ -121,7 +121,6 @@ const DrumBox: React.FC = () => {
     // bpm = newbpm
   }
   const nothing = () => {
-    console.log("Ici rien ne se passe")
     stopLecture()
   }
   const stopLecture = (): void => {
@@ -138,18 +137,16 @@ const DrumBox: React.FC = () => {
     }
     const spanClass = document.getElementsByClassName("span_" + counter)
     for (let i = 0; i < spanClass.length; i++) {
+
       const elem = spanClass[i];
+
       elem.classList.add("span_survol")
-      // console.log(elem)
       setTimeout(() => {
         elem.classList.remove("span_survol")
       }, bpmInterval)
-
-
       if (elem.classList.contains("span_active") === true) {
         handlePlayDrum(drums[i].sound, drums[i].type)
       }
-      // elem.classList.remove("span_survol")
     }
   }
 
@@ -190,17 +187,20 @@ const DrumBox: React.FC = () => {
           onClick={handleSwitchDrumSet}>
           909
         </button>
-        {/* <button onClick={testSelection} className='button_menu'></button> */}
-        <button onClick={startLecture} className="button_menu" id="button_lecture">Play</button>
+      </div>
+      <div id="container_input">
+        <button onClick={startLecture} className="button_menu" id="button_lecture">PLAY</button>
+        <label htmlFor="setter_bpm">BPM :</label>
         <input
           type="number"
           id="setter_bpm"
-          className=""
+          name="setter_bpm"
           onChange={setbpm}
           min={20}
-          max={300}
-        />
+          max={300} />
       </div>
+
+
 
 
       <div id="veritable_boite_a_rythme">

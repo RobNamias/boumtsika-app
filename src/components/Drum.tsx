@@ -5,12 +5,12 @@ const StyledDrum = styled.div`
   width: 80px;
   height: 80px;
   // border-radius: 50%;
-  background: darkslategrey;
+  background-color: var(--main-bg-color);
   filter: drop-shadow(2px 2px 2px black);
   cursor: pointer;
   // border: 2px solid black;
   transition: all 0.1s;
-  color: white;
+  color: darkgrey;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,7 +23,7 @@ const StyledDrum = styled.div`
     @media screen and (max-width: 1280px) {
     height : 50px;
     width: 50px;
-    font-size: calc(5px + 2vh);
+    font-size: 3vh;
 }
 `;
 

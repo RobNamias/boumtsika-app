@@ -1,5 +1,6 @@
 .span_drum_div {
     /* height: 100%; */
+    border-radius: 5px;
     width: 6%;
     background-color: grey;
     margin: 0 1px;
@@ -17,10 +18,11 @@
     border-radius: 10px;
 }
 
-.span_survol {
-    background-color: yellow;
+.span_active {
+    background-color: darkgrey;
 }
 
-.span_active {
-    background-color: red;
+.span_survol {
+    background-color: darkgrey;
+    filter: invert(1);
 }
