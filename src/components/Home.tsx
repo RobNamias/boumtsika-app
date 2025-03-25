@@ -24,7 +24,7 @@ const Home = () => {
                 <button onClick={toggleHeader}>
                     <img src={logo} className="App-logo" alt="logo" />
                 </button>
-                <p>TA MERE ELLE VA JUMPER !</p>
+                <p>BOUM TSI KLAK !</p>
             </div>
         </>
     );
