@@ -43,7 +43,14 @@
     transition: all 0.3s ease-in-out
 }
 
+#button_lecture {
+    height: 50px;
+    width: 50px
+}
 
+.lecture_en_cours {
+    background-color: green;
+}
 
 #veritable_boite_a_rythme {
     margin-top: 5vh;
@@ -56,11 +63,13 @@
     /* background-color: blue; */
     margin: 2px 0;
     height: fit-content;
+    border: 1px black;
 }
 
 .drum_box_line {
     display: flex;
     height: 80px;
+
     /* background-color: orange; */
 }
 

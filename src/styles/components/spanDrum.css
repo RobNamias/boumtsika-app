@@ -6,11 +6,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    -webkit-transition: background-color 1000ms linear;
+    -ms-transition: background-color 1000ms linear;
+    transition: background-color 1000ms linear;
 }
 
 .span_drum {
     height: 20px;
     width: 20px;
+    border-radius: 10px;
+}
+
+.span_survol {
+    background-color: yellow;
 }
 
 .span_active {

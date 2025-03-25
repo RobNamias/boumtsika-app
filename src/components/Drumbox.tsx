@@ -11,6 +11,7 @@ import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
 
 var isLectureActive = false;
+
 var counter = 0;
 var bpm = 120;
 var bpmInterval = 1000 / (bpm / 60) / 4;;
@@ -57,9 +58,8 @@ const DrumBox: React.FC = () => {
       drumSet = switchDrumSet(numDrumKit);
       setDrums([...drumSet]); // Update state to trigger re-render
       stopLecture()
-      console.log("voir l'array drumSet : ", drumSet);
-    } else {
-      console.log("On ne change pas de set")
+
+      // console.log("voir l'array drumSet : ", drumSet);
     }
   };
 
@@ -75,7 +75,6 @@ const DrumBox: React.FC = () => {
         break;
       case 'Kick':
         volumeSoundArray[1] = volumeSound;
-        console.log("Le volume du " + e.id.replace("vol", "") + " est mainteant à " + volumeSoundArray[1])
         break;
       case 'OpenHat':
         volumeSoundArray[2] = volumeSound;
@@ -85,7 +84,6 @@ const DrumBox: React.FC = () => {
         break;
       default: break;
     }
-    console.log("le volume est à " + volumeSound)
   }
 
 
@@ -110,58 +108,61 @@ const DrumBox: React.FC = () => {
         console.log("Ca coince sur le selecteur de Volume");
         break;
     }
-    console.log("Le volume du " + drumType + " est lu à " + audio.volume)
+    // console.log("Le" + drumType + " est lu à " + audio.volume)
     audio.play();
   };
-
-  // const testSelection = (index: number) => {
-  //   console.log(document.getElementsByClassName("span_" + index));
-  //   for (let i = 0; i < document.getElementsByClassName("span_" + index).length; i++) {
-  //     if (document.getElementsByClassName("span_" + index)[i].classList.contains("drum_active") === true) {
-  //       console.log("la span_" + index + i + " a été reconnue")
-  //     }
-  //   }
-  // }
 
   // bouton Play
 
   const setbpm = (e: React.FormEvent<HTMLInputElement>): void => {
     bpm = Number(getValue(e.currentTarget))
     console.log(bpm)
-    // e.currentTarget.value = bpm;
     bpmInterval = 1000 / (bpm / 60) / 4;
     // bpm = newbpm
   }
   const nothing = () => {
-    console.log("ne rien faire")
+    console.log("Ici rien ne se passe")
     stopLecture()
   }
-  const stopLecture = () => {
+  const stopLecture = (): void => {
     clearInterval(intervalId);
+    isLectureActive = false;
+    // recupérer le bouton et luio passer un innerHTML"Play"
+    counter = 0
   }
+
   const Lecture = () => {
     counter++
-    if (counter === 16) {
-      counter = 0
+    if (counter === 17) {
+      counter = 1
     }
-    console.log(document.getElementsByClassName("span_" + counter));
-    for (let i = 0; i < document.getElementsByClassName("span_" + counter).length; i++) {
-      if (document.getElementsByClassName("span_" + counter)[i].classList.contains("drum_active") === true) {
-        console.log("la span_" + counter + i + " a été reconnue")
+    const spanClass = document.getElementsByClassName("span_" + counter)
+    for (let i = 0; i < spanClass.length; i++) {
+      const elem = spanClass[i];
+      elem.classList.add("span_survol")
+      // console.log(elem)
+      setTimeout(() => {
+        elem.classList.remove("span_survol")
+      }, bpmInterval)
+
+
+      if (elem.classList.contains("span_active") === true) {
         handlePlayDrum(drums[i].sound, drums[i].type)
       }
+      // elem.classList.remove("span_survol")
     }
   }
 
   var intervalId = setInterval(nothing, 0);
-  const startLecture = () => {
+  const startLecture = (event: React.MouseEvent) => {
+
     if (isLectureActive === false) {
+      event.currentTarget.classList.add('lecture_en_cours');
       isLectureActive = true;
-      console.log("bpm : ", bpm, " bpmInterval : ", bpmInterval)
       intervalId = setInterval(Lecture, bpmInterval);
     } else {
-      isLectureActive = false
-      counter = 0
+
+      event.currentTarget.classList.remove('lecture_en_cours');
       stopLecture()
     }
   }
@@ -190,12 +191,12 @@ const DrumBox: React.FC = () => {
           909
         </button>
         {/* <button onClick={testSelection} className='button_menu'></button> */}
-        <button onClick={startLecture} className="button_menu">Play</button>
+        <button onClick={startLecture} className="button_menu" id="button_lecture">Play</button>
         <input
           type="number"
           id="setter_bpm"
           className=""
-          onInput={setbpm}
+          onChange={setbpm}
           min={20}
           max={300}
         />

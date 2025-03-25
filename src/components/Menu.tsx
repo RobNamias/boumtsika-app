@@ -14,7 +14,6 @@ const Menu = () => {
             elem.setAttribute("style", ("background-color:var(--button-color-active)"))
             num_drum_kit = elem.id.replace("button_", "");
         }
-        console.log("le num_drum_kit que j'envois dans ma fonction setDrumSet via mon bouton : ", num_drum_kit)
         switchDrumSet(num_drum_kit);
     };
 

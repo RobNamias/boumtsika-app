@@ -1,4 +1,3 @@
-Structure :
     Construire un composant avec une boucle (les SPANS) :
         for (let index=1; index<17;index++) {
             SPAN classname={"span_" + index}
@@ -6,3 +5,9 @@ Structure :
         }
 
     Initialiser l'affichage du bpm
+    Ne pas réinitialiser intervalBPM onChange bpm_setter
+
+    Réussir à GetElementbyId.inner HTML Play/Pause et mettre/retirer la classe lecture_en_cours
+
+
+

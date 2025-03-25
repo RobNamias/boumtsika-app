@@ -5,13 +5,13 @@ const setSpan = (event: React.MouseEvent) => {
     console.log(event?.currentTarget?.classList)
     console.log(event?.currentTarget?.children[0].id)
 
-    switch (classList.contains("drum_active")) {
+    switch (classList.contains("span_active")) {
         case false: {
-            classList.add("drum_active");
+            classList.add("span_active");
             break;
         }
         case true: {
-            classList.remove("drum_active");
+            classList.remove("span_active");
             break;
         }
         default: {
