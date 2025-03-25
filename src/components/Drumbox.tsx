@@ -35,6 +35,13 @@ const DrumBox: React.FC = () => {
     setDrums([...drumSet]); // Update state to trigger re-render
   }, []);
 
+  // Se répète toutes les 2 secondes
+  // const timerId setInterval(() => console.log('tick'), 2000);
+
+  // S'arrête après 5 secondes
+  // setTimeout(() => { clearInterval(timerId); alert('stop'); }, 5000);
+
+
   const handleSwitchDrumSet = (numDrumKit: string, idClicked: string) => {
 
     const elem = document.getElementById(idClicked)
@@ -119,6 +126,8 @@ const DrumBox: React.FC = () => {
           onClick={() => handleSwitchDrumSet("909", "button_909")}>
           909
         </button>
+        <button className='button_kit_menu'>Play</button>
+        <button className='button_kit_menu'>Stop</button>
       </div>
       <div id="veritable_boite_a_rythme">
         <PadsWrapper>
