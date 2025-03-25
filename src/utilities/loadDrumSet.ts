@@ -21,8 +21,7 @@ export function switchDrumSet(numDrumKit: string) {
 
     var drumSet = audioFiles.keys().map((file) => ({
         type: file.replace(idDossier, "").replace(" ", "").replace(".mp3", ""), // Extract filename without extension
-        sound: audioFiles(file),
-        volumeSound: 1
+        sound: audioFiles(file)
     }));
 
     return drumSet;

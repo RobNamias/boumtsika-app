@@ -1,0 +1,8 @@
+Structure :
+    Construire un composant avec une boucle (les SPANS) :
+        for (let index=1; index<17;index++) {
+            SPAN classname={"span_" + index}
+            id={drumType.drumType + index}
+        }
+
+    Initialiser l'affichage du bpm

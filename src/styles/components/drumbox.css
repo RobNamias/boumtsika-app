@@ -22,7 +22,7 @@
     /* background-color: rgb(0, 255, 55); */
 }
 
-.button_kit_menu {
+.button_menu {
     height: 40px;
     width: 40px;
     border: none;
@@ -32,7 +32,7 @@
     transition: all 0.3s ease-in-out
 }
 
-.button_kit_menu:hover {
+.button_menu:hover {
     cursor: pointer;
 }
 

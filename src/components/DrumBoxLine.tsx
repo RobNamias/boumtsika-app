@@ -10,6 +10,15 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
 
     return (
         <div className={'drum_box_line dbl_' + drumType.drumType}>
+            {/* {for (let index=1, index < 17,index++) {
+                
+                <SpanDrum
+                    drumType={drumType.drumType}
+                    index={index}
+                />
+
+            }
+} */}
             <SpanDrum
                 drumType={drumType.drumType}
                 index={1}
