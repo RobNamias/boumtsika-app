@@ -7,9 +7,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    -webkit-transition: background-color 1000ms linear;
-    -ms-transition: background-color 1000ms linear;
-    transition: background-color 1000ms linear;
+    -webkit-transition: background-color 200ms linear;
+    -ms-transition: background-color 200ms linear;
+    transition: background-color 200ms linear;
+}
+
+.span_drum_div:hover {
+    background-color: rgb(136, 136, 136);
+    cursor: pointer;
 }
 
 .span_drum {
