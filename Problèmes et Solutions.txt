@@ -6,16 +6,12 @@ Problèmatiques --->
             SPAN classname={"span_" + index}
             id={drumType.drumType + index}
         }
-
-    Initialiser l'affichage du bpm
-    Ne pas réinitialiser intervalBPM onChange bpm_setter
-
     Réussir à GetElementbyId.inner HTML Play/Pause dans les fonctions Lecture et stopLecture
 
 Optimisation --->
 
         Créer les audio au chargement du tableau et pas dans la fonction handlplaydrums
-        Réencoder en mp3 de moindre qualité pour les alléger
+        Réencoder en mp3 de moindre qualité pour les alléger// fichiers entre 5 et 20Ko... ptet pas utile de rebaisser
 
 V2 --->
         Possibilité de triolet

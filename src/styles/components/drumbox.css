@@ -73,6 +73,10 @@ label {
     font-size: 20px;
 }
 
+#setter_bpm {
+    width: 50px;
+}
+
 
 #veritable_boite_a_rythme {
     margin-top: 5vh;

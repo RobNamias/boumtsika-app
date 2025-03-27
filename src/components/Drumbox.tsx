@@ -1,7 +1,4 @@
-//fonction
-
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { switchDrumSet } from '../utilities/loadDrumSet';
 import { getValue } from '@testing-library/user-event/dist/utils';
@@ -10,65 +7,54 @@ import { getValue } from '@testing-library/user-event/dist/utils';
 import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
 
-var isLectureActive = false;
-
-var counter = 0;
-var bpm = 120;
-var bpmInterval = 1000 / (bpm / 60) / 4;;
-
 const volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5];
-
 
 interface DrumSet {
   type: string;
   sound: string;
 }
+
 const PadsWrapper = styled.main`
-//   padding: 5rem 0;
   flex: 1;
-//   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-//   grid-gap: 20px;
 `;
 
 const DrumBox: React.FC = () => {
-  var drumSet: DrumSet[] = [];
-  const [drums, setDrums] = useState(drumSet);
-  // Load a default drum set on component mount
+  const [drums, setDrums] = useState<DrumSet[]>([]);
+  const [bpm, setBpm] = useState<number>(120);
+
+  const isLectureActive = useRef(false);
+  const intervalId = useRef<NodeJS.Timeout | null>(null);
+  const counterRef = useRef(0);
+
+  const bpmInterval = 1000 / (bpm / 60) / 4;
+
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    drumSet = switchDrumSet("808"); // Load the default drum set
-    setDrums([...drumSet]); // Update state to trigger re-render
+    const initialDrums = switchDrumSet("808");
+    setDrums(initialDrums);
   }, []);
 
-
-  // changer de DrumSet
-  // const handleSwitchDrumSet = (numDrumKit: string, idClicked: string) => {
   const handleSwitchDrumSet = (event: React.MouseEvent) => {
-    const idClicked = event.currentTarget.id
-    const elem = document.getElementById(idClicked)
-    const numDrumKit = idClicked.replace("button_", "")
+    const idClicked = event.currentTarget.id;
+    const elem = document.getElementById(idClicked);
+    const numDrumKit = idClicked.replace("button_", "");
     const listeButton = document.getElementsByClassName("button_kit_menu");
 
-    if (elem?.classList.contains("drum_active") === false) {
+    if (!elem?.classList.contains("drum_active")) {
       for (let i = 0; i < listeButton.length; i++) {
         listeButton[i].classList.remove("drum_active");
       }
       elem?.classList.add("drum_active");
-      drumSet = switchDrumSet(numDrumKit);
-      setDrums([...drumSet]); // Update state to trigger re-render
-      stopLecture()
 
-      // console.log("voir l'array drumSet : ", drumSet);
+      const newSet = switchDrumSet(numDrumKit);
+      setDrums(newSet);
+      stopLecture();
     }
   };
 
-  //  changer le volume pour chaque piste
-
-
   const setVolumeSound = (event: React.MouseEvent) => {
     const e = event?.currentTarget;
-    var volumeSound = Number(getValue(e)) / 100;
+    const volumeSound = Number(getValue(e)) / 100;
     switch (e.id.replace("vol", "")) {
       case 'ClosedHat':
         volumeSoundArray[0] = volumeSound;
@@ -84,154 +70,139 @@ const DrumBox: React.FC = () => {
         break;
       default: break;
     }
-  }
+  };
 
-
-  // lire le fichier audio one shot
-  // const handlePlayDrum = (sound: string, drumType: string): void => {
   const handlePlayDrum = (sound: string, drumType: string): void => {
     const audio = new Audio(sound);
     switch (drumType) {
       case 'ClosedHat':
-        audio.volume = volumeSoundArray[0]
+        audio.volume = volumeSoundArray[0];
         break;
       case 'Kick':
-        audio.volume = volumeSoundArray[1]
+        audio.volume = volumeSoundArray[1];
         break;
       case 'OpenHat':
-        audio.volume = volumeSoundArray[2]
+        audio.volume = volumeSoundArray[2];
         break;
       case 'Snare':
-        audio.volume = volumeSoundArray[3]
+        audio.volume = volumeSoundArray[3];
         break;
       default:
-        console.log("Ca coince sur le selecteur de Volume");
+        console.log("Erreur dans le switch de volume");
         break;
     }
-    // console.log("Le" + drumType + " est lu à " + audio.volume)
     audio.play();
   };
 
-  // bouton Play
-
   const setbpm = (e: React.FormEvent<HTMLInputElement>): void => {
-    bpm = Number(getValue(e.currentTarget))
-    bpmInterval = 1000 / (bpm / 60) / 4;
-  }
-  const nothing = () => {
     stopLecture()
-  }
-  const stopLecture = (): void => {
-    clearInterval(intervalId);
-    isLectureActive = false;
-    if (document.getElementById("button_lecture") !== null) {
-      // console.log(document.getElementById("button_lecture")?.classList)// recupérer le bouton et luio passer un innerHTML"Play"
-      document.getElementById("button_lecture")?.classList.remove("lecture_en_cours")// recupérer le bouton et luio passer un innerHTML"Play"
-      // recupérer le bouton et luio passer un innerHTML"Play"
+    const newBpm = Number(getValue(e.currentTarget));
+    if (newBpm > 0 && newBpm < 1000) {
+      setBpm(newBpm);
     }
-    counter = 0
-  }
+  };
+
+  const stopLecture = (): void => {
+    if (intervalId.current) {
+      clearInterval(intervalId.current);
+    }
+    isLectureActive.current = false;
+    const playButton = document.getElementById("button_lecture");
+    playButton?.classList.remove("lecture_en_cours");
+    counterRef.current = 0;
+  };
 
   const Lecture = () => {
-    counter++
-    if (counter === 17) {
-      counter = 1
+    counterRef.current++;
+    if (counterRef.current === 17) {
+      counterRef.current = 1;
     }
-    const spanClass = document.getElementsByClassName("span_" + counter)
+
+    const spanClass = document.getElementsByClassName("span_" + counterRef.current);
     for (let i = 0; i < spanClass.length; i++) {
-
       const elem = spanClass[i];
-
-      elem.classList.add("span_survol")
+      elem.classList.add("span_survol");
       setTimeout(() => {
-        elem.classList.remove("span_survol")
-      }, bpmInterval)
-      if (elem.classList.contains("span_active") === true) {
-        handlePlayDrum(drums[i].sound, drums[i].type)
+        elem.classList.remove("span_survol");
+      }, bpmInterval);
+
+      if (elem.classList.contains("span_active")) {
+        handlePlayDrum(drums[i].sound, drums[i].type);
       }
     }
-  }
+  };
 
-  var intervalId = setInterval(nothing, 0);
-  const startLecture = (event: React.MouseEvent) => {
+  const startLecture = () => {
+    const playButton = document.getElementById("button_lecture");
 
-    if (isLectureActive === false) {
-      event.currentTarget.classList.add('lecture_en_cours');
-      isLectureActive = true;
-      intervalId = setInterval(Lecture, bpmInterval);
+    if (!isLectureActive.current) {
+      playButton?.classList.add("lecture_en_cours");
+      isLectureActive.current = true;
+      intervalId.current = setInterval(Lecture, bpmInterval);
     } else {
-
-      // event.currentTarget.classList.remove('lecture_en_cours');
-      stopLecture()
+      stopLecture();
     }
-  }
-  return (
+  };
 
+  return (
     <div className='container_drumbox'>
 
-      {/* le menu, en gros */}
       <div id="container_button_setDrum">
-        <button
-          className="button_menu button_kit_menu"
-          id="button_707"
-          onClick={handleSwitchDrumSet}>
+        <button className="button_menu button_kit_menu" id="button_707" onClick={handleSwitchDrumSet}>
           707
         </button>
-        <button
-          className="button_menu button_kit_menu drum_active"
-          id="button_808"
-          onClick={handleSwitchDrumSet}>
+        <button className="button_menu button_kit_menu drum_active" id="button_808" onClick={handleSwitchDrumSet}>
           808
         </button>
-        <button
-          className="button_menu button_kit_menu"
-          id="button_909"
-          onClick={handleSwitchDrumSet}>
+        <button className="button_menu button_kit_menu" id="button_909" onClick={handleSwitchDrumSet}>
           909
         </button>
       </div>
+
       <div id="container_input">
         <button onClick={startLecture} className="button_menu" id="button_lecture">PLAY</button>
+
         <label htmlFor="setter_bpm">BPM :</label>
+
         <input
           type="number"
           id="setter_bpm"
           name="setter_bpm"
           onChange={setbpm}
-          min={20}
-          max={300} />
+          value={bpm}
+        // minLength={2}
+        // maxLength={3}
+        />
+
       </div>
-
-
-
 
       <div id="veritable_boite_a_rythme">
         <PadsWrapper>
           {drums.length > 0 ? (
             drums.map(drum => (
-              <div
-                className="drum_line" id={drum.type}
-              >
+              <div className="drum_line" id={drum.type} key={drum.type}>
                 <Drum
-                  key={drum.type}
                   drumType={drum.type}
                   onClick={() => handlePlayDrum(drum.sound, drum.type)}
                 />
-
                 <div className='vertical-wrapper'>
-                  <input type="range" className='vertical' id={"vol" + drum.type}
+                  <input
+                    type="range"
+                    className='vertical'
+                    id={"vol" + drum.type}
                     step="5"
                     onClick={setVolumeSound}
                   />
                 </div>
                 <DrumBoxLine drumType={drum.type} />
               </div>
-            ))) : (
+            ))
+          ) : (
             <p>No drums available. Please load a drum set.</p>
           )}
-        </PadsWrapper >
+        </PadsWrapper>
       </div>
-    </div >
+    </div>
   );
 };
 

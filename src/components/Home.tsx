@@ -24,7 +24,7 @@ const Home = () => {
                 <button onClick={toggleHeader}>
                     <img src={logo} className="App-logo" alt="logo" />
                 </button>
-                <p>BOUM TSI KLAK !</p>
+                <p>BOUM TSI KA !</p>
             </div>
         </>
     );
