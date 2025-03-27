@@ -116,9 +116,7 @@ const DrumBox: React.FC = () => {
 
   const setbpm = (e: React.FormEvent<HTMLInputElement>): void => {
     bpm = Number(getValue(e.currentTarget))
-    console.log(bpm)
     bpmInterval = 1000 / (bpm / 60) / 4;
-    // bpm = newbpm
   }
   const nothing = () => {
     stopLecture()
@@ -126,7 +124,11 @@ const DrumBox: React.FC = () => {
   const stopLecture = (): void => {
     clearInterval(intervalId);
     isLectureActive = false;
-    // recupérer le bouton et luio passer un innerHTML"Play"
+    if (document.getElementById("button_lecture") !== null) {
+      // console.log(document.getElementById("button_lecture")?.classList)// recupérer le bouton et luio passer un innerHTML"Play"
+      document.getElementById("button_lecture")?.classList.remove("lecture_en_cours")// recupérer le bouton et luio passer un innerHTML"Play"
+      // recupérer le bouton et luio passer un innerHTML"Play"
+    }
     counter = 0
   }
 
@@ -159,7 +161,7 @@ const DrumBox: React.FC = () => {
       intervalId = setInterval(Lecture, bpmInterval);
     } else {
 
-      event.currentTarget.classList.remove('lecture_en_cours');
+      // event.currentTarget.classList.remove('lecture_en_cours');
       stopLecture()
     }
   }
