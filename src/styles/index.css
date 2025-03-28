@@ -3,14 +3,12 @@
   --scnd-bg-color: rgb(102, 102, 102);
   --button-color: rgb(102, 102, 102);
   --button-color-active: green;
-  /* --menu-height: ""; */
 }
 
 @import "./App";
 @import "./components/drumbox";
 @import "./components/header";
 @import "./components/home";
-@import "./components/menu";
 @import "./components/spanDrum";
 @import "./components/drum";
 @import "./components/inputVolume";
