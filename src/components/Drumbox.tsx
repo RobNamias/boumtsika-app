@@ -12,6 +12,7 @@ const volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5];
 interface DrumSet {
   type: string;
   sound: string;
+  // audiosrc:typeof Audio;
 }
 
 const PadsWrapper = styled.main`
@@ -22,7 +23,6 @@ const PadsWrapper = styled.main`
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>([]);
   const [bpm, setBpm] = useState<number>(120);
-
   const isLectureActive = useRef(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
   const counterRef = useRef(0);
@@ -34,23 +34,30 @@ const DrumBox: React.FC = () => {
     setDrums(initialDrums);
   }, []);
 
+  // const audioCH = new Audio(drums[0].sound);
+  // const audioK = new Audio(drums[1].sound);
+  // const audioS = new Audio(drums[2].sound);
+  // const audioOH = new Audio(drums[3].sound);
+
+
   const handleSwitchDrumSet = (event: React.MouseEvent) => {
     const idClicked = event.currentTarget.id;
     const elem = document.getElementById(idClicked);
     const numDrumKit = idClicked.replace("button_", "");
     const listeButton = document.getElementsByClassName("button_kit_menu");
+    const newSet = switchDrumSet(numDrumKit);
+
 
     if (!elem?.classList.contains("drum_active")) {
       for (let i = 0; i < listeButton.length; i++) {
-        listeButton[i].classList.remove("drum_active");
+        listeButton[i].classList.remove("drum_active")
       }
       elem?.classList.add("drum_active");
-
-      const newSet = switchDrumSet(numDrumKit);
       setDrums(newSet);
       stopLecture();
     }
   };
+
 
   const setVolumeSound = (event: React.MouseEvent) => {
     const e = event?.currentTarget;
@@ -77,6 +84,8 @@ const DrumBox: React.FC = () => {
     switch (drumType) {
       case 'ClosedHat':
         audio.volume = volumeSoundArray[0];
+        // audioCH.volume = volumeSoundArray[0];
+        // audioCH.play();
         break;
       case 'Kick':
         audio.volume = volumeSoundArray[1];
@@ -98,7 +107,7 @@ const DrumBox: React.FC = () => {
     stopLecture()
     const newBpm = Number(getValue(e.currentTarget));
     if (newBpm > 0 && newBpm < 1000) {
-      setBpm(newBpm);
+      setBpm(newBpm)
     }
   };
 
@@ -117,7 +126,6 @@ const DrumBox: React.FC = () => {
     if (counterRef.current === 17) {
       counterRef.current = 1;
     }
-
     const spanClass = document.getElementsByClassName("span_" + counterRef.current);
     for (let i = 0; i < spanClass.length; i++) {
       const elem = spanClass[i];
@@ -173,35 +181,32 @@ const DrumBox: React.FC = () => {
         // minLength={2}
         // maxLength={3}
         />
-
       </div>
 
-      <div id="veritable_boite_a_rythme">
-        <PadsWrapper>
-          {drums.length > 0 ? (
-            drums.map(drum => (
-              <div className="drum_line" id={drum.type} key={drum.type}>
-                <Drum
-                  drumType={drum.type}
-                  onClick={() => handlePlayDrum(drum.sound, drum.type)}
+      <PadsWrapper>
+        {drums.length > 0 ? (
+          drums.map(drum => (
+            <div className="drum_line" id={drum.type} key={drum.type}>
+              <Drum
+                drumType={drum.type}
+                onClick={() => handlePlayDrum(drum.sound, drum.type)}
+              />
+              <div className='vertical-wrapper'>
+                <input
+                  type="range"
+                  className='vertical'
+                  id={"vol" + drum.type}
+                  step="5"
+                  onClick={setVolumeSound}
                 />
-                <div className='vertical-wrapper'>
-                  <input
-                    type="range"
-                    className='vertical'
-                    id={"vol" + drum.type}
-                    step="5"
-                    onClick={setVolumeSound}
-                  />
-                </div>
-                <DrumBoxLine drumType={drum.type} />
               </div>
-            ))
-          ) : (
-            <p>No drums available. Please load a drum set.</p>
-          )}
-        </PadsWrapper>
-      </div>
+              <DrumBoxLine drumType={drum.type} />
+            </div>
+          ))
+        ) : (
+          <p>No drums available. Please load a drum set.</p>
+        )}
+      </PadsWrapper>
     </div>
   );
 };
