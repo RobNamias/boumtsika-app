@@ -2,7 +2,7 @@ import React from 'react';
 
 const setSpan = (event: React.MouseEvent) => {
     const classList = event?.currentTarget?.children[0].classList;
-    console.log(event?.currentTarget?.children[0].id)
+    // console.log(event?.currentTarget?.children[0].id)
 
     switch (classList.contains("span_active")) {
         case false: {
@@ -14,11 +14,11 @@ const setSpan = (event: React.MouseEvent) => {
             break;
         }
         default: {
-            console.log("ça fait queud")
+            console.log("La séléction de Span ne marche pas")
             break;
         }
     }
-    console.log(classList);
+    // console.log(classList);
 }
 
 type Props = {

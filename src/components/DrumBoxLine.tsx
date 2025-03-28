@@ -8,92 +8,28 @@ type Props = {
 
 const DrumBoxLine: React.FC<Props> = (drumType) => {
 
+    const max_index: number = 16;
+    let indexes: number[] = [];
+    let i: number;
+    for (i = 1; i <= max_index; i++) {
+        indexes.push(i);
+    }
+
     return (
         <div className={'drum_box_line dbl_' + drumType.drumType}>
-            {/* {for (let index=1, index < 17,index++) {
-                
-                <SpanDrum
-                    drumType={drumType.drumType}
-                    index={index}
-                />
-
-            }
-} */}
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={1}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={2}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={3}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={4}
-            />
-
-            <div className="separation"></div>
-
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={5}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={6}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={7}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={8}
-            />
-
-            <div className="separation"></div>
-
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={9}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={10}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={11}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={12}
-            />
-
-            <div className="separation"></div>
-
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={13}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={14}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={15}
-            />
-            <SpanDrum
-                drumType={drumType.drumType}
-                index={16}
-            />
+            {indexes.map(index => (
+                <>
+                    <SpanDrum
+                        drumType={drumType.drumType}
+                        index={index}
+                    />
+                    {/* affichage conditionnel */}
+                    {index % 4 === 0 && index < max_index && <div className="separation"></div>}
+                </>
+            ))}
         </div>
-    );
+
+    )
 };
 
 export default DrumBoxLine;

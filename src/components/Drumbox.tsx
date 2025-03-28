@@ -23,7 +23,7 @@ const PadsWrapper = styled.main`
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>([]);
   const [bpm, setBpm] = useState<number>(120);
-  const isLectureActive = useRef(false);
+  const [isLectureActive, setIsLectureActive] = useState(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
   const counterRef = useRef(0);
 
@@ -115,7 +115,7 @@ const DrumBox: React.FC = () => {
     if (intervalId.current) {
       clearInterval(intervalId.current);
     }
-    isLectureActive.current = false;
+    setIsLectureActive(false);
     const playButton = document.getElementById("button_lecture");
     playButton?.classList.remove("lecture_en_cours");
     counterRef.current = 0;
@@ -141,15 +141,8 @@ const DrumBox: React.FC = () => {
   };
 
   const startLecture = () => {
-    const playButton = document.getElementById("button_lecture");
-
-    if (!isLectureActive.current) {
-      playButton?.classList.add("lecture_en_cours");
-      isLectureActive.current = true;
-      intervalId.current = setInterval(Lecture, bpmInterval);
-    } else {
-      stopLecture();
-    }
+    setIsLectureActive(true);
+    intervalId.current = setInterval(Lecture, bpmInterval);
   };
 
   return (
@@ -168,7 +161,12 @@ const DrumBox: React.FC = () => {
       </div>
 
       <div id="container_input">
-        <button onClick={startLecture} className="button_menu" id="button_lecture">PLAY</button>
+        {!isLectureActive &&
+          <button onClick={startLecture} className="button_menu" id="button_lecture">PLAY</button>
+        }
+        {isLectureActive &&
+          <button onClick={stopLecture} className="button_menu lecture_en_cours" id="button_stop">STOP</button>
+        }
 
         <label htmlFor="setter_bpm">BPM :</label>
 

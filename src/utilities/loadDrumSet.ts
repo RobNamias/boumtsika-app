@@ -24,7 +24,7 @@ export function switchDrumSet(numDrumKit: string) {
         sound: audioFiles(file)
     }));
 
-    console.log(drumSet);
+    // console.log(drumSet);
 
     return drumSet;
 }

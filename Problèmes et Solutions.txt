@@ -1,12 +1,5 @@
 Problèmatiques --->   
-    
-    Construire le composant Span dans une boucle (les SPANS) :
-        for (let index=1; index<17;index++) {
-            (revoir selon les besoins)
-            SPAN classname={"span_" + index}
-            id={drumType.drumType + index}
-        }
-    Réussir à GetElementbyId.inner HTML Play/Pause dans les fonctions Lecture et stopLecture
+        Réussir à GetElementbyId.inner HTML Play/Pause dans les fonctions Lecture et stopLecture
 
 Optimisation --->
 
@@ -14,6 +7,7 @@ Optimisation --->
         Réencoder en mp3 de moindre qualité pour les alléger// fichiers entre 5 et 20Ko... ptet pas utile de rebaisser
 
 V2 --->
+        Utilisation SCSS
         Possibilité de triolet
         Modifier le volume pour chaque span et garder un volume globlal sur la drum_line (faire une moyenne des deux à la lecture)
         Ajouter un kit à moi
@@ -21,6 +15,10 @@ V2 --->
         Delay : a la lecture d'un audio, appeler une fonction décalé un nombre de fois paramètrable (entre 1 et 3 pour pas surcharger),
         en baissant le volume (var interne) à chaque fois d'un pourcentage paramètrable (pour 20% --> 100%/80%/64%, 50%/40%/32%)
 
+V3 --->
+        Laravel
+        Sauvegarde
+        Menu Glisser Déposer
 
 
 

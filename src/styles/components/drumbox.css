@@ -41,7 +41,7 @@
     background-color: grey;
     transition: all 0.3s ease-in-out;
     color: var(--scnd-bg-color);
-    font-size: 18px
+    font-size: 18px;
 }
 
 .button_menu:hover {
@@ -60,19 +60,26 @@
     background-color: rgb(0, 138, 0);
 }
 
-#button_lecture {
+#button_lecture,
+#button_stop {
     height: 60px;
     width: 60px;
-    margin: 0 10%
+    margin: 0 10%;
 }
 
-.lecture_en_cours:hover {
-    background-color: rgb(0, 138, 0);
+#button_stop:hover {
+    background-color: rgb(138, 0, 0);
+}
+
+#button_lecture:hover {
+    background-color: rgb(0, 138, 0)
 }
 
 .lecture_en_cours {
-    background-color: var(--button-color-active);
+    background-color: rgb(138, 0, 0);
 }
+
+
 
 label {
     margin-right: 10px;
@@ -156,7 +163,8 @@ label {
         font-size: 15px;
     }
 
-    #button_lecture {
+    #button_lecture,
+    #button_stop {
         height: 50px;
         width: 50px;
         margin: 0 50px;
