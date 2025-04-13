@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { switchDrumSet } from '../utilities/loadDrumSet';
 import { getValue } from '@testing-library/user-event/dist/utils';
@@ -59,7 +59,8 @@ const DrumBox: React.FC = () => {
   };
 
 
-  const setVolumeSound = (event: React.MouseEvent) => {
+  // const setVolumeSound = (event: React.MouseEvent) => {
+  const setVolumeSound = (event: ChangeEvent<HTMLInputElement>) => {
     const e = event?.currentTarget;
     const volumeSound = Number(getValue(e)) / 100;
     switch (e.id.replace("vol", "")) {
@@ -195,7 +196,7 @@ const DrumBox: React.FC = () => {
                   className='vertical'
                   id={"vol" + drum.type}
                   step="5"
-                  onClick={setVolumeSound}
+                  onChange={setVolumeSound}
                 />
               </div>
               <DrumBoxLine drumType={drum.type} />
