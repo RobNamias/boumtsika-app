@@ -1,8 +1,9 @@
 {
   "files": {
-    "main.css": "/boumtsika-app/static/css/main.6fc4924a.css",
+    "main.css": "/boumtsika-app/static/css/main.fa42d540.css",
     "main.js": "/boumtsika-app/static/js/main.c776a373.js",
     "static/js/453.59aa6262.chunk.js": "/boumtsika-app/static/js/453.59aa6262.chunk.js",
+    "static/media/fondApp.png": "/boumtsika-app/static/media/fondApp.5c7e43780878bfe2701b.png",
     "static/media/logoApp.png": "/boumtsika-app/static/media/logoApp.a9d7eec1849b479d10f0.png",
     "static/media/808 - Open Hat.mp3": "/boumtsika-app/static/media/808 - Open Hat.322935da32c237a41da4.mp3",
     "static/media/808 - Kick.mp3": "/boumtsika-app/static/media/808 - Kick.43210e9c7d98362d8cdd.mp3",
@@ -17,12 +18,12 @@
     "static/media/707 - ClosedHat.mp3": "/boumtsika-app/static/media/707 - ClosedHat.052fbfb82e1e28ab38e9.mp3",
     "static/media/707 - Kick.mp3": "/boumtsika-app/static/media/707 - Kick.cab021bfdf2d1a6af7bd.mp3",
     "index.html": "/boumtsika-app/index.html",
-    "main.6fc4924a.css.map": "/boumtsika-app/static/css/main.6fc4924a.css.map",
+    "main.fa42d540.css.map": "/boumtsika-app/static/css/main.fa42d540.css.map",
     "main.c776a373.js.map": "/boumtsika-app/static/js/main.c776a373.js.map",
     "453.59aa6262.chunk.js.map": "/boumtsika-app/static/js/453.59aa6262.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.6fc4924a.css",
+    "static/css/main.fa42d540.css",
     "static/js/main.c776a373.js"
   ]
 }
