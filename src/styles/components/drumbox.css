@@ -3,14 +3,18 @@
     width: 100%;
     height: 85vh;
     overflow-y: scroll;
+    background: url("../../assets/img/fondApp.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
     background-color: var(--scnd-bg-color);
 }
 
 
 .container_drumbox {
-    background-color: var(--scnd-bg-color);
     margin: 0 auto;
     width: 90%;
+    height: 85vh;
 }
 
 #container_button_setDrum {
