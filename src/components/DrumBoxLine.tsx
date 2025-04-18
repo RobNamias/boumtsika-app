@@ -8,7 +8,7 @@ type Props = {
 
 const DrumBoxLine: React.FC<Props> = (drumType) => {
 
-    const max_index: number = 16;
+    const max_index: number = 32;
     let indexes: number[] = [];
     let i: number;
     for (i = 1; i <= max_index; i++) {

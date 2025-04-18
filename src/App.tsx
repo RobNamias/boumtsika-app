@@ -1,3 +1,4 @@
+import React from 'react';
 import Drumbox from './components/Drumbox';
 import Header from './components/Header';
 // import Menu from './components/Menu';
@@ -10,9 +11,6 @@ function App() {
       <div className="main_container_header">
         <Header />
       </div>
-      {/* <div className="main_container_menu">
-        <Menu />
-      </div> */}
       <div className='main_container_drumbox'>
         <Drumbox />
       </div>

@@ -12,7 +12,6 @@ const volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5];
 interface DrumSet {
   type: string;
   sound: string;
-  // audiosrc:typeof Audio;
 }
 
 const PadsWrapper = styled.main`
@@ -58,8 +57,6 @@ const DrumBox: React.FC = () => {
     }
   };
 
-
-  // const setVolumeSound = (event: React.MouseEvent) => {
   const setVolumeSound = (event: ChangeEvent<HTMLInputElement>) => {
     const e = event?.currentTarget;
     const volumeSound = Number(getValue(e)) / 100;
@@ -124,7 +121,7 @@ const DrumBox: React.FC = () => {
 
   const Lecture = () => {
     counterRef.current++;
-    if (counterRef.current === 17) {
+    if (counterRef.current === 33) {
       counterRef.current = 1;
     }
     const spanClass = document.getElementsByClassName("span_" + counterRef.current);
