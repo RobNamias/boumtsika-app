@@ -64,10 +64,10 @@ const DrumBox: React.FC = () => {
       case 'Snare':
         volumeSoundArray[1] = volumeSound;
         break;
-      case 'ClosedHat':
+      case 'ClHat':
         volumeSoundArray[2] = volumeSound;
         break;
-      case 'OpenHat':
+      case 'OpHat':
         volumeSoundArray[3] = volumeSound;
         break;
       case 'Crash':
@@ -87,10 +87,10 @@ const DrumBox: React.FC = () => {
       case 'Snare':
         audio.volume = volumeSoundArray[1];
         break;
-      case 'ClosedHat':
+      case 'ClHat':
         audio.volume = volumeSoundArray[2];
         break;
-      case 'OpenHat':
+      case 'OpHat':
         audio.volume = volumeSoundArray[3];
         break;
       case 'Crash':

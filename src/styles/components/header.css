@@ -17,16 +17,3 @@
     font-size: 2rem;
     color: darkgrey
 }
-
-
-@media screen and (max-width: 1280px) {
-    .main_container_header {
-        height: 10vh;
-    }
-}
-
-@media screen and (orientation: portrait) {
-    .main_container_header {
-        height: 5vh;
-    }
-}

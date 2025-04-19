@@ -10,8 +10,8 @@
 @import "./components/header";
 @import "./components/home";
 @import "./components/spanDrum";
-@import "./components/drum";
 @import "./components/inputVolume";
+@import "./mob_Version.css";
 
 body {
   margin: 0;

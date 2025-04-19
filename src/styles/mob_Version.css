@@ -1,0 +1,111 @@
+/* @media screen and (orientation: landscape) { */
+@media screen and (max-width: 1280px) {
+    article {
+        display: flex;
+    }
+
+    .main_container_header {
+        height: 10vh;
+    }
+
+    .span_drum {
+        height: 10px;
+        width: 10px;
+        border-radius: 5px;
+    }
+
+    .span_drum_div {
+        height: 30px;
+    }
+
+    .vertical-wrapper {
+        height: 30px;
+    }
+
+    .vertical {
+        width: 30px;
+        bottom: -1.2em;
+    }
+
+    .main_container_drumbox {
+        width: 100%;
+        height: 90vh;
+        overflow-y: scroll;
+    }
+
+    .container_drumbox {
+        width: 95%;
+        margin-top: 5vh;
+    }
+
+    .drum_box_line {
+        height: 30px;
+    }
+
+    #container_button_setDrum {
+        /* position: absolute; */
+        height: 15vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 5vh auto;
+    }
+
+    #container_input {
+        height: 15vh;
+    }
+
+    .button_menu {
+        margin: 0 5px;
+        font-size: 13px;
+        width: 40px;
+    }
+
+
+    .button_kit_menu {
+        height: 40px;
+        width: 40px;
+    }
+
+    #button_lecture,
+    #button_stop {
+        height: 50px;
+        width: 50px;
+        margin: 0 50px;
+    }
+
+    .button_set_nb_time {
+        height: 26px;
+
+    }
+
+    label {
+        font-size: 15px;
+        width: 50px;
+    }
+
+    #container_set_time {
+        width: 100px;
+
+    }
+}
+
+@media screen and (orientation: portrait) {
+    .unable_orientation {
+        display: block;
+        position: fixed;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.541);
+        height: 100%;
+        width: 100%;
+        z-index: 100;
+        backdrop-filter: blur(3px);
+    }
+
+    .mess_orientation {
+        margin-top: 20vh;
+        /* color: black; */
+        background-color: red;
+        color: white;
+    }
+}

@@ -35,16 +35,3 @@ input[type=range][orient=vertical] {
     height: 80px;
     position: relative;
 }
-
-@media screen and (max-width: 1280px) {
-    .vertical-wrapper {
-        display: none;
-        height: 50px;
-    }
-
-    .vertical {
-        width: 40px;
-        bottom: -1em;
-    }
-
-}

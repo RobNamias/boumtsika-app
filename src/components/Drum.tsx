@@ -21,8 +21,8 @@ const StyledDrum = styled.div`
     background: darkgrey;
   }
     @media screen and (max-width: 1280px) {
-    height : 50px;
-    width: 50px;
+    height : 30px;
+    width: 40px;
     font-size: 3vh;
 }
 `;

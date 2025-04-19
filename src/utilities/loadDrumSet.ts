@@ -28,6 +28,7 @@ export function switchDrumSet(numDrumKit: string) {
         sound: audioFiles(file)
     }));
 
+    // Réorganisation du tableau pour avoir un ordre plus logique que l'ordre alphabetique
     var drum_temp = drumSet[0]
     drumSet[0] = drumSet[2]
     drumSet[2] = drum_temp
