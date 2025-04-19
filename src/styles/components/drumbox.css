@@ -27,11 +27,19 @@
 
 #container_input {
     height: 20vh;
-    width: 300px;
+    width: 500px;
     display: flex;
     float: right;
     align-items: center;
     justify-content: center;
+}
+
+#container_set_time {
+    display: block;
+    align-items: center;
+    -moz-box-orient: vertical;
+    -webkit-box-orient: vertical;
+    width: 70px;
 }
 
 .button_menu {
@@ -46,9 +54,23 @@
     font-size: 18px;
 }
 
+.button_set_nb_time {
+    height: 30px;
+}
+
+.nb_time_active {
+    background-color: green;
+}
+
+
+
 .button_menu:hover {
     cursor: pointer;
     background-color: rgb(141, 141, 141);
+}
+
+.nb_time_active:hover {
+    background-color: green;
 }
 
 
@@ -102,16 +124,17 @@ label {
     float: left;
     width: 100%;
     display: block;
-    /* background-color: blue; */
+
     margin: 2px 0;
     height: fit-content;
     border: 1px black;
+
+    backdrop-filter: blur(20px);
 }
 
 .drum_box_line {
     display: flex;
     height: 80px;
-
     /* background-color: orange; */
 }
 

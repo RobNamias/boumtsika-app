@@ -28,7 +28,7 @@ type Props = {
 
 const SpanDrum: React.FC<Props> = (drumType) => {
     return (
-        <div className={'span_drum_div sdd_' + drumType.drumType} id={'sdd_' + drumType.index} onClick={setSpan}>
+        <div className={'span_drum_div sdd_' + drumType.drumType + ' sdd_' + drumType.index} id={'sdd_' + drumType.index} onClick={setSpan}>
             <span className={'span_drum span_' + drumType.index} id={drumType.drumType + '_' + drumType.index} ></span>
         </div>
     );

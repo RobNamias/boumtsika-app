@@ -1,17 +1,17 @@
 
+import React from "react";
 import SpanDrum from "./SpanDrum";
-
+// import { useEffect, useState } from "react";
 
 type Props = {
     drumType: string;
 };
 
-const DrumBoxLine: React.FC<Props> = (drumType) => {
 
-    const max_index: number = 32;
+const DrumBoxLine: React.FC<Props> = (drumType) => {
     let indexes: number[] = [];
     let i: number;
-    for (i = 1; i <= max_index; i++) {
+    for (i = 1; i <= 32; i++) {
         indexes.push(i);
     }
 
@@ -24,12 +24,13 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                         index={index}
                     />
                     {/* affichage conditionnel */}
-                    {index % 4 === 0 && index < max_index && <div className="separation"></div>}
+                    {index % 4 === 0 && index < 32 && <div className={"separation sep_" + index / 4}></div>}
                 </>
-            ))}
-        </div>
-
+            ))
+            }
+        </div >
     )
 };
+
 
 export default DrumBoxLine;

@@ -25,6 +25,7 @@ const DrumBox: React.FC = () => {
   const [isLectureActive, setIsLectureActive] = useState(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
   const counterRef = useRef(0);
+  const [show32, setShow32] = useState(true);
 
   const bpmInterval = 1000 / (bpm / 60) / 4;
 
@@ -33,19 +34,12 @@ const DrumBox: React.FC = () => {
     setDrums(initialDrums);
   }, []);
 
-  // const audioCH = new Audio(drums[0].sound);
-  // const audioK = new Audio(drums[1].sound);
-  // const audioS = new Audio(drums[2].sound);
-  // const audioOH = new Audio(drums[3].sound);
-
-
   const handleSwitchDrumSet = (event: React.MouseEvent) => {
     const idClicked = event.currentTarget.id;
     const elem = document.getElementById(idClicked);
     const numDrumKit = idClicked.replace("button_", "");
     const listeButton = document.getElementsByClassName("button_kit_menu");
     const newSet = switchDrumSet(numDrumKit);
-
 
     if (!elem?.classList.contains("drum_active")) {
       for (let i = 0; i < listeButton.length; i++) {
@@ -101,6 +95,49 @@ const DrumBox: React.FC = () => {
     audio.play();
   };
 
+  const toggle_display = (e: React.MouseEvent): void => {
+    if (e.currentTarget.id.replace("show_32_", "") !== show32.toString()) {
+      stopLecture();
+      if (show32 === false) {
+        setShow32(true);
+        for (let i = 17; i < 33; i++) {
+          const listeSpan = document.getElementsByClassName("sdd_" + i);
+          for (let j = 0; j < listeSpan.length; j++) {
+            listeSpan[j].setAttribute("style", ("display: flex;"))
+          }
+        }
+        for (let i = 4; i < 8; i++) {
+          const listeSeparation = document.getElementsByClassName("sep_" + i)
+          for (let j = 0; j < listeSeparation.length; j++) {
+            listeSeparation[j].setAttribute("style", ("display: flex;"));
+          }
+        }
+      }
+      else {
+        setShow32(false);
+        for (let i = 4; i < 8; i++) {
+          const listeSeparation = document.getElementsByClassName("sep_" + i)
+          for (let j = 0; j < listeSeparation.length; j++) {
+            listeSeparation[j].setAttribute("style", ("display: none;"));
+          }
+        }
+        for (let i = 17; i < 33; i++) {
+          const listeSpan = document.getElementsByClassName("sdd_" + i);
+          for (let j = 0; j < listeSpan.length; j++) {
+            listeSpan[j].setAttribute("style", ("display: none;"))
+          }
+        }
+      }
+      // 
+      const listeButton = document.getElementsByClassName("button_set_nb_time");
+      for (let i = 0; i < listeButton.length; i++) {
+        listeButton[i].classList.remove("nb_time_active")
+      }
+      e?.currentTarget.classList.add("nb_time_active");
+    }
+
+  }
+
   const setbpm = (e: React.FormEvent<HTMLInputElement>): void => {
     stopLecture()
     const newBpm = Number(getValue(e.currentTarget));
@@ -120,8 +157,15 @@ const DrumBox: React.FC = () => {
   };
 
   const Lecture = () => {
+    var nb_Time: number;
     counterRef.current++;
-    if (counterRef.current === 33) {
+    if (show32) {
+      nb_Time = 32
+    }
+    else {
+      nb_Time = 16
+    }
+    if (counterRef.current === nb_Time + 1) {
       counterRef.current = 1;
     }
     const spanClass = document.getElementsByClassName("span_" + counterRef.current);
@@ -159,6 +203,10 @@ const DrumBox: React.FC = () => {
       </div>
 
       <div id="container_input">
+        <div id="container_set_time">
+          <button onClick={toggle_display} className='button_menu button_set_nb_time' id="show_32_false">16</button>
+          <button onClick={toggle_display} className='button_menu button_set_nb_time nb_time_active' id="show_32_true">32</button>
+        </div>
         {!isLectureActive &&
           <button onClick={startLecture} className="button_menu" id="button_lecture">PLAY</button>
         }
@@ -174,8 +222,6 @@ const DrumBox: React.FC = () => {
           name="setter_bpm"
           onChange={setbpm}
           value={bpm}
-        // minLength={2}
-        // maxLength={3}
         />
       </div>
 
@@ -196,7 +242,9 @@ const DrumBox: React.FC = () => {
                   onChange={setVolumeSound}
                 />
               </div>
-              <DrumBoxLine drumType={drum.type} />
+              <DrumBoxLine
+                drumType={drum.type}
+              />
             </div>
           ))
         ) : (
