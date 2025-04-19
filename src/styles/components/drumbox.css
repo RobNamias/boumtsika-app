@@ -27,7 +27,7 @@
 
 #container_input {
     height: 20vh;
-    width: 500px;
+    width: 350px;
     display: flex;
     float: right;
     align-items: center;
@@ -39,7 +39,7 @@
     align-items: center;
     -moz-box-orient: vertical;
     -webkit-box-orient: vertical;
-    width: 70px;
+    width: 100px;
 }
 
 .button_menu {

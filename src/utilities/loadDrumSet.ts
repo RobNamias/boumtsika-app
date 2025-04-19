@@ -12,6 +12,11 @@ export function switchDrumSet(numDrumKit: string) {
         case "909":
             audioFiles = require.context("../assets/audio/drumKits/909/", false, /.ogg$/);
             break;
+        case "Tribe":
+            audioFiles = require.context("../assets/audio/drumKits/Tribe/", false, /.ogg$/);
+            break;
+
+
         default:
             audioFiles = require.context("../assets/audio/drumKits/808/", false, /.ogg$/);
             break;

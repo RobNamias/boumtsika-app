@@ -10,8 +10,6 @@ V2 --->
         Utilisation SCSS (optionnel)
         Possibilité de triolet
         Modifier le volume pour chaque span et garder un volume globlal sur la drum_line (VSpan*Vdrum_line/100)
-        *Me faire un pti kit et le rajouter, pour le fun...*
-        Ajouter plus d'élements  : ride, crash, rimshock
 
         //Fonction prête... et ça marche ! Impossible à mettre en place tant que la lecture n'est pas optimisée.// 
         Delay : a la lecture d'un audio, appeler une fonction décalé un nombre de fois paramètrable (entre 1 et 3 pour pas surcharger),

@@ -7,7 +7,8 @@ import { getValue } from '@testing-library/user-event/dist/utils';
 import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
 
-const volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5];
+const volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.5];
+
 
 interface DrumSet {
   type: string;
@@ -34,6 +35,8 @@ const DrumBox: React.FC = () => {
     setDrums(initialDrums);
   }, []);
 
+
+
   const handleSwitchDrumSet = (event: React.MouseEvent) => {
     const idClicked = event.currentTarget.id;
     const elem = document.getElementById(idClicked);
@@ -58,17 +61,22 @@ const DrumBox: React.FC = () => {
       case 'ClosedHat':
         volumeSoundArray[0] = volumeSound;
         break;
-      case 'Kick':
+      case 'Crash':
         volumeSoundArray[1] = volumeSound;
         break;
-      case 'OpenHat':
+      case 'Kick':
         volumeSoundArray[2] = volumeSound;
         break;
-      case 'Snare':
+      case 'OpenHat':
         volumeSoundArray[3] = volumeSound;
+        break;
+      case 'Snare':
+        volumeSoundArray[4] = volumeSound;
         break;
       default: break;
     }
+
+    console.log(volumeSoundArray)
   };
 
   const handlePlayDrum = (sound: string, drumType: string): void => {
@@ -76,17 +84,18 @@ const DrumBox: React.FC = () => {
     switch (drumType) {
       case 'ClosedHat':
         audio.volume = volumeSoundArray[0];
-        // audioCH.volume = volumeSoundArray[0];
-        // audioCH.play();
         break;
-      case 'Kick':
+      case 'Crash':
         audio.volume = volumeSoundArray[1];
         break;
-      case 'OpenHat':
+      case 'Kick':
         audio.volume = volumeSoundArray[2];
         break;
-      case 'Snare':
+      case 'OpenHat':
         audio.volume = volumeSoundArray[3];
+        break;
+      case 'Snare':
+        audio.volume = volumeSoundArray[4];
         break;
       default:
         console.log("Erreur dans le switch de volume");
@@ -199,6 +208,9 @@ const DrumBox: React.FC = () => {
         </button>
         <button className="button_menu button_kit_menu" id="button_909" onClick={handleSwitchDrumSet}>
           909
+        </button>
+        <button className="button_menu button_kit_menu" id="button_Tribe" onClick={handleSwitchDrumSet}>
+          Tribe
         </button>
       </div>
 
