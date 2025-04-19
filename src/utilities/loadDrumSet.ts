@@ -1,7 +1,6 @@
 var audioFiles: __WebpackModuleApi.RequireContext;
 
 export function switchDrumSet(numDrumKit: string) {
-    //     console.log("le num Drum Kit à l'entrée de loadDrumSet : ", numDrumKit);
     switch (numDrumKit) {
         case "707":
             audioFiles = require.context("../assets/audio/drumKits/707/", false, /.ogg$/);
@@ -29,7 +28,14 @@ export function switchDrumSet(numDrumKit: string) {
         sound: audioFiles(file)
     }));
 
-    // console.log(drumSet);
+    var drum_temp = drumSet[0]
+    drumSet[0] = drumSet[2]
+    drumSet[2] = drum_temp
+    drum_temp = drumSet[1]
+    drumSet[1] = drumSet[4]
+    drumSet[4] = drum_temp
+
+    console.log(drumSet);
 
     return drumSet;
 }

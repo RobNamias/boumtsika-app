@@ -58,43 +58,42 @@ const DrumBox: React.FC = () => {
     const e = event?.currentTarget;
     const volumeSound = Number(getValue(e)) / 100;
     switch (e.id.replace("vol", "")) {
-      case 'ClosedHat':
+      case 'Kick':
         volumeSoundArray[0] = volumeSound;
         break;
-      case 'Crash':
+      case 'Snare':
         volumeSoundArray[1] = volumeSound;
         break;
-      case 'Kick':
+      case 'ClosedHat':
         volumeSoundArray[2] = volumeSound;
         break;
       case 'OpenHat':
         volumeSoundArray[3] = volumeSound;
         break;
-      case 'Snare':
+      case 'Crash':
         volumeSoundArray[4] = volumeSound;
         break;
       default: break;
     }
-
-    console.log(volumeSoundArray)
+    // console.log(volumeSoundArray)
   };
 
   const handlePlayDrum = (sound: string, drumType: string): void => {
     const audio = new Audio(sound);
     switch (drumType) {
-      case 'ClosedHat':
+      case 'Kick':
         audio.volume = volumeSoundArray[0];
         break;
-      case 'Crash':
+      case 'Snare':
         audio.volume = volumeSoundArray[1];
         break;
-      case 'Kick':
+      case 'ClosedHat':
         audio.volume = volumeSoundArray[2];
         break;
       case 'OpenHat':
         audio.volume = volumeSoundArray[3];
         break;
-      case 'Snare':
+      case 'Crash':
         audio.volume = volumeSoundArray[4];
         break;
       default:
