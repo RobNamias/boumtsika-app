@@ -14,8 +14,6 @@ export function switchDrumSet(numDrumKit: string) {
         case "Tribe":
             audioFiles = require.context("../assets/audio/drumKits/Tribe/", false, /.ogg$/);
             break;
-
-
         default:
             audioFiles = require.context("../assets/audio/drumKits/808/", false, /.ogg$/);
             break;
@@ -36,7 +34,7 @@ export function switchDrumSet(numDrumKit: string) {
     drumSet[1] = drumSet[4]
     drumSet[4] = drum_temp
 
-    console.log(drumSet);
+    // console.log(drumSet);
 
     return drumSet;
 }

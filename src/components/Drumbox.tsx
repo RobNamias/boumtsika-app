@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { switchDrumSet } from '../utilities/loadDrumSet';
+import { saveDataToFile } from '../utilities/saveData';
 import { getValue } from '@testing-library/user-event/dist/utils';
 
 // Components
 import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
 
-const volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.5];
+var volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.5];
 
 
 interface DrumSet {
@@ -195,6 +196,39 @@ const DrumBox: React.FC = () => {
     intervalId.current = setInterval(Lecture, bpmInterval);
   };
 
+  const loadDataFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("J'essaye de charger un truc")
+    if (e.currentTarget.files != null) {
+
+      //   let file = e.target.files[0];
+      // if (!file) return;
+
+      // let reader = new FileReader();
+      // reader.onload = function (event) {
+      //   try {
+      //     let Data = JSON.parse(event.target.result);
+      //     console.log("📂 Contenu du fichier chargé :", Data);
+
+      //     if (Data && typeof Data === "object") {
+      //       // ✅ Mise à jour des valeurs du jeu
+      // volumeSoundArray = Data.volumeSoundArray ?? [0.5,0.5,0.5,0.5,0.5];
+      //       setBpm(Data.bpm ?? 120);
+
+      //       console.log("✅ Partie chargée depuis le fichier !");
+      //     } else {
+      //       console.error("❌ Fichier de sauvegarde invalide !");
+      //       alert("❌ Erreur : Fichier JSON invalide !");
+      //     }
+      //   } catch (error) {
+      //     console.error("❌ Erreur lors de l'analyse du fichier JSON :", error);
+      //     alert("❌ Erreur : Impossible de lire le fichier JSON !");
+      //   }
+      // };
+
+      // reader.readAsText(file);
+    }
+  }
+
   return (
     <div className='container_drumbox'>
 
@@ -211,6 +245,12 @@ const DrumBox: React.FC = () => {
         <button className="button_menu button_kit_menu" id="button_Tribe" onClick={handleSwitchDrumSet}>
           Tribe
         </button>
+
+        <button className="button_menu button_kit_menu" onClick={() => saveDataToFile(volumeSoundArray, bpm)}>💾 Exporter</button>
+
+        <input type="file" id="loadFileInput" accept=".json" hidden onChange={() => loadDataFromFile} />
+        <button className="button_menu button_kit_menu" onClick={() => document.getElementById('loadFileInput')?.click()}>📂 Importer</button>
+
       </div>
 
       <div id="container_input">
