@@ -19,7 +19,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: calc(10px + 2vmin);
+    font-size: calc(50px + 2vmin);
     color: white;
     overflow: hidden;
     transition: height 1s ease-in-out;
@@ -34,4 +34,24 @@
 
 .unable_orientation {
     display: none;
+}
+
+@media screen and (orientation: portrait) {
+    .unable_orientation {
+        display: block;
+        position: fixed;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.541);
+        height: 100%;
+        width: 100%;
+        z-index: 100;
+        backdrop-filter: blur(3px);
+    }
+
+    .mess_orientation {
+        margin-top: 20vh;
+        /* color: black; */
+        background-color: red;
+        color: white;
+    }
 }

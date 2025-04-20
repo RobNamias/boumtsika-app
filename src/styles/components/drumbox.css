@@ -51,11 +51,24 @@
     background-color: grey;
     transition: all 0.3s ease-in-out;
     color: var(--scnd-bg-color);
-    font-size: 18px;
+    font-family: 'Traffic';
+    font-size: 26px;
+}
+
+.button_kit_menu {
+    font-family: 'Gothic';
+}
+
+#button_Tribe {
+    font-family: 'Traffic';
+    /* font-size: 30px */
 }
 
 .button_set_nb_time {
     height: 30px;
+    font-family: 'Gothic';
+    font-weight: bold;
+    font-size: 20px;
 }
 
 .nb_time_active {
@@ -77,7 +90,7 @@
 .drum_active {
     background-color: var(--button-color-active);
     transition: all 0.5s ease-in-out;
-    font-size: 20px
+    font-size: 30px
 }
 
 .drum_active:hover {
@@ -86,8 +99,8 @@
 
 #button_lecture,
 #button_stop {
-    height: 60px;
-    width: 60px;
+    height: 70px;
+    width: 70px;
     margin: 0 10%;
 }
 
@@ -108,7 +121,8 @@
 label {
     margin-right: 10px;
     color: grey;
-    font-size: 20px;
+    font-size: 28px;
+    font-family: 'Traffic';
 }
 
 #setter_bpm {

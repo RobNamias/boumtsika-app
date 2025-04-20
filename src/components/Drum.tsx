@@ -2,6 +2,12 @@ import styled from 'styled-components';
 // import SliderVolumeComponent from './SliderVolumeComponent';
 
 const StyledDrum = styled.div`
+  @font-face {
+    font-family: 'Traffic';
+    src: url('../../assets/fonts/Traffic.ttf') format('truetype')
+  }
+  font-family:"Traffic";
+  font-size:5vh;
   width: 80px;
   height: 80px;
   // border-radius: 50%;

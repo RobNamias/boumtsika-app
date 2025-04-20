@@ -5,6 +5,16 @@
   --button-color-active: green;
 }
 
+@font-face {
+  font-family: 'Traffic';
+  src: url('../assets/fonts/Traffic.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: 'Gothic';
+  src: url('../assets/fonts/nu_century_gothic.ttf') format('truetype')
+}
+
 @import "./App";
 @import "./components/drumbox";
 @import "./components/header";
@@ -13,11 +23,11 @@
 @import "./components/inputVolume";
 @import "./mob_Version.css";
 
+
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Traffic';
 }
 
 code {

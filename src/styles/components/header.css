@@ -14,6 +14,7 @@
 }
 
 .titre {
-    font-size: 2rem;
-    color: darkgrey
+    font-size: 15vh;
+    color: darkgrey;
+    font-family: 'Traffic', sans-serif;
 }

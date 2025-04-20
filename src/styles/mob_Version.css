@@ -8,6 +8,10 @@
         height: 10vh;
     }
 
+    .titre {
+        font-size: 8vh;
+    }
+
     .span_drum {
         height: 10px;
         width: 10px;
@@ -59,6 +63,7 @@
         margin: 0 5px;
         font-size: 13px;
         width: 40px;
+        height: 40px
     }
 
 
@@ -87,25 +92,5 @@
     #container_set_time {
         width: 100px;
 
-    }
-}
-
-@media screen and (orientation: portrait) {
-    .unable_orientation {
-        display: block;
-        position: fixed;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.541);
-        height: 100%;
-        width: 100%;
-        z-index: 100;
-        backdrop-filter: blur(3px);
-    }
-
-    .mess_orientation {
-        margin-top: 20vh;
-        /* color: black; */
-        background-color: red;
-        color: white;
     }
 }

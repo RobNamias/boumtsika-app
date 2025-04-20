@@ -8,7 +8,7 @@ import { getValue } from '@testing-library/user-event/dist/utils';
 import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
 
-var volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.5];
+var volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.2];
 
 
 interface DrumSet {
@@ -72,7 +72,7 @@ const DrumBox: React.FC = () => {
         volumeSoundArray[3] = volumeSound;
         break;
       case 'Crash':
-        volumeSoundArray[4] = volumeSound;
+        volumeSoundArray[4] = volumeSound / 4;
         break;
       default: break;
     }
@@ -246,10 +246,10 @@ const DrumBox: React.FC = () => {
           Tribe
         </button>
 
-        <button className="button_menu button_kit_menu" onClick={() => saveDataToFile(volumeSoundArray, bpm)}>💾 Exporter</button>
+        <button className="button_menu" onClick={() => saveDataToFile(volumeSoundArray, bpm)}>💾 Exporter</button>
 
         <input type="file" id="loadFileInput" accept=".json" hidden onChange={() => loadDataFromFile} />
-        <button className="button_menu button_kit_menu" onClick={() => document.getElementById('loadFileInput')?.click()}>📂 Importer</button>
+        <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()}>📂 Importer</button>
 
       </div>
 
