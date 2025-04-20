@@ -1,9 +1,11 @@
 {
   "files": {
-    "main.css": "/boumtsika-app/static/css/main.f0960c23.css",
-    "main.js": "/boumtsika-app/static/js/main.b4c2dd5b.js",
+    "main.css": "/boumtsika-app/static/css/main.a2e85bd1.css",
+    "main.js": "/boumtsika-app/static/js/main.de11d1fb.js",
     "static/js/453.59aa6262.chunk.js": "/boumtsika-app/static/js/453.59aa6262.chunk.js",
+    "static/media/Traffic.ttf": "/boumtsika-app/static/media/Traffic.db27688923410b71308e.ttf",
     "static/media/fondApp.png": "/boumtsika-app/static/media/fondApp.5c7e43780878bfe2701b.png",
+    "static/media/nu_century_gothic.ttf": "/boumtsika-app/static/media/nu_century_gothic.8aa831f4ce1b2a1f81d3.ttf",
     "static/media/logoApp.png": "/boumtsika-app/static/media/logoApp.a9d7eec1849b479d10f0.png",
     "static/media/Tribe - Crash.ogg": "/boumtsika-app/static/media/Tribe - Crash.7834c694b29fc57d98f7.ogg",
     "static/media/707 - Crash.ogg": "/boumtsika-app/static/media/707 - Crash.59de81ce71ec65515af1.ogg",
@@ -26,12 +28,12 @@
     "static/media/Tribe - Snare.ogg": "/boumtsika-app/static/media/Tribe - Snare.e784cfd4440d637cb86e.ogg",
     "static/media/707 - ClHat.ogg": "/boumtsika-app/static/media/707 - ClHat.e64e2ce70b747f599479.ogg",
     "index.html": "/boumtsika-app/index.html",
-    "main.f0960c23.css.map": "/boumtsika-app/static/css/main.f0960c23.css.map",
-    "main.b4c2dd5b.js.map": "/boumtsika-app/static/js/main.b4c2dd5b.js.map",
+    "main.a2e85bd1.css.map": "/boumtsika-app/static/css/main.a2e85bd1.css.map",
+    "main.de11d1fb.js.map": "/boumtsika-app/static/js/main.de11d1fb.js.map",
     "453.59aa6262.chunk.js.map": "/boumtsika-app/static/js/453.59aa6262.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f0960c23.css",
-    "static/js/main.b4c2dd5b.js"
+    "static/css/main.a2e85bd1.css",
+    "static/js/main.de11d1fb.js"
   ]
 }
