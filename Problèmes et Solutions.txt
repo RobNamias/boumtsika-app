@@ -2,10 +2,7 @@ En cours : Sauvegarde et Importation json
                 Sauvegarde volumeSoundArray et bpm OK
 
         Problème: 
-                - Importation de fichier ne se déclenche pas :
-
-                Drumbox.tsx ---> fonction l.199
-                                 input et bouton l.251/252
+                réinitialisation des input range "Volume" lors du chargement
 
 
 

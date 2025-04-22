@@ -8,7 +8,7 @@ import { getValue } from '@testing-library/user-event/dist/utils';
 import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
 
-var volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.2];
+var volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.125];
 
 
 interface DrumSet {
@@ -79,6 +79,30 @@ const DrumBox: React.FC = () => {
     // console.log(volumeSoundArray)
   };
 
+  const getVolumeSound = (drumType: string) => {
+    var volume: number = 0.5
+    switch (drumType) {
+      case 'Kick':
+        volume = volumeSoundArray[0];
+        break;
+      case 'Snare':
+        volume = volumeSoundArray[1];
+        break;
+      case 'ClHat':
+        volume = volumeSoundArray[2];
+        break;
+      case 'OpHat':
+        volume = volumeSoundArray[3];
+        break;
+      case 'Crash':
+        volume = volumeSoundArray[4];
+        break;
+      default:
+        break;
+    }
+    console.log(volume)
+    return volume
+  }
   const handlePlayDrum = (sound: string, drumType: string): void => {
     const audio = new Audio(sound);
     switch (drumType) {
@@ -197,37 +221,36 @@ const DrumBox: React.FC = () => {
   };
 
   const loadDataFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("J'essaye de charger un truc")
-    if (e.currentTarget.files != null) {
+    if (e.currentTarget.files && e.currentTarget.files.length > 0) {
+      const file = e.currentTarget.files[0];
 
-      //   let file = e.target.files[0];
-      // if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        try {
+          const content = event.target?.result;
+          if (typeof content === "string") {
+            const Data = JSON.parse(content);
+            console.log("📂 Contenu du fichier chargé :", Data);
 
-      // let reader = new FileReader();
-      // reader.onload = function (event) {
-      //   try {
-      //     let Data = JSON.parse(event.target.result);
-      //     console.log("📂 Contenu du fichier chargé :", Data);
+            if (Data && typeof Data === "object") {
+              volumeSoundArray = Data.volumeSoundArray ?? [0.5, 0.5, 0.5, 0.5, 0.5];
+              setBpm(Data.bpm ?? 120);
 
-      //     if (Data && typeof Data === "object") {
-      //       // ✅ Mise à jour des valeurs du jeu
-      // volumeSoundArray = Data.volumeSoundArray ?? [0.5,0.5,0.5,0.5,0.5];
-      //       setBpm(Data.bpm ?? 120);
+              console.log("✅ Sauvegarde Chargée !");
+            } else {
+              console.error("❌ Fichier de sauvegarde invalide !");
+              alert("❌ Erreur : Fichier JSON invalide !");
+            }
+          }
+        } catch (error) {
+          console.error("❌ Erreur lors de l'analyse du fichier JSON :", error);
+          alert("❌ Erreur : Impossible de lire le fichier JSON !");
+        }
+      };
 
-      //       console.log("✅ Partie chargée depuis le fichier !");
-      //     } else {
-      //       console.error("❌ Fichier de sauvegarde invalide !");
-      //       alert("❌ Erreur : Fichier JSON invalide !");
-      //     }
-      //   } catch (error) {
-      //     console.error("❌ Erreur lors de l'analyse du fichier JSON :", error);
-      //     alert("❌ Erreur : Impossible de lire le fichier JSON !");
-      //   }
-      // };
-
-      // reader.readAsText(file);
+      reader.readAsText(file);
     }
-  }
+  };
 
   return (
     <div className='container_drumbox'>
@@ -248,7 +271,7 @@ const DrumBox: React.FC = () => {
 
         <button className="button_menu" onClick={() => saveDataToFile(volumeSoundArray, bpm)}>💾 Exporter</button>
 
-        <input type="file" id="loadFileInput" accept=".json" hidden onChange={() => loadDataFromFile} />
+        <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} />
         <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()}>📂 Importer</button>
 
       </div>
@@ -291,6 +314,7 @@ const DrumBox: React.FC = () => {
                   id={"vol" + drum.type}
                   step="5"
                   onChange={setVolumeSound}
+                // value={getVolumeSound(drum.type)}
                 />
               </div>
               <DrumBoxLine
