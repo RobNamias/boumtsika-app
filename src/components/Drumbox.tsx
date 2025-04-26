@@ -8,8 +8,7 @@ import { getValue } from '@testing-library/user-event/dist/utils';
 import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
 
-var volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.125];
-
+// var volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.5];
 
 interface DrumSet {
   type: string;
@@ -24,6 +23,7 @@ const PadsWrapper = styled.main`
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>([]);
   const [bpm, setBpm] = useState<number>(120);
+  const [volumeSoundArray, setVolumeSoundArray] = useState<number[]>([0.5, 0.5, 0.5, 0.5, 0.5])
   const [isLectureActive, setIsLectureActive] = useState(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
   const counterRef = useRef(0);
@@ -35,8 +35,6 @@ const DrumBox: React.FC = () => {
     const initialDrums = switchDrumSet("808");
     setDrums(initialDrums);
   }, []);
-
-
 
   const handleSwitchDrumSet = (event: React.MouseEvent) => {
     const idClicked = event.currentTarget.id;
@@ -57,74 +55,45 @@ const DrumBox: React.FC = () => {
 
   const setVolumeSound = (event: ChangeEvent<HTMLInputElement>) => {
     const e = event?.currentTarget;
+    const drumType = e.id.replace("vol", "");
     const volumeSound = Number(getValue(e)) / 100;
-    switch (e.id.replace("vol", "")) {
-      case 'Kick':
-        volumeSoundArray[0] = volumeSound;
-        break;
-      case 'Snare':
-        volumeSoundArray[1] = volumeSound;
-        break;
-      case 'ClHat':
-        volumeSoundArray[2] = volumeSound;
-        break;
-      case 'OpHat':
-        volumeSoundArray[3] = volumeSound;
-        break;
-      case 'Crash':
-        volumeSoundArray[4] = volumeSound / 4;
-        break;
-      default: break;
+    console.log("Entrée de setVolume : " + volumeSound)
+    volumeSoundArray[switchDrumTypeToIndex(drumType)] = volumeSound
+    if (drumType === 'Crash') {
+      volumeSoundArray[4] = volumeSoundArray[4] / 4;
     }
-    // console.log(volumeSoundArray)
   };
 
-  const getVolumeSound = (drumType: string) => {
-    var volume: number = 0.5
+  const switchDrumTypeToIndex = (drumType: string) => {
+    var index = 0
     switch (drumType) {
       case 'Kick':
-        volume = volumeSoundArray[0];
+        index = 0;
         break;
       case 'Snare':
-        volume = volumeSoundArray[1];
+        index = 1;
         break;
       case 'ClHat':
-        volume = volumeSoundArray[2];
+        index = 2;
         break;
       case 'OpHat':
-        volume = volumeSoundArray[3];
+        index = 3;
         break;
       case 'Crash':
-        volume = volumeSoundArray[4];
+        index = 4;
         break;
       default:
         break;
     }
-    console.log(volume)
-    return volume
+    return (index);
+
   }
+
+
   const handlePlayDrum = (sound: string, drumType: string): void => {
     const audio = new Audio(sound);
-    switch (drumType) {
-      case 'Kick':
-        audio.volume = volumeSoundArray[0];
-        break;
-      case 'Snare':
-        audio.volume = volumeSoundArray[1];
-        break;
-      case 'ClHat':
-        audio.volume = volumeSoundArray[2];
-        break;
-      case 'OpHat':
-        audio.volume = volumeSoundArray[3];
-        break;
-      case 'Crash':
-        audio.volume = volumeSoundArray[4];
-        break;
-      default:
-        console.log("Erreur dans le switch de volume");
-        break;
-    }
+    audio.volume = volumeSoundArray[switchDrumTypeToIndex(drumType)]
+    // console.log(audio.volume)
     audio.play();
   };
 
@@ -222,6 +191,7 @@ const DrumBox: React.FC = () => {
 
   const loadDataFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget.files && e.currentTarget.files.length > 0) {
+      stopLecture()
       const file = e.currentTarget.files[0];
 
       const reader = new FileReader();
@@ -233,7 +203,7 @@ const DrumBox: React.FC = () => {
             console.log("📂 Contenu du fichier chargé :", Data);
 
             if (Data && typeof Data === "object") {
-              volumeSoundArray = Data.volumeSoundArray ?? [0.5, 0.5, 0.5, 0.5, 0.5];
+              setVolumeSoundArray(Data.volumeSoundArray ?? [0.5, 0.5, 0.5, 0.5, 0.5]);
               setBpm(Data.bpm ?? 120);
 
               console.log("✅ Sauvegarde Chargée !");
@@ -314,7 +284,7 @@ const DrumBox: React.FC = () => {
                   id={"vol" + drum.type}
                   step="5"
                   onChange={setVolumeSound}
-                // value={getVolumeSound(drum.type)}
+                  value={volumeSoundArray[switchDrumTypeToIndex(drum.type)] * 100}
                 />
               </div>
               <DrumBoxLine
