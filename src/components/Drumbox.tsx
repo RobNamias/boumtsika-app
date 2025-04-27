@@ -7,12 +7,15 @@ import { getValue } from '@testing-library/user-event/dist/utils';
 // Components
 import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
+import { DrumType } from '../models/DrumType';
 
 // var volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.5];
 
 interface DrumSet {
-  type: string;
-  sound: string;
+  type: keyof typeof DrumType;
+  path: string;
+  audio: HTMLAudioElement;
+  volume: number;
 }
 
 const PadsWrapper = styled.main`
@@ -23,7 +26,6 @@ const PadsWrapper = styled.main`
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>([]);
   const [bpm, setBpm] = useState<number>(120);
-  const [volumeSoundArray, setVolumeSoundArray] = useState<number[]>([0.5, 0.5, 0.5, 0.5, 0.5])
   const [isLectureActive, setIsLectureActive] = useState(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
   const counterRef = useRef(0);
@@ -55,45 +57,23 @@ const DrumBox: React.FC = () => {
 
   const setVolumeSound = (event: ChangeEvent<HTMLInputElement>) => {
     const e = event?.currentTarget;
-    const drumType = e.id.replace("vol", "");
+    const drumTypeKey = e.id.replace("vol", "") as keyof typeof DrumType;
+    const index = DrumType[drumTypeKey];
     const volumeSound = Number(getValue(e)) / 100;
-    console.log("Entrée de setVolume : " + volumeSound)
-    volumeSoundArray[switchDrumTypeToIndex(drumType)] = volumeSound
-    if (drumType === 'Crash') {
-      volumeSoundArray[4] = volumeSoundArray[4] / 4;
-    }
+    console.log("Entrée de setVolume : " + volumeSound);
+
+    // On crée un nouveau tableau de drums avec le volume modifié
+    setDrums(prevDrumSet => {
+      const newDrums = [...prevDrumSet];
+      var drum = newDrums[index];
+      drum.volume = volumeSound;
+      return newDrums;
+    });
   };
 
-  const switchDrumTypeToIndex = (drumType: string) => {
-    var index = 0
-    switch (drumType) {
-      case 'Kick':
-        index = 0;
-        break;
-      case 'Snare':
-        index = 1;
-        break;
-      case 'ClHat':
-        index = 2;
-        break;
-      case 'OpHat':
-        index = 3;
-        break;
-      case 'Crash':
-        index = 4;
-        break;
-      default:
-        break;
-    }
-    return (index);
-
-  }
-
-
-  const handlePlayDrum = (sound: string, drumType: string): void => {
-    const audio = new Audio(sound);
-    audio.volume = volumeSoundArray[switchDrumTypeToIndex(drumType)]
-    // console.log(audio.volume)
+  const handlePlayDrum = (drumSet: DrumSet): void => {
+    const audio = new Audio(drumSet.path);
+    audio.volume = drumSet.volume;
     audio.play();
   };
 
@@ -141,10 +121,10 @@ const DrumBox: React.FC = () => {
   }
 
   const setbpm = (e: React.FormEvent<HTMLInputElement>): void => {
-    stopLecture()
+    stopLecture();
     const newBpm = Number(getValue(e.currentTarget));
     if (newBpm > 0 && newBpm < 1000) {
-      setBpm(newBpm)
+      setBpm(newBpm);
     }
   };
 
@@ -159,17 +139,11 @@ const DrumBox: React.FC = () => {
   };
 
   const Lecture = () => {
-    var nb_Time: number;
+    var nb_Time: number = show32 ? 32 : 16;
+    if (counterRef.current === nb_Time) {
+      counterRef.current = 0;
+    }
     counterRef.current++;
-    if (show32) {
-      nb_Time = 32
-    }
-    else {
-      nb_Time = 16
-    }
-    if (counterRef.current === nb_Time + 1) {
-      counterRef.current = 1;
-    }
     const spanClass = document.getElementsByClassName("span_" + counterRef.current);
     for (let i = 0; i < spanClass.length; i++) {
       const elem = spanClass[i];
@@ -179,7 +153,7 @@ const DrumBox: React.FC = () => {
       }, bpmInterval);
 
       if (elem.classList.contains("span_active")) {
-        handlePlayDrum(drums[i].sound, drums[i].type);
+        handlePlayDrum(drums[i]);
       }
     }
   };
@@ -191,7 +165,7 @@ const DrumBox: React.FC = () => {
 
   const loadDataFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget.files && e.currentTarget.files.length > 0) {
-      stopLecture()
+      stopLecture();
       const file = e.currentTarget.files[0];
 
       const reader = new FileReader();
@@ -203,7 +177,7 @@ const DrumBox: React.FC = () => {
             console.log("📂 Contenu du fichier chargé :", Data);
 
             if (Data && typeof Data === "object") {
-              setVolumeSoundArray(Data.volumeSoundArray ?? [0.5, 0.5, 0.5, 0.5, 0.5]);
+              //setVolumeSoundArray(Data.volumeSoundArray ?? [0.5, 0.5, 0.5, 0.5, 0.5]);
               setBpm(Data.bpm ?? 120);
 
               console.log("✅ Sauvegarde Chargée !");
@@ -239,7 +213,7 @@ const DrumBox: React.FC = () => {
           Tribe
         </button>
 
-        <button className="button_menu" onClick={() => saveDataToFile(volumeSoundArray, bpm)}>💾 Exporter</button>
+        <button className="button_menu" onClick={() => alert('HAHAHA') /*saveDataToFile(volumeSoundArray, bpm)*/}>💾 Exporter</button>
 
         <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} />
         <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()}>📂 Importer</button>
@@ -275,7 +249,7 @@ const DrumBox: React.FC = () => {
             <div className="drum_line" id={drum.type} key={drum.type}>
               <Drum
                 drumType={drum.type}
-                onClick={() => handlePlayDrum(drum.sound, drum.type)}
+                onClick={() => handlePlayDrum(drum)}
               />
               <div className='vertical-wrapper'>
                 <input
@@ -284,7 +258,7 @@ const DrumBox: React.FC = () => {
                   id={"vol" + drum.type}
                   step="5"
                   onChange={setVolumeSound}
-                  value={volumeSoundArray[switchDrumTypeToIndex(drum.type)] * 100}
+                  value={drum.volume * 100}
                 />
               </div>
               <DrumBoxLine
