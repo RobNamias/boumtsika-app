@@ -8,15 +8,9 @@ import { getValue } from '@testing-library/user-event/dist/utils';
 import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
 import { DrumType } from '../models/DrumType';
+import { DrumSet } from '../models/DrumSet';
 
 // var volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.5];
-
-interface DrumSet {
-  type: keyof typeof DrumType;
-  path: string;
-  audio: HTMLAudioElement;
-  volume: number;
-}
 
 const PadsWrapper = styled.main`
   flex: 1;
@@ -177,7 +171,7 @@ const DrumBox: React.FC = () => {
             console.log("📂 Contenu du fichier chargé :", Data);
 
             if (Data && typeof Data === "object") {
-              //setVolumeSoundArray(Data.volumeSoundArray ?? [0.5, 0.5, 0.5, 0.5, 0.5]);
+              setDrums(Data.drumSet ?? []);
               setBpm(Data.bpm ?? 120);
 
               console.log("✅ Sauvegarde Chargée !");
@@ -213,7 +207,7 @@ const DrumBox: React.FC = () => {
           Tribe
         </button>
 
-        <button className="button_menu" onClick={() => alert('HAHAHA') /*saveDataToFile(volumeSoundArray, bpm)*/}>💾 Exporter</button>
+        <button className="button_menu" onClick={() => saveDataToFile(drums, bpm)}>💾 Exporter</button>
 
         <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} />
         <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()}>📂 Importer</button>
