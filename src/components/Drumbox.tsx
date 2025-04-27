@@ -10,8 +10,6 @@ import DrumBoxLine from './DrumBoxLine';
 import { DrumType } from '../models/DrumType';
 import { DrumSet } from '../models/DrumSet';
 
-// var volumeSoundArray: number[] = [0.5, 0.5, 0.5, 0.5, 0.5];
-
 const PadsWrapper = styled.main`
   flex: 1;
   grid-template-columns: 1fr 1fr 1fr;
@@ -20,6 +18,9 @@ const PadsWrapper = styled.main`
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>([]);
   const [bpm, setBpm] = useState<number>(120);
+  const [volumeSoundArray, setVolumeSoundArray] = useState<number[]>([0.5, 0.5, 0.5, 0.5, 0.5]);
+  const [patternArray, setPatternArray] = useState<boolean[][]>([
+  ]);
   const [isLectureActive, setIsLectureActive] = useState(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
   const counterRef = useRef(0);
@@ -28,16 +29,16 @@ const DrumBox: React.FC = () => {
   const bpmInterval = 1000 / (bpm / 60) / 4;
 
   useEffect(() => {
-    const initialDrums = switchDrumSet("808");
+    const initialDrums = switchDrumSet("808", volumeSoundArray);
     setDrums(initialDrums);
-  }, []);
+  }, [volumeSoundArray]);
 
   const handleSwitchDrumSet = (event: React.MouseEvent) => {
     const idClicked = event.currentTarget.id;
     const elem = document.getElementById(idClicked);
     const numDrumKit = idClicked.replace("button_", "");
     const listeButton = document.getElementsByClassName("button_kit_menu");
-    const newSet = switchDrumSet(numDrumKit);
+    const newSet = switchDrumSet(numDrumKit, volumeSoundArray);
 
     if (!elem?.classList.contains("drum_active")) {
       for (let i = 0; i < listeButton.length; i++) {
@@ -61,12 +62,16 @@ const DrumBox: React.FC = () => {
       const newDrums = [...prevDrumSet];
       var drum = newDrums[index];
       drum.volume = volumeSound;
+      console.log(drum.volume)
+      volumeSoundArray[index] = drum.volume;
+      setVolumeSoundArray([...volumeSoundArray]);
       return newDrums;
     });
   };
 
   const handlePlayDrum = (drumSet: DrumSet): void => {
     const audio = new Audio(drumSet.path);
+    console.log(drumSet.volume)
     audio.volume = drumSet.volume;
     audio.play();
   };
@@ -127,8 +132,6 @@ const DrumBox: React.FC = () => {
       clearInterval(intervalId.current);
     }
     setIsLectureActive(false);
-    const playButton = document.getElementById("button_lecture");
-    playButton?.classList.remove("lecture_en_cours");
     counterRef.current = 0;
   };
 
@@ -147,10 +150,18 @@ const DrumBox: React.FC = () => {
       }, bpmInterval);
 
       if (elem.classList.contains("span_active")) {
+        drums[i].pattern[counterRef.current - 1] = true
         handlePlayDrum(drums[i]);
       }
+      else {
+        drums[i].pattern[counterRef.current - 1] = false
+      }
+      patternArray[i] = drums[i].pattern
+      setPatternArray([...patternArray])
     }
   };
+
+  // const getPattern = (DrumType)
 
   const startLecture = () => {
     setIsLectureActive(true);
@@ -173,6 +184,31 @@ const DrumBox: React.FC = () => {
             if (Data && typeof Data === "object") {
               setDrums(Data.drumSet ?? []);
               setBpm(Data.bpm ?? 120);
+              for (let i = 0; i < drums.length; i++) {
+                volumeSoundArray[i] = Data.drumSet[i].volume
+                patternArray[i] = Data.drumSet[i].pattern
+              }
+              setVolumeSoundArray([...volumeSoundArray])
+              setPatternArray([...patternArray])
+
+              for (let i = 0; i < patternArray.length; i++) {
+                const listSpanByDrum = document.getElementsByClassName("sdd_" + drums[i].type)
+                for (let j = 0; j < patternArray[i].length; j++) {
+                  if (patternArray[i][j]) {
+                    listSpanByDrum[j]?.children[0].classList.add("span_active")
+                  }
+                  else {
+                    listSpanByDrum[j]?.children[0].classList.remove("span_active")
+                  }
+                }
+              }
+
+              const listeButton = document.getElementsByClassName("button_kit_menu");
+              for (let i = 0; i < listeButton.length; i++) {
+                listeButton[i].classList.remove("drum_active")
+              }
+              const elem = document.getElementById("button_" + Data.drumSet[0].drumKit);
+              elem?.classList.add("drum_active");
 
               console.log("✅ Sauvegarde Chargée !");
             } else {
@@ -189,6 +225,8 @@ const DrumBox: React.FC = () => {
       reader.readAsText(file);
     }
   };
+
+
 
   return (
     <div className='container_drumbox'>

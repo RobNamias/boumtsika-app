@@ -2,7 +2,7 @@ import { DrumType } from "../models/DrumType";
 
 var audioFiles: __WebpackModuleApi.RequireContext;
 
-export function switchDrumSet(numDrumKit: string) {
+export function switchDrumSet(numDrumKit: string, volumeSoundArray: number[]) {
     switch (numDrumKit) {
         case "707":
             audioFiles = require.context("../assets/audio/drumKits/707/", false, /.ogg$/);
@@ -25,9 +25,12 @@ export function switchDrumSet(numDrumKit: string) {
 
     var drumSet = audioFiles.keys().map((file) => ({
         type: file.replace(idDossier, "").replace(" ", "").replace(".ogg", "") as keyof typeof DrumType, // Extract filename without extension
+        drumKit: numDrumKit,
         path: audioFiles(file),
         audio: new Audio(audioFiles(file)),
-        volume: 0.5
+        volume: 0.5,
+        pattern: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
     }));
 
     // Réorganisation du tableau pour avoir un ordre plus logique que l'ordre alphabetique
@@ -39,6 +42,8 @@ export function switchDrumSet(numDrumKit: string) {
     drumSet[4] = drum_temp;
 
     // console.log(drumSet);
-
+    for (let i = 0; i < drumSet.length; i++) {
+        drumSet[i].volume = volumeSoundArray[i]
+    }
     return drumSet;
 }

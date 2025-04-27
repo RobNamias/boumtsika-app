@@ -14,7 +14,7 @@ const Menu = () => {
             elem.setAttribute("style", ("background-color:var(--button-color-active)"))
             num_drum_kit = elem.id.replace("button_", "");
         }
-        switchDrumSet(num_drum_kit);
+        switchDrumSet(num_drum_kit, [0.5]);
     };
 
     const [isMenuDeployed, setIsMenuDeployed] = useState(false);

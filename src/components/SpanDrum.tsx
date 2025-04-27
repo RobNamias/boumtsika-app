@@ -3,14 +3,13 @@ import React from 'react';
 const setSpan = (event: React.MouseEvent) => {
     const classList = event?.currentTarget?.children[0].classList;
     // console.log(event?.currentTarget?.children[0].id)
-
     switch (classList.contains("span_active")) {
-        case false: {
-            classList.add("span_active");
-            break;
-        }
         case true: {
             classList.remove("span_active");
+            break;
+        }
+        case false: {
+            classList.add("span_active");
             break;
         }
         default: {
