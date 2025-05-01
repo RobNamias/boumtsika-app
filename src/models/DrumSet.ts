@@ -5,6 +5,4 @@ export interface DrumSet {
     drumKit: string;
     path: string;
     audio: HTMLAudioElement;
-    volume: number;
-    pattern: boolean[]
 }

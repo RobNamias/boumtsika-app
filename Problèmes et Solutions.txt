@@ -1,11 +1,6 @@
 En cours : Sauvegarde et Importation json
-                Sauvegarde volumeSoundArray et bpm OK
-
         Problème: 
                 réinitialisation des input range "Volume" lors du chargement
-
-
-
 
 Optimisation --->
 

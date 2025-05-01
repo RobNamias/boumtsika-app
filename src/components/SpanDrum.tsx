@@ -1,15 +1,36 @@
 import React from 'react';
+import * as Pattern from '../utilities/patternManager';
 
 const setSpan = (event: React.MouseEvent) => {
+    var i: number = 0
+    switch (event?.currentTarget?.classList[1].replace("sdd_", "")) {
+        case "Kick":
+            i = 0
+            break;
+        case "Snare":
+            i = 1
+            break;
+        case "ClHat":
+            i = 2
+            break;
+        case "OpHat":
+            i = 3
+            break;
+        case "Crash":
+            i = 4
+            break;
+    }
     const classList = event?.currentTarget?.children[0].classList;
-    // console.log(event?.currentTarget?.children[0].id)
+    const j = parseInt(event?.currentTarget?.classList[2].replace("sdd_", "")) - 1
     switch (classList.contains("span_active")) {
         case true: {
             classList.remove("span_active");
+            Pattern.setBySpan(i, j, false)
             break;
         }
         case false: {
             classList.add("span_active");
+            Pattern.setBySpan(i, j, true)
             break;
         }
         default: {
@@ -17,7 +38,7 @@ const setSpan = (event: React.MouseEvent) => {
             break;
         }
     }
-    // console.log(classList);
+    // console.log(getPattern());
 }
 
 type Props = {
