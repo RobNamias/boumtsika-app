@@ -36,14 +36,31 @@ const DrumBox: React.FC = () => {
     const newSet = switchDrumSet(numDrumKit);
 
     if (!elem?.classList.contains("drum_active")) {
+      setDrums(newSet);
       for (let i = 0; i < listeButton.length; i++) {
         listeButton[i].classList.remove("drum_active")
       }
       elem?.classList.add("drum_active");
-      setDrums(newSet);
-      stopLecture();
+
+      if (isLectureActive) {
+        stopLecture();
+      }
+      // intervalId.current = setInterval(drumSetpreview, bpmInterval)
     }
   };
+
+  // const drumSetpreview = () => {
+  //   handlePlayDrum(drums[counterRef.current]);
+  //   counterRef.current++
+  //   if (counterRef.current === drums.length) {
+  //     if (intervalId.current) {
+  //       clearInterval(intervalId.current);
+  //     }
+  //     counterRef.current = 0
+  //   }
+  // }
+
+
 
   const setVolumeSound = (event: ChangeEvent<HTMLInputElement>) => {
     const e = event?.currentTarget;
@@ -59,7 +76,7 @@ const DrumBox: React.FC = () => {
 
     const drumTypeKey = drumSet.type as keyof typeof DrumType;
     const index = DrumType[drumTypeKey];
-    console.log(Volumes.getByIndex(index))
+    // console.log(Volumes.getByIndex(index))
     audio.volume = Volumes.getByIndex(index) / 100
     audio.play();
   };
@@ -161,13 +178,11 @@ const DrumBox: React.FC = () => {
           if (typeof content === "string") {
             const Data = JSON.parse(content);
             console.log("📂 Contenu du fichier chargé :", Data);
-
             if (Data && typeof Data === "object") {
               setDrums(Data.drumSet ?? []);
               setBpm(Data.bpm ?? 120);
               Pattern.set(Data.patternArray)
               Volumes.set(Data.volumeSoundArray)
-
               for (let i = 0; i < Pattern.get().length; i++) {
                 const listSpanByDrum = document.getElementsByClassName("sdd_" + drums[i].type)
                 for (let j = 0; j < Pattern.get()[i].length; j++) {
@@ -179,7 +194,6 @@ const DrumBox: React.FC = () => {
                   }
                 }
               }
-
               const listeButton = document.getElementsByClassName("button_kit_menu");
               for (let i = 0; i < listeButton.length; i++) {
                 listeButton[i].classList.remove("drum_active")
@@ -198,7 +212,6 @@ const DrumBox: React.FC = () => {
           alert("❌ Erreur : Impossible de lire le fichier JSON !");
         }
       };
-
       reader.readAsText(file);
     }
   };
