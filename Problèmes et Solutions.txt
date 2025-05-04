@@ -1,16 +1,16 @@
-En cours : Sauvegarde et Importation json
-        Problème: 
-                réinitialisation des input range "Volume" lors du chargement
+En cours ---> v2.0
+        Modifier le volume pour chaque span et garder un volume globlal sur la drum_line (VSpan*Vdrum_line/100)
+        afficher/masquer une div en hover avec le volumeInput
+        ajouter Volume au Pattern
+
+        Bouton Solo/Muet : ajouter un is_active au drum (condition pour l'handleplaydrum()) 
 
 Optimisation --->
 
-        Créer les audio au chargement du tableau et pas dans la fonction handlplaydrums //peu concluant, voir pour recompresser au maximum les ogg
+        voir pour recompresser au maximum les ogg
+        reengeristrer les crashs
 
-V2 --->
-        Utilisation SCSS (optionnel)
-        Possibilité de triolet
-        Modifier le volume pour chaque span et garder un volume globlal sur la drum_line (VSpan*Vdrum_line/100)
-
+V2 ---> 
         //Fonction Delay prête dans la bank, mais chaud tant que la lecture n'est pas optimisée.// 
         Delay : a la lecture d'un audio, appeler une fonction décalé un nombre de fois paramètrable (entre 1 et 3 pour pas surcharger),
         en baissant le volume (var interne) à chaque fois d'un pourcentage paramètrable (pour 20% --> 100%/80%/64%, 50%/40%/32%)
@@ -18,6 +18,7 @@ V2 --->
 V3 --->
         Laravel
         Menu Glisser Déposer
+        Possibilité de triolet
 
 
 

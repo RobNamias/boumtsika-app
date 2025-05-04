@@ -68,7 +68,7 @@ const DrumBox: React.FC = () => {
     const id = e.id.replace("vol", "");
     const drumTypeKey = id as keyof typeof DrumType;
     const index = DrumType[drumTypeKey];
-    console.log(index + " " + Number(getValue(e)));
+    // console.log(index + " " + Number(getValue(e)));
     Volumes.setByType(drums[index], Number(getValue(e)));
     setLocalVolumes([...Volumes.get()]);
   };
@@ -123,7 +123,6 @@ const DrumBox: React.FC = () => {
       }
       e?.currentTarget.classList.add("nb_time_active");
     }
-
   }
 
   const setbpm = (e: React.FormEvent<HTMLInputElement>): void => {
@@ -186,7 +185,7 @@ const DrumBox: React.FC = () => {
               Pattern.set(Data.patternArray);
               Volumes.set(Data.volumeSoundArray);
               setLocalVolumes([...Volumes.get()]);
-              
+
               for (let i = 0; i < Pattern.get().length; i++) {
                 const listSpanByDrum = document.getElementsByClassName("sdd_" + drums[i].type)
                 for (let j = 0; j < Pattern.get()[i].length; j++) {
