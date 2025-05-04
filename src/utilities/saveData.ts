@@ -1,11 +1,12 @@
 import { DrumSet } from "../models/DrumSet";
 
-export function saveDataToFile(drumSet: DrumSet[], bpm: number, volumeSoundArray: number[], patternArray: boolean[][]) {
+export function saveDataToFile(drumSet: DrumSet[], bpm: number, volumeSoundArray: number[], patternArray: boolean[][], VolumesBySpan: number[][]) {
     let Data = {
         drumSet,
         bpm,
         volumeSoundArray,
-        patternArray
+        patternArray,
+        VolumesBySpan
     };
 
     let jsonData = JSON.stringify(Data, null, 2);

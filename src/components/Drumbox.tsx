@@ -73,14 +73,20 @@ const DrumBox: React.FC = () => {
     setLocalVolumes([...Volumes.get()]);
   };
 
-  const handlePlayDrum = (drumSet: DrumSet): void => {
+  const handlePlayDrum = (drumSet: DrumSet, volume: number): void => {
     const audio = new Audio(drumSet.path);
 
     const drumTypeKey = drumSet.type as keyof typeof DrumType;
     const index = DrumType[drumTypeKey];
     // console.log(Volumes.getByIndex(index))
-    audio.volume = Volumes.getByIndex(index) / 100
-    audio.play();
+    if (drums[index].is_active) {
+      audio.volume = Volumes.getByIndex(index) / 100 * volume / 100
+      console.log(audio.volume)
+      audio.play();
+    }
+    else {
+      console.log(drumSet.type + " is muted")
+    }
   };
 
   const toggle_display = (e: React.MouseEvent): void => {
@@ -156,7 +162,9 @@ const DrumBox: React.FC = () => {
       }, bpmInterval);
 
       if (elem.classList.contains("span_active")) {
-        handlePlayDrum(drums[i]);
+        const drumTypeKey = drums[i].type as keyof typeof DrumType;
+        const index = DrumType[drumTypeKey];
+        handlePlayDrum(drums[i], Volumes.getVolumesBySpan()[index][counterRef.current - 1]);
       }
     }
   };
@@ -225,6 +233,57 @@ const DrumBox: React.FC = () => {
     for (let i = 0; i < spanList.length; i++)
       spanList[i].classList.remove("span_active")
   }
+  const switchMuted = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const id = e.currentTarget.id.replace("mute_", "");
+    console.log(id);
+    const drumTypeKey = id as keyof typeof DrumType;
+    const index = DrumType[drumTypeKey];
+    console.log(index)
+    if (drums[index].is_active) {
+      e.currentTarget.classList.add("is_muted");
+      drums[index].is_active = false
+    }
+    else {
+      e.currentTarget.classList.remove("is_muted");
+      drums[index].is_active = true
+    }
+    console.log(drums[index].is_active)
+  }
+
+  const switchSolo = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const id = e.currentTarget.id.replace("solo_", "");
+    // console.log(id);
+    const drumTypeKey = id as keyof typeof DrumType;
+    const index = DrumType[drumTypeKey];
+    if (e.currentTarget.classList.contains("drum_active") !== true) {
+      e.currentTarget.classList.add("drum_active")
+      for (let i = 0; i < drums.length; i++) {
+        const button_mute = document.getElementById("mute_" + drums[i].type)
+        const button_solo = document.getElementById("solo_" + drums[i].type)
+        console.log(button_solo?.id)
+        if (i !== index) {
+          drums[i].is_active = false
+          button_mute?.classList.add("is_muted")
+          button_solo?.classList.remove("drum_active")
+        }
+        else {
+          drums[i].is_active = true
+          button_mute?.classList.remove("is_muted")
+          button_solo?.classList.add("drum_active")
+        }
+      }
+    }
+    else {
+      e.currentTarget.classList.remove("drum_active");
+
+      for (let i = 0; i < drums.length; i++) {
+        drums[i].is_active = true
+        // console.log("mute_" + drums[i].type)
+        const button_mute = document.getElementById("mute_" + drums[i].type)
+        button_mute?.classList.remove("is_muted")
+      }
+    }
+  }
 
   return (
     <div className='container_drumbox'>
@@ -243,7 +302,7 @@ const DrumBox: React.FC = () => {
           Tribe
         </button>
 
-        <button className="button_menu" onClick={() => saveDataToFile(drums, bpm, Volumes.get(), Pattern.get())}>💾 Exporter</button>
+        <button className="button_menu" onClick={() => saveDataToFile(drums, bpm, Volumes.get(), Pattern.get(), Volumes.getVolumesBySpan())}>💾 Exporter</button>
 
         <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} />
         <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()}>📂 Importer</button>
@@ -278,9 +337,13 @@ const DrumBox: React.FC = () => {
         {drums.length > 0 ? (
           drums.map(drum => (
             <div className="drum_line" id={drum.type} key={drum.type}>
+              <div className="drum_line_options" id={"dlo_" + drum.type}>
+                <button className="button_menu small_button" id={"mute_" + drum.type} onClick={switchMuted}>M</button>
+                <button className="button_menu small_button" id={"solo_" + drum.type} onClick={switchSolo}>S</button>
+              </div>
               <Drum
                 drumType={drum.type}
-                onClick={() => handlePlayDrum(drum)}
+                onClick={() => handlePlayDrum(drum, 100)}
               />
               <div className='vertical-wrapper'>
                 <input
@@ -300,8 +363,8 @@ const DrumBox: React.FC = () => {
         ) : (
           <p>No drums available. Please load a drum set.</p>
         )}
-      </PadsWrapper>
-    </div>
+      </PadsWrapper >
+    </div >
   );
 };
 

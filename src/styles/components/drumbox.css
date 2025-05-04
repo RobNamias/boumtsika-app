@@ -116,7 +116,13 @@
     background-color: rgb(138, 0, 0);
 }
 
+.is_muted {
+    background-color: rgb(138, 0, 0)
+}
 
+.is_muted:hover {
+    background-color: rgb(151, 0, 0)
+}
 
 label {
     margin-right: 10px;
@@ -144,6 +150,18 @@ label {
     border: 1px black;
 
     backdrop-filter: blur(20px);
+}
+
+.drum_line_options {
+    position: absolute;
+    left: -25px;
+}
+
+.small_button {
+    height: 25px;
+    width: 25px;
+    font-size: 20px;
+    display: block;
 }
 
 .drum_box_line {

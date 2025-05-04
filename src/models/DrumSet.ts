@@ -5,4 +5,5 @@ export interface DrumSet {
     drumKit: string;
     path: string;
     audio: HTMLAudioElement;
+    is_active: boolean
 }

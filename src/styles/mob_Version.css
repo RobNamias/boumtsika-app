@@ -19,15 +19,15 @@
     }
 
     .span_drum_div {
-        height: 30px;
+        height: 40px;
     }
 
     .vertical-wrapper {
-        height: 30px;
+        height: 40px;
     }
 
     .vertical {
-        width: 30px;
+        width: 40px;
         bottom: -1.2em;
     }
 
@@ -43,7 +43,7 @@
     }
 
     .drum_box_line {
-        height: 30px;
+        height: 40px;
     }
 
     #container_button_setDrum {
@@ -82,6 +82,17 @@
     .button_set_nb_time {
         height: 26px;
 
+    }
+
+    .drum_line_options {
+        position: absolute;
+        left: -23px;
+    }
+
+    .small_button {
+        width: 20px;
+        height: 20px;
+        font-size: 3vh;
     }
 
     label {

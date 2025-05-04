@@ -25,12 +25,12 @@ const setSpan = (event: React.MouseEvent) => {
     switch (classList.contains("span_active")) {
         case true: {
             classList.remove("span_active");
-            Pattern.setBySpan(i, j, false)
+            Pattern.setSpanActive(i, j, false)
             break;
         }
         case false: {
             classList.add("span_active");
-            Pattern.setBySpan(i, j, true)
+            Pattern.setSpanActive(i, j, true)
             break;
         }
         default: {

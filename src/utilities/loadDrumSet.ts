@@ -30,6 +30,7 @@ export function switchDrumSet(numDrumKit: string) {
         drumKit: numDrumKit,
         path: audioFiles(file),
         audio: new Audio(audioFiles(file)),
+        is_active: true
     }));
 
     // Réorganisation du tableau pour avoir un ordre plus logique que l'ordre alphabetique

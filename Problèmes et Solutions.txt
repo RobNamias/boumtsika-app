@@ -1,9 +1,8 @@
 En cours ---> v2.0
+
         Modifier le volume pour chaque span et garder un volume globlal sur la drum_line (VSpan*Vdrum_line/100)
         afficher/masquer une div en hover avec le volumeInput
-        ajouter Volume au Pattern
-
-        Bouton Solo/Muet : ajouter un is_active au drum (condition pour l'handleplaydrum()) 
+        ajouter Volume au Pattern//Retravailler le VolumesManager
 
 Optimisation --->
 
