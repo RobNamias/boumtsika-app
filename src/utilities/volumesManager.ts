@@ -4,7 +4,7 @@ import { DrumType } from "../models/DrumType"
 const initialVolumeArray: number[] = [50, 50, 50, 50, 50]
 
 
-var VolumeArray = initialVolumeArray
+export var VolumeArray = initialVolumeArray
 
 export function setByIndex(index: number, newValue: number) {
     VolumeArray[index] = newValue

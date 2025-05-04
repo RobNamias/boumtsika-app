@@ -20,6 +20,7 @@ const PadsWrapper = styled.main`
 
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>(switchDrumSet("808"));
+  const [localVolumes, setLocalVolumes] = useState(Volumes.VolumeArray);
   const [bpm, setBpm] = useState<number>(120);
   const [isLectureActive, setIsLectureActive] = useState(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
@@ -64,11 +65,12 @@ const DrumBox: React.FC = () => {
 
   const setVolumeSound = (event: ChangeEvent<HTMLInputElement>) => {
     const e = event?.currentTarget;
-    const id = e.id.replace("vol", "")
+    const id = e.id.replace("vol", "");
     const drumTypeKey = id as keyof typeof DrumType;
     const index = DrumType[drumTypeKey];
-    console.log(index + " " + Number(getValue(e)))
-    Volumes.setByType(drums[index], Number(getValue(e)))
+    console.log(index + " " + Number(getValue(e)));
+    Volumes.setByType(drums[index], Number(getValue(e)));
+    setLocalVolumes([...Volumes.get()]);
   };
 
   const handlePlayDrum = (drumSet: DrumSet): void => {
@@ -181,8 +183,10 @@ const DrumBox: React.FC = () => {
             if (Data && typeof Data === "object") {
               setDrums(Data.drumSet ?? []);
               setBpm(Data.bpm ?? 120);
-              Pattern.set(Data.patternArray)
-              Volumes.set(Data.volumeSoundArray)
+              Pattern.set(Data.patternArray);
+              Volumes.set(Data.volumeSoundArray);
+              setLocalVolumes([...Volumes.get()]);
+              
               for (let i = 0; i < Pattern.get().length; i++) {
                 const listSpanByDrum = document.getElementsByClassName("sdd_" + drums[i].type)
                 for (let j = 0; j < Pattern.get()[i].length; j++) {
@@ -285,6 +289,7 @@ const DrumBox: React.FC = () => {
                   className='vertical'
                   id={"vol" + drum.type}
                   step="5"
+                  value={localVolumes[DrumType[drum.type]]}
                   onChange={setVolumeSound}
                 />
               </div>
