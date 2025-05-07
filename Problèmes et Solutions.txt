@@ -2,13 +2,13 @@ En cours ---> v1.9
 
         afficher/masquer une div en hover avec le volumeInput--> gérer le rendu
         initialiser tous les inputVolume à l'import d'une sauvegarde
-        Retravailler le VolumesManager
 
 
 Optimisation --->
 
         voir pour recompresser au maximum les ogg
         reengeristrer les crashs
+        interface responsive
 
 V2 ---> 
         Bouton formulaire "Générer GROOOOVE" ---> Générer un nouveau VolumesBySpan en influant sur le randInt

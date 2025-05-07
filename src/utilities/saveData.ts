@@ -1,8 +1,15 @@
 import { DrumSet } from "../models/DrumSet";
 
 export function saveDataToFile(drumSet: DrumSet[], bpm: number, volumeSoundArray: number[], patternArray: boolean[][], VolumesBySpan: number[][]) {
+
+    const setDrumSet = drumSet
+    for (let i = 0; i < setDrumSet.length; i++) {
+        setDrumSet[i].is_active = true
+    }
+
+
     let Data = {
-        drumSet,
+        setDrumSet,
         bpm,
         volumeSoundArray,
         patternArray,

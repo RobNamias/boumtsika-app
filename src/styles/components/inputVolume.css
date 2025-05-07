@@ -39,11 +39,12 @@ input[type=range][orient=vertical] {
 .dbl_volume {
     position: absolute;
     display: none;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(2px);
     /* bottom: 80px; */
     z-index: 10;
     height: 80px;
-    /* width: 100% */
+    width: 93%;
+    /* background-color: orange */
 }
 
 
@@ -52,13 +53,12 @@ input[type=range][orient=vertical] {
 }
 
 .spanVolume {
-    /* display: flex; */
-    margin: 0 0.84px;
-    width: 41.5px;
+    display: flex;
+    margin: 0 0.85px;
+    width: 6%;
 
 }
 
 .spanVolumeInput {
-    width: 40px;
-    height: 70px;
+    width: 60px;
 }

@@ -19,7 +19,6 @@ const setSpanVolume = (event: ChangeEvent<HTMLInputElement>) => {
     // console.log(id)
     const drumTypeKey = id as keyof typeof DrumType;
     const indexDrum = DrumType[drumTypeKey];
-    console.log(indexDrum)
     console.log(indexDrum + " " + (index - 1) + " " + Number(getValue(e)));
     Volumes.setSpanVolume(indexDrum, index - 1, Number(getValue(e)));
     // setLocalVolumes([...Volumes.get()]);

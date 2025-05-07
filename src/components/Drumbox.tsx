@@ -32,10 +32,17 @@ const DrumBox: React.FC = () => {
 
   const handleSwitchDrumSet = (event: React.MouseEvent) => {
     const idClicked = event.currentTarget.id;
-    const elem = document.getElementById(idClicked);
     const numDrumKit = idClicked.replace("button_", "");
-    const listeButton = document.getElementsByClassName("button_kit_menu");
     const newSet = switchDrumSet(numDrumKit);
+    const elem = document.getElementById(idClicked);
+    const listeButton = document.getElementsByClassName("button_kit_menu");
+
+    for (let i = 0; i < newSet.length; i++) {
+      const buttonMute = document.getElementById("mute_" + newSet[i].type);
+      if (buttonMute?.classList.contains("is_muted")) {
+        newSet[i].is_active = false
+      }
+    }
 
     if (!elem?.classList.contains("drum_active")) {
       setDrums(newSet);
@@ -191,17 +198,17 @@ const DrumBox: React.FC = () => {
             const Data = JSON.parse(content);
             console.log("📂 Contenu du fichier chargé :", Data);
             if (Data && typeof Data === "object") {
-              setDrums(Data.drumSet ?? []);
+              setDrums(Data.setDrumSet ?? []);
               setBpm(Data.bpm ?? 120);
               Pattern.set(Data.patternArray);
               Volumes.set(Data.volumeSoundArray);
               Volumes.setVolumesBySpan(Data.VolumesBySpan);
               setLocalVolumes([...Volumes.VolumeArray]);
 
-              for (let i = 0; i < Pattern.get().length; i++) {
+              for (let i = 0; i < Pattern.PatternArray.length; i++) {
                 const listSpanByDrum = document.getElementsByClassName("sdd_" + drums[i].type)
-                for (let j = 0; j < Pattern.get()[i].length; j++) {
-                  if (Pattern.get()[i][j]) {
+                for (let j = 0; j < Pattern.PatternArray[i].length; j++) {
+                  if (Pattern.PatternArray[i][j]) {
                     listSpanByDrum[j]?.children[0].classList.add("span_active")
                   }
                   else {
@@ -213,8 +220,15 @@ const DrumBox: React.FC = () => {
               for (let i = 0; i < listeButton.length; i++) {
                 listeButton[i].classList.remove("drum_active")
               }
-              const elem = document.getElementById("button_" + Data.drumSet[0].drumKit);
+              const elem = document.getElementById("button_" + Data.setDrumSet[0].drumKit);
               elem?.classList.add("drum_active");
+
+              for (let i = 0; i < Data.setDrumSet.length; i++) {
+                const buttonMute = document.getElementById("mute_" + Data.setDrumSet[i].type);
+                if (buttonMute?.classList.contains("is_muted")) {
+                  Data.setDrumSet[i].is_active = false
+                }
+              }
 
               console.log("✅ Sauvegarde Chargée !");
             } else {
@@ -239,10 +253,10 @@ const DrumBox: React.FC = () => {
   }
   const switchMuted = (e: React.MouseEvent<HTMLButtonElement>) => {
     const id = e.currentTarget.id.replace("mute_", "");
-    console.log(id);
+    // console.log(id);
     const drumTypeKey = id as keyof typeof DrumType;
     const index = DrumType[drumTypeKey];
-    console.log(index)
+    // console.log(index)
     if (drums[index].is_active) {
       e.currentTarget.classList.add("is_muted");
       drums[index].is_active = false
@@ -251,7 +265,7 @@ const DrumBox: React.FC = () => {
       e.currentTarget.classList.remove("is_muted");
       drums[index].is_active = true
     }
-    console.log(drums[index].is_active)
+    // console.log(drums[index].is_active)
   }
 
   const switchSolo = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -264,7 +278,6 @@ const DrumBox: React.FC = () => {
       for (let i = 0; i < drums.length; i++) {
         const button_mute = document.getElementById("mute_" + drums[i].type)
         const button_solo = document.getElementById("solo_" + drums[i].type)
-        console.log(button_solo?.id)
         if (i !== index) {
           drums[i].is_active = false
           button_mute?.classList.add("is_muted")
@@ -292,7 +305,7 @@ const DrumBox: React.FC = () => {
   const drumFunction = (drum: DrumSet) => {
     // handlePlayDrum(drum, 80)
     const dbl_vol = document.getElementById("dbl_volume_" + drum.type)
-    console.log(dbl_vol)
+    // console.log(dbl_vol)
     if (dbl_vol?.classList.contains("dbl_vol_active")) {
       dbl_vol?.classList.remove("dbl_vol_active")
     }
@@ -318,7 +331,7 @@ const DrumBox: React.FC = () => {
           Tribe
         </button>
 
-        <button className="button_menu" onClick={() => saveDataToFile(drums, bpm, Volumes.VolumeArray, Pattern.get(), Volumes.getVolumesBySpan())}>💾 Exporter</button>
+        <button className="button_menu" onClick={() => saveDataToFile(drums, bpm, Volumes.VolumeArray, Pattern.PatternArray, Volumes.VolumesBySpan)}>💾 Exporter</button>
 
         <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} />
         <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()}>📂 Importer</button>

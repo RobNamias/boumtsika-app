@@ -7,7 +7,7 @@ for (let i = 0; i < initialPatternArray.length; i++) {
         initialPatternArray[i].push(false)
     }
 }
-var PatternArray = initialPatternArray
+export var PatternArray = initialPatternArray
 
 
 export function setClear() {
@@ -21,9 +21,5 @@ export function setSpanActive(i: number, j: number, is_on: boolean) {
 
 export function set(newPatternArray: boolean[][]) {
     PatternArray = newPatternArray
-}
-
-export function get() {
-    return PatternArray;
 }
 
