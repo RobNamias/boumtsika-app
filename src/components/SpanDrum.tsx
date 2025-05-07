@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Pattern from '../utilities/patternManager';
 
+
 const setSpan = (event: React.MouseEvent) => {
     var i: number = 0
     switch (event?.currentTarget?.classList[1].replace("sdd_", "")) {
@@ -48,11 +49,14 @@ type Props = {
 
 const SpanDrum: React.FC<Props> = (drumType) => {
     return (
-        <div className={'span_drum_div sdd_' + drumType.drumType + ' sdd_' + drumType.index} id={'sdd_' + drumType.index} onClick={setSpan}>
-            <span className={'span_drum span_' + drumType.index} id={drumType.drumType + '_' + drumType.index} ></span>
-        </div>
+        <>
+            <div className={'span_drum_div sdd_' + drumType.drumType + ' sdd_' + drumType.index} id={'sdd_' + drumType.index} onClick={setSpan}>
+                <span className={'span_drum span_' + drumType.index} id={drumType.drumType + '_' + drumType.index} ></span>
+            </div>
+        </>
     );
 };
 
 
 export default SpanDrum;
+

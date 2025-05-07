@@ -42,7 +42,6 @@ const Drum: React.FC<Props> = ({ drumType, onClick }) => (
   <div className='drum_kit_line_src' id={'dkl_src_' + drumType}>
     <StyledDrum onClick={onClick}>
       <p>{drumType}</p>
-      {/* <SliderVolumeComponent volume={volume} /> */}
     </StyledDrum>
   </div>
 );

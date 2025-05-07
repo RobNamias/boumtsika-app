@@ -21,6 +21,7 @@ const PadsWrapper = styled.main`
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>(switchDrumSet("808"));
   const [localVolumes, setLocalVolumes] = useState(Volumes.VolumeArray);
+  const [localVolumesBySpan, setLocalVolumesBySpan] = useState(Volumes.VolumesBySpan);
   const [bpm, setBpm] = useState<number>(120);
   const [isLectureActive, setIsLectureActive] = useState(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
@@ -70,7 +71,7 @@ const DrumBox: React.FC = () => {
     const index = DrumType[drumTypeKey];
     // console.log(index + " " + Number(getValue(e)));
     Volumes.setByType(drums[index], Number(getValue(e)));
-    setLocalVolumes([...Volumes.get()]);
+    setLocalVolumes([...Volumes.VolumeArray]);
   };
 
   const handlePlayDrum = (drumSet: DrumSet, volume: number): void => {
@@ -80,8 +81,8 @@ const DrumBox: React.FC = () => {
     const index = DrumType[drumTypeKey];
     // console.log(Volumes.getByIndex(index))
     if (drums[index].is_active) {
-      audio.volume = Volumes.getByIndex(index) / 100 * volume / 100
-      console.log(audio.volume)
+      audio.volume = Volumes.VolumeArray[index] / 100 * volume / 100
+      // console.log(audio.volume)
       audio.play();
     }
     else {
@@ -92,42 +93,44 @@ const DrumBox: React.FC = () => {
   const toggle_display = (e: React.MouseEvent): void => {
     if (e.currentTarget.id.replace("show_32_", "") !== show32.toString()) {
       stopLecture();
-      if (show32 === false) {
-        setShow32(true);
-        for (let i = 17; i < 33; i++) {
-          const listeSpan = document.getElementsByClassName("sdd_" + i);
+      for (let i = 17; i < 33; i++) {
+        const listInputVol = document.getElementsByClassName("spanVolume" + i);
+        const listeSpan = document.getElementsByClassName("sdd_" + i);
+        if (show32 === false) {
           for (let j = 0; j < listeSpan.length; j++) {
             listeSpan[j].setAttribute("style", ("display: flex;"))
+            listInputVol[j].setAttribute("style", ("display: flex;"))
           }
         }
-        for (let i = 4; i < 8; i++) {
-          const listeSeparation = document.getElementsByClassName("sep_" + i)
-          for (let j = 0; j < listeSeparation.length; j++) {
-            listeSeparation[j].setAttribute("style", ("display: flex;"));
-          }
-        }
-      }
-      else {
-        setShow32(false);
-        for (let i = 4; i < 8; i++) {
-          const listeSeparation = document.getElementsByClassName("sep_" + i)
-          for (let j = 0; j < listeSeparation.length; j++) {
-            listeSeparation[j].setAttribute("style", ("display: none;"));
-          }
-        }
-        for (let i = 17; i < 33; i++) {
-          const listeSpan = document.getElementsByClassName("sdd_" + i);
+        else {
           for (let j = 0; j < listeSpan.length; j++) {
             listeSpan[j].setAttribute("style", ("display: none;"))
+            listInputVol[j].setAttribute("style", ("display: none;"))
           }
         }
+        for (let i = 4; i < 8; i++) {
+          const listeSeparation = document.getElementsByClassName("sep_" + i)
+          if (show32 === false) {
+            for (let j = 0; j < listeSeparation.length; j++) {
+              listeSeparation[j].setAttribute("style", ("display: flex;"));
+            }
+            setShow32(true);
+          }
+          else {
+            for (let j = 0; j < listeSeparation.length; j++) {
+              listeSeparation[j].setAttribute("style", ("display: none;"));
+            }
+            setShow32(false);
+          }
+
+        }
+        // 
+        const listeButton = document.getElementsByClassName("button_set_nb_time");
+        for (let i = 0; i < listeButton.length; i++) {
+          listeButton[i].classList.remove("nb_time_active")
+        }
+        e?.currentTarget.classList.add("nb_time_active");
       }
-      // 
-      const listeButton = document.getElementsByClassName("button_set_nb_time");
-      for (let i = 0; i < listeButton.length; i++) {
-        listeButton[i].classList.remove("nb_time_active")
-      }
-      e?.currentTarget.classList.add("nb_time_active");
     }
   }
 
@@ -192,7 +195,8 @@ const DrumBox: React.FC = () => {
               setBpm(Data.bpm ?? 120);
               Pattern.set(Data.patternArray);
               Volumes.set(Data.volumeSoundArray);
-              setLocalVolumes([...Volumes.get()]);
+              Volumes.setVolumesBySpan(Data.VolumesBySpan);
+              setLocalVolumes([...Volumes.VolumeArray]);
 
               for (let i = 0; i < Pattern.get().length; i++) {
                 const listSpanByDrum = document.getElementsByClassName("sdd_" + drums[i].type)
@@ -285,6 +289,18 @@ const DrumBox: React.FC = () => {
     }
   }
 
+  const drumFunction = (drum: DrumSet) => {
+    // handlePlayDrum(drum, 80)
+    const dbl_vol = document.getElementById("dbl_volume_" + drum.type)
+    console.log(dbl_vol)
+    if (dbl_vol?.classList.contains("dbl_vol_active")) {
+      dbl_vol?.classList.remove("dbl_vol_active")
+    }
+    else {
+      dbl_vol?.classList.add("dbl_vol_active")
+    }
+
+  }
   return (
     <div className='container_drumbox'>
 
@@ -302,7 +318,7 @@ const DrumBox: React.FC = () => {
           Tribe
         </button>
 
-        <button className="button_menu" onClick={() => saveDataToFile(drums, bpm, Volumes.get(), Pattern.get(), Volumes.getVolumesBySpan())}>💾 Exporter</button>
+        <button className="button_menu" onClick={() => saveDataToFile(drums, bpm, Volumes.VolumeArray, Pattern.get(), Volumes.getVolumesBySpan())}>💾 Exporter</button>
 
         <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} />
         <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()}>📂 Importer</button>
@@ -343,7 +359,8 @@ const DrumBox: React.FC = () => {
               </div>
               <Drum
                 drumType={drum.type}
-                onClick={() => handlePlayDrum(drum, 100)}
+                // onClick={() => handlePlayDrum(drum, 100)}
+                onClick={() => drumFunction(drum)}
               />
               <div className='vertical-wrapper'>
                 <input
@@ -357,6 +374,7 @@ const DrumBox: React.FC = () => {
               </div>
               <DrumBoxLine
                 drumType={drum.type}
+                volumesByType={localVolumesBySpan[DrumType[drum.type]]}
               />
             </div>
           ))

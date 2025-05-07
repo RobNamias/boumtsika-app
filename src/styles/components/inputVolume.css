@@ -35,3 +35,30 @@ input[type=range][orient=vertical] {
     height: 80px;
     position: relative;
 }
+
+.dbl_volume {
+    position: absolute;
+    display: none;
+    backdrop-filter: blur(5px);
+    /* bottom: 80px; */
+    z-index: 10;
+    height: 80px;
+    /* width: 100% */
+}
+
+
+.dbl_vol_active {
+    display: flex
+}
+
+.spanVolume {
+    /* display: flex; */
+    margin: 0 0.84px;
+    width: 41.5px;
+
+}
+
+.spanVolumeInput {
+    width: 40px;
+    height: 70px;
+}

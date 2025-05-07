@@ -1,8 +1,9 @@
-En cours ---> v2.0
+En cours ---> v1.9
 
-        Modifier le volume pour chaque span et garder un volume globlal sur la drum_line (VSpan*Vdrum_line/100)
-        afficher/masquer une div en hover avec le volumeInput
-        ajouter Volume au Pattern//Retravailler le VolumesManager
+        afficher/masquer une div en hover avec le volumeInput--> gérer le rendu
+        initialiser tous les inputVolume à l'import d'une sauvegarde
+        Retravailler le VolumesManager
+
 
 Optimisation --->
 
@@ -10,6 +11,11 @@ Optimisation --->
         reengeristrer les crashs
 
 V2 ---> 
+        Bouton formulaire "Générer GROOOOVE" ---> Générer un nouveau VolumesBySpan en influant sur le randInt
+                Curseur pour le 'degré' de groove (1-->5)
+                //initialVolumesBySpan[i].push(50 + Math.random()*degré*10);
+
+
         //Fonction Delay prête dans la bank, mais chaud tant que la lecture n'est pas optimisée.// 
         Delay : a la lecture d'un audio, appeler une fonction décalé un nombre de fois paramètrable (entre 1 et 3 pour pas surcharger),
         en baissant le volume (var interne) à chaque fois d'un pourcentage paramètrable (pour 20% --> 100%/80%/64%, 50%/40%/32%)
