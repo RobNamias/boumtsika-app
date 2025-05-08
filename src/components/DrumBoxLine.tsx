@@ -33,40 +33,42 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
     }
 
     return (
-        <div className={'drum_box_line dbl_' + drumType.drumType}>
-            <div className="dbl_volume" id={'dbl_volume_' + drumType.drumType}>
-                {indexes.map(index => (
-                    <>
-                        <div className={'vertical-wrapper spanVolume spanVolume' + index}>
-                            <input
-                                type="range"
-                                className='vertical spanVolumeInput'
-                                id={index + "_vol" + drumType.drumType}
-                                step="5"
-                                // value={drumType.volumesByType[index]}
-                                onChange={setSpanVolume}
-                            />
-                        </div>
-                        {index % 4 === 0 && index < 32 && <div className={"separation sep_" + index / 4}></div>}
-                    </>
-                ))
+        <>
+            <div className='drum_box_line' id={'dbl_' + drumType.drumType}>
+                <div className="dbl_volume" id={'dbl_volume_' + drumType.drumType}>
+                    {/* <div className="dbl_volume" id={'dbl_volume_' + drumType.drumType} width={document.getElementById('')}> */}
+                    {indexes.map(index => (
+                        <>
+                            <div className={'vertical-wrapper spanVolume spanVolume' + index}>
+                                <input
+                                    type="range"
+                                    className='vertical spanVolumeInput'
+                                    id={index + "_vol" + drumType.drumType}
+                                    step="5"
+                                    // value={drumType.volumesByType[index]}
+                                    onChange={setSpanVolume}
+                                />
+                            </div>
+                            {/* {index % 4 === 0 && index < 32 && <div className={"separation sep_" + index / 4}></div>} */}
+                        </>
+                    ))
 
+                    }
+                </div >
+                {
+                    indexes.map(index => (
+                        <>
+                            <SpanDrum
+                                drumType={drumType.drumType}
+                                index={index}
+                            />
+                            {/* affichage conditionnel */}
+                            {index % 4 === 0 && index < 32 && <div className={"separation sep_" + index / 4}></div>}
+                        </>
+                    ))
                 }
             </div >
-            {
-                indexes.map(index => (
-                    <>
-                        <SpanDrum
-                            drumType={drumType.drumType}
-                            index={index}
-                        />
-                        {/* affichage conditionnel */}
-                        {index % 4 === 0 && index < 32 && <div className={"separation sep_" + index / 4}></div>}
-                    </>
-                ))
-            }
-        </div >
-
+        </>
     )
 };
 

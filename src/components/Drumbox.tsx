@@ -92,9 +92,9 @@ const DrumBox: React.FC = () => {
       // console.log(audio.volume)
       audio.play();
     }
-    else {
-      console.log(drumSet.type + " is muted")
-    }
+    // else {
+    //   console.log(drumSet.type + " is muted")
+    // }
   };
 
   const toggle_display = (e: React.MouseEvent): void => {
