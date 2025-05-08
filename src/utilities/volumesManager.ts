@@ -7,7 +7,7 @@ const initialVolumesBySpan: number[][] = [[], [], [], [], []]
 for (let i = 0; i < initialVolumesBySpan.length; i++) {
     for (let j = 0; j < 32; j++) {
         initialVolumesBySpan[i].push(50);
-        // initialVolumesBySpan[i].push(50 + Math.random() * 50);
+        // initialVolumesBySpan[i].push(Math.random() * 100);
     }
 }
 
@@ -18,6 +18,16 @@ export var VolumesBySpan = initialVolumesBySpan
 export function set(newVolumeArray: number[]) {
     VolumeArray = newVolumeArray
     // console.log(Volumerray)
+}
+
+export function generateAleaArray(degreeOfGroove: number) {
+    var newVolumeBySpanArray: number[][] = [[], [], [], [], []]
+    for (let i = 0; i < newVolumeBySpanArray.length; i++) {
+        for (let j = 0; j < 32; j++) {
+            newVolumeBySpanArray[i].push(40 + Math.random() * 12 * degreeOfGroove);
+        }
+    }
+    return newVolumeBySpanArray
 }
 export function setByType(drumSet: DrumSet, newValue: number) {
     const drumTypeKey = drumSet.type as keyof typeof DrumType;
@@ -38,6 +48,7 @@ export function getByType(drumSet: DrumSet) {
 export function setVolumesBySpan(new_volumeBySpan: number[][]) {
     VolumesBySpan = new_volumeBySpan
     console.log("VolumesBySpan remappé")
+    console.log(VolumesBySpan)
 }
 export function setSpanVolume(i: number, j: number, new_volume: number) {
     VolumesBySpan[i][j] = new_volume
@@ -45,7 +56,4 @@ export function setSpanVolume(i: number, j: number, new_volume: number) {
 }
 export function getSpanVolume(i: number, j: number) {
     return VolumesBySpan[i][j]
-}
-export function getVolumesBySpan() {
-    return VolumesBySpan
 }

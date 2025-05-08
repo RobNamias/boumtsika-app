@@ -1,26 +1,27 @@
-En cours ---> v1.9
-
-        Gérer le rendu des input// y'a du mieux
-        initialiser tous les inputVolume à l'import d'une sauvegarde
-
+En cours ---> v2
+        Design création Groove --> ajuster le nombre de 'o' en fonction du degreeOfGroove
+        Design input range
 
 Optimisation --->
         reengeristrer les crashs
+        Gérer le rendu des input// y'a du mieux
 
-V2 ---> 
-        Bouton formulaire "Générer GROOOOVE" ---> Générer un nouveau VolumesBySpan en influant sur le randInt
-                Curseur pour le 'degré' de groove (1-->5)
-                //initialVolumesBySpan[i].push(50 + Math.random()*degré*10);
+V3 ---> 
+        //Sélection du kit dans une liste ---> Vrai Menu
+        //Possibilité de triolet
+        //Plus de pistes
+
+        Optimisation du code 
 
 
         //Fonction Delay prête dans la bank, mais chaud tant que la lecture n'est pas optimisée.// 
         Delay : a la lecture d'un audio, appeler une fonction décalé un nombre de fois paramètrable (entre 1 et 3 pour pas surcharger),
         en baissant le volume (var interne) à chaque fois d'un pourcentage paramètrable (pour 20% --> 100%/80%/64%, 50%/40%/32%)
 
-V3 --->
+V4 --->
         Laravel
-        Menu Glisser Déposer
-        Possibilité de triolet
+        //Possibilité de mixer les kits via Menu ---> Glisser Déposer
+
 
 
 

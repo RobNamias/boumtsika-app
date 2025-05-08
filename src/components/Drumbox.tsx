@@ -9,6 +9,7 @@ import { getValue } from '@testing-library/user-event/dist/utils';
 // Components
 import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
+// import { set_DBL_LocalVolumesBySpan } from './DrumBoxLine'
 import { DrumType } from '../models/DrumType';
 import { DrumSet } from '../models/DrumSet';
 
@@ -21,7 +22,6 @@ const PadsWrapper = styled.main`
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>(switchDrumSet("808"));
   const [localVolumes, setLocalVolumes] = useState(Volumes.VolumeArray);
-  const [localVolumesBySpan, setLocalVolumesBySpan] = useState(Volumes.VolumesBySpan);
   const [bpm, setBpm] = useState<number>(120);
   const [isLectureActive, setIsLectureActive] = useState(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
@@ -174,7 +174,7 @@ const DrumBox: React.FC = () => {
       if (elem.classList.contains("span_active")) {
         const drumTypeKey = drums[i].type as keyof typeof DrumType;
         const index = DrumType[drumTypeKey];
-        handlePlayDrum(drums[i], Volumes.getVolumesBySpan()[index][counterRef.current - 1]);
+        handlePlayDrum(drums[i], Volumes.VolumesBySpan[index][counterRef.current - 1]);
       }
     }
   };
@@ -314,6 +314,17 @@ const DrumBox: React.FC = () => {
     }
 
   }
+
+  const createGroove = () => {
+    const degreeOfGroove = getValue(document.getElementById('setter_Groove'))
+    console.log(degreeOfGroove)
+    if (degreeOfGroove) {
+      Volumes.setVolumesBySpan(Volumes.generateAleaArray(parseInt(degreeOfGroove)))
+      setLocalVolumes([...Volumes.VolumeArray]);
+      // Volumes.setVolumesBySpan(Data.VolumesBySpan);
+    }
+
+  }
   return (
     <div className='container_drumbox'>
 
@@ -340,6 +351,18 @@ const DrumBox: React.FC = () => {
       </div>
 
       <div id="container_input">
+        <div id="container_setGroove">
+          <label htmlFor="setter_Groove">Groove :</label>
+          <input
+            type="range"
+            id="setter_Groove"
+            name="setter_Groove"
+            min={0}
+            max={5}
+            step={1}
+          />
+          <input type="submit" value="Générer" onClick={createGroove}></input>
+        </div>
         <div id="container_set_time">
           <button onClick={toggle_display} className='button_menu button_set_nb_time' id="show_32_false">16</button>
           <button onClick={toggle_display} className='button_menu button_set_nb_time nb_time_active' id="show_32_true">32</button>
@@ -387,7 +410,7 @@ const DrumBox: React.FC = () => {
               </div>
               <DrumBoxLine
                 drumType={drum.type}
-                volumesByType={localVolumesBySpan[DrumType[drum.type]]}
+                index={DrumType[drum.type]}
               />
             </div>
           ))
