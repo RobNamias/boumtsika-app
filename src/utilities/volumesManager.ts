@@ -1,12 +1,14 @@
 import { DrumSet } from "../models/DrumSet"
 import { DrumType } from "../models/DrumType"
 
-const initialVolumeArray: number[] = [50, 50, 50, 50, 50]
+const initialVolumeArray: number[] = [80, 80, 80, 80, 80]
 const initialVolumesBySpan: number[][] = [[], [], [], [], []]
+const initialDegreesOfGroove: number[] = [3, 3, 3, 3, 3]
 
+// for (let i = 0; i < initialVolumesBySpan.length; i++) {
 for (let i = 0; i < initialVolumesBySpan.length; i++) {
     for (let j = 0; j < 32; j++) {
-        initialVolumesBySpan[i].push(50);
+        initialVolumesBySpan[i].push(80);
         // initialVolumesBySpan[i].push(Math.random() * 100);
     }
 }
@@ -14,21 +16,21 @@ for (let i = 0; i < initialVolumesBySpan.length; i++) {
 
 export var VolumeArray = initialVolumeArray
 export var VolumesBySpan = initialVolumesBySpan
+export var DegreesOfGroove = initialDegreesOfGroove
+
+export function setDegOfGroove(newDegOfGroove: number[]) {
+    DegreesOfGroove = newDegOfGroove
+}
+
+export function setDegOfGrooveByIndex(index: number, newValue: number) {
+    DegreesOfGroove[index] = newValue
+}
 
 export function set(newVolumeArray: number[]) {
     VolumeArray = newVolumeArray
     // console.log(Volumerray)
 }
 
-export function generateAleaArray(degreeOfGroove: number) {
-    var newVolumeBySpanArray: number[][] = [[], [], [], [], []]
-    for (let i = 0; i < newVolumeBySpanArray.length; i++) {
-        for (let j = 0; j < 32; j++) {
-            newVolumeBySpanArray[i].push(40 + Math.random() * 12 * degreeOfGroove);
-        }
-    }
-    return newVolumeBySpanArray
-}
 export function setByType(drumSet: DrumSet, newValue: number) {
     const drumTypeKey = drumSet.type as keyof typeof DrumType;
     const index = DrumType[drumTypeKey];
@@ -37,7 +39,6 @@ export function setByType(drumSet: DrumSet, newValue: number) {
 export function setByIndex(index: number, newValue: number) {
     VolumeArray[index] = newValue
 }
-
 
 export function getByType(drumSet: DrumSet) {
     const drumTypeKey = drumSet.type as keyof typeof DrumType;

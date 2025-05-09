@@ -4,6 +4,7 @@
         display: flex;
     }
 
+
     .main_container_header {
         height: 10vh;
     }
@@ -40,6 +41,7 @@
     .container_drumbox {
         width: 95%;
         margin-top: 5vh;
+        min-width: 700px;
     }
 
     .drum_box_line {

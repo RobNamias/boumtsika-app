@@ -10,7 +10,7 @@ const StyledDrum = styled.div`
   font-size:5vh;
   width: 80px;
   height: 80px;
-  // border-radius: 50%;
+  border-radius: 5px;
   background-color: var(--main-bg-color);
   filter: drop-shadow(2px 2px 2px black);
   cursor: pointer;

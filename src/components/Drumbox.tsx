@@ -22,7 +22,7 @@ const PadsWrapper = styled.main`
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>(switchDrumSet("808"));
   const [localVolumes, setLocalVolumes] = useState(Volumes.VolumeArray);
-  const [bpm, setBpm] = useState<number>(120);
+  const [bpm, setBpm] = useState<number>(130);
   const [isLectureActive, setIsLectureActive] = useState(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
   const counterRef = useRef(0);
@@ -31,10 +31,8 @@ const DrumBox: React.FC = () => {
   const bpmInterval = 1000 / (bpm / 60) / 4;
 
   const handleSwitchDrumSet = (event: React.MouseEvent) => {
-    const idClicked = event.currentTarget.id;
-    const numDrumKit = idClicked.replace("button_", "");
+    const numDrumKit = event.currentTarget.id.replace("button_", "");
     const newSet = switchDrumSet(numDrumKit);
-    const elem = document.getElementById(idClicked);
     const listeButton = document.getElementsByClassName("button_kit_menu");
 
     for (let i = 0; i < newSet.length; i++) {
@@ -44,12 +42,12 @@ const DrumBox: React.FC = () => {
       }
     }
 
-    if (!elem?.classList.contains("drum_active")) {
+    if (!event.currentTarget?.classList.contains("drum_active")) {
       setDrums(newSet);
       for (let i = 0; i < listeButton.length; i++) {
         listeButton[i].classList.remove("drum_active")
       }
-      elem?.classList.add("drum_active");
+      event.currentTarget?.classList.add("drum_active");
 
       if (isLectureActive) {
         stopLecture();
@@ -89,12 +87,9 @@ const DrumBox: React.FC = () => {
     // console.log(Volumes.getByIndex(index))
     if (drums[index].is_active) {
       audio.volume = Volumes.VolumeArray[index] / 100 * volume / 100
-      // console.log(audio.volume)
+      console.log(audio.volume)
       audio.play();
     }
-    // else {
-    //   console.log(drumSet.type + " is muted")
-    // }
   };
 
   const toggle_display = (e: React.MouseEvent): void => {
@@ -315,16 +310,7 @@ const DrumBox: React.FC = () => {
 
   }
 
-  const createGroove = () => {
-    const degreeOfGroove = getValue(document.getElementById('setter_Groove'))
-    console.log(degreeOfGroove)
-    if (degreeOfGroove) {
-      Volumes.setVolumesBySpan(Volumes.generateAleaArray(parseInt(degreeOfGroove)))
-      setLocalVolumes([...Volumes.VolumeArray]);
-      // Volumes.setVolumesBySpan(Data.VolumesBySpan);
-    }
 
-  }
   return (
     <div className='container_drumbox'>
 
@@ -351,18 +337,7 @@ const DrumBox: React.FC = () => {
       </div>
 
       <div id="container_input">
-        <div id="container_setGroove">
-          <label htmlFor="setter_Groove">Groove :</label>
-          <input
-            type="range"
-            id="setter_Groove"
-            name="setter_Groove"
-            min={0}
-            max={5}
-            step={1}
-          />
-          <input type="submit" value="Générer" onClick={createGroove}></input>
-        </div>
+
         <div id="container_set_time">
           <button onClick={toggle_display} className='button_menu button_set_nb_time' id="show_32_false">16</button>
           <button onClick={toggle_display} className='button_menu button_set_nb_time nb_time_active' id="show_32_true">32</button>
