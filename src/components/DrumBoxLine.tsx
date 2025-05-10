@@ -24,10 +24,15 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
         const indexDrumType = parseInt(e.currentTarget.id.replace("setter_Groove_submit_", ""))
         const newVolumeBySpanArray: number[] = []
         for (let j = 0; j < 32; j++) {
-            newVolumeBySpanArray.push(40 + Math.random() * 12 * degreesOfGroove[indexDrumType]);
-            Volumes.VolumesBySpan[indexDrumType] = newVolumeBySpanArray// setLocalVolumes([...Volumes.VolumeArray]);
-            setLocalVolumesBySpan([...Volumes.VolumesBySpan])
+            if (Math.random() < 0.5) {
+                newVolumeBySpanArray.push(50 + Math.random() * 10 * degreesOfGroove[indexDrumType]);
+            }
+            else {
+                newVolumeBySpanArray.push(50 - Math.random() * 10 * degreesOfGroove[indexDrumType]);
+            }
         }
+        Volumes.VolumesBySpan[indexDrumType] = newVolumeBySpanArray// setLocalVolumes([...Volumes.VolumeArray]);
+        setLocalVolumesBySpan([...Volumes.VolumesBySpan])
     }
 
     const changeGroove = (event: ChangeEvent<HTMLInputElement>) => {

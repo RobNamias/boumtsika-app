@@ -8,7 +8,7 @@ const initialDegreesOfGroove: number[] = [3, 3, 3, 3, 3]
 // for (let i = 0; i < initialVolumesBySpan.length; i++) {
 for (let i = 0; i < initialVolumesBySpan.length; i++) {
     for (let j = 0; j < 32; j++) {
-        initialVolumesBySpan[i].push(80);
+        initialVolumesBySpan[i].push(50);
         // initialVolumesBySpan[i].push(Math.random() * 100);
     }
 }
