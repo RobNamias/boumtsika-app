@@ -103,7 +103,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                                     className='vertical spanVolumeInput'
                                     id={index + "_vol" + drumType.drumType}
                                     step="5"
-                                    value={localVolumesBySpan[drumType.index][index - 1]}
+                                    value={Volumes.VolumesBySpan[drumType.index][index - 1]}
                                     onChange={setSpanVolume}
                                 />
                             </div>
