@@ -1,19 +1,37 @@
-input[type=range][orient=vertical] {
-    appearance: slider-vertical;
-    -webkit-appearance: slider-vertical;
-    width: 30px;
-    height: 60px;
-    /* padding: 5px 0 10px 0; */
-    /* initial-value: 80; */
-    background-color: var(--scnd-bg-color);
-    color: var(--main-bg-color);
-    background-color: var(--scnd-bg-color);
+input[type=range] {
+    appearance: none;
+    -webkit-appearance: none;
+    height: 2px;
+    margin-bottom: 15px;
 }
 
 .vertical:hover {
     cursor: pointer;
 }
 
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    /* Override default look */
+    appearance: none;
+    margin-top: 0;
+    /* Centers thumb on the track */
+
+    /*custom styles*/
+    background-color: var(--main-bg-color);
+    height: 15px;
+    width: 5px;
+}
+
+input[type="range"]::-moz-range-thumb {
+    appearance: none;
+    border: none;
+    /*Removes extra border that FF applies*/
+    border-radius: 0;
+    /*Removes default border-radius that FF applies*/
+    background-color: var(--main-bg-color);
+    height: 15px;
+    width: 5px;
+}
 
 .vertical {
     width: 60px;
@@ -44,7 +62,9 @@ input[type=range][orient=vertical] {
     z-index: 10;
     height: 80px;
     width: 92%;
+    /* background-color: black; */
 }
+
 
 
 .dbl_vol_active {

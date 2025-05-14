@@ -7,7 +7,7 @@ const StyledDrum = styled.div`
     src: url('../../assets/fonts/Traffic.ttf') format('truetype')
   }
   font-family:"Traffic";
-  font-size:5vh;
+  font-size:4vh;
   width: 80px;
   height: 80px;
   border-radius: 5px;

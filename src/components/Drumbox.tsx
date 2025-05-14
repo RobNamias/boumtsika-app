@@ -64,7 +64,7 @@ const DrumBox: React.FC = () => {
     const drumTypeKey = drumSet.type as keyof typeof DrumType;
     if (drums[DrumType[drumTypeKey]].is_active) {
       audio.volume = Volumes.VolumeArray[DrumType[drumTypeKey]] / 100 * spanVolume / 100
-      console.log(audio.volume)
+      // console.log(audio.volume)
       audio.play();
     }
   };

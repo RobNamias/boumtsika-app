@@ -30,7 +30,7 @@
 
 #container_input {
     height: 20vh;
-    width: 390px;
+    width: 40%;
     display: flex;
     float: right;
     align-items: center;
@@ -106,7 +106,7 @@
 #button_stop {
     height: 70px;
     width: 70px;
-    margin: 0 10%;
+    margin: 0 5%;
 }
 
 #button_stop:hover {
@@ -164,6 +164,19 @@ label {
     width: 60px;
 }
 
+.container_input_setter_groove input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    /* Override default look */
+    appearance: none;
+    margin-top: -17px;
+    /* Centers thumb on the track */
+
+    /*custom styles*/
+    background-color: var(--main-bg-color);
+    height: 15px;
+    width: 5px;
+}
+
 .setters_Groove_submit {
     height: 32px;
     margin: auto;
@@ -175,13 +188,13 @@ datalist {
     position: relative;
     display: flex;
     justify-content: space-between;
-    width: 45px;
+    width: 60px;
     list-style: none;
     font-family: 'Gothic';
     font-size: 10px;
     /* background-color: green; */
     margin: auto;
-    margin-top: -5px;
+    margin-top: -15px;
 }
 
 /* datalist:hover {} */

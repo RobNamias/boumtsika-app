@@ -19,9 +19,13 @@
         border-radius: 5px;
     }
 
-    .span_drum_div {
+    /* .spanVolume {
+        width: 6%;
+    } */
+
+    /* .span_drum_div {
         height: 40px;
-    }
+    } */
 
     .vertical-wrapper {
         height: 40px;
@@ -39,13 +43,19 @@
     }
 
     .container_drumbox {
-        width: 95%;
+        width: 90%;
         margin-top: 5vh;
-        min-width: 700px;
+        min-width: 650px;
     }
 
     .drum_box_line {
         height: 40px;
+    }
+
+    .dbl_volume {
+        height: 40px;
+        width: 92%;
+        min-width: 650px;
     }
 
     #container_button_setDrum {
@@ -78,7 +88,7 @@
     #button_stop {
         height: 50px;
         width: 50px;
-        margin: 0 50px;
+        margin: 0 20px;
     }
 
     .button_set_nb_time {
@@ -102,8 +112,30 @@
         width: 50px;
     }
 
+    .container_setGroove {
+        left: -145px;
+        display: none;
+    }
+
     #container_set_time {
         width: 100px;
 
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        height: 15px;
+        width: 5px;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        height: 10px;
+        width: 5px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .spanVolume {
+        width: 5.7%;
+        margin: 0 0 0 0.8px;
     }
 }

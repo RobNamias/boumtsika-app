@@ -1,6 +1,4 @@
-En cours ---> v2
-        Optimisation du code
-        CSS responsive 
+Gestion de l'affichage sur portable...
 
 V3 ---> 
         //Sélection du kit dans une liste ---> Vrai Menu
