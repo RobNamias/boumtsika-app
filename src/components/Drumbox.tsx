@@ -242,8 +242,9 @@ const DrumBox: React.FC = () => {
 
 
   const drumFunction = (drumType: string) => {
-    const isActivated = document.getElementById("dbl_volume_" + drumType)?.classList.contains("dbl_vol_active")
-    toggle_classes("dbl_volume_" + drumType, "dbl_vol_active", !isActivated)
+    const isActivated = document.getElementById("co_" + drumType)?.classList.contains("container_option_active")
+    console.log(isActivated)
+    toggle_classes("co_" + drumType, "container_option_active", !isActivated)
   }
 
 

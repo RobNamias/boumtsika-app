@@ -121,13 +121,7 @@
     background-color: rgb(138, 0, 0);
 }
 
-.is_muted {
-    background-color: rgb(138, 0, 0)
-}
 
-.is_muted:hover {
-    background-color: rgb(151, 0, 0)
-}
 
 label {
     margin-right: 10px;
@@ -141,105 +135,10 @@ label {
     width: 50px;
 }
 
-.container_setGroove {
-    color: var(--scnd-bg-color);
-    position: absolute;
-    background-color: rgb(141, 141, 141);
-    left: -191px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    /* width: 150px; */
-    padding: 5px 5px;
-    border-radius: 5px;
-    height: 70px;
-}
 
-.container_input_setter_groove {
-    display: flex;
-    margin: auto;
-}
-
-.setters_Groove {
-    width: 60px;
-}
-
-.container_input_setter_groove input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    /* Override default look */
-    appearance: none;
-    margin-top: -17px;
-    /* Centers thumb on the track */
-
-    /*custom styles*/
-    background-color: var(--main-bg-color);
-    height: 15px;
-    width: 5px;
-}
-
-.setters_Groove_submit {
-    height: 32px;
-    margin: auto;
-    margin-top: 5px;
-    font-size: 20px;
-}
-
-datalist {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    width: 60px;
-    list-style: none;
-    font-family: 'Gothic';
-    font-size: 10px;
-    /* background-color: green; */
-    margin: auto;
-    margin-top: -15px;
-}
 
 /* datalist:hover {} */
 
 #veritable_boite_a_rythme {
     margin-top: 5vh;
-}
-
-.drum_line {
-    float: left;
-    width: 100%;
-    display: block;
-
-    margin: 2px 0;
-    height: fit-content;
-    border: 1px black;
-
-    backdrop-filter: blur(20px);
-}
-
-.drum_line_options {
-    position: absolute;
-    left: -25px;
-}
-
-.small_button {
-    height: 25px;
-    width: 25px;
-    font-size: 20px;
-    display: block;
-}
-
-.drum_box_line {
-    display: flex;
-    height: 80px;
-    /* background-color: orange; */
-    max-width: 92%;
-}
-
-
-.separation {
-    width: 3px;
-    background-color: black;
-}
-
-.drum_kit_line_src {
-    float: left;
 }

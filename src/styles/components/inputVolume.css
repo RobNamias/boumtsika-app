@@ -54,22 +54,7 @@ input[type="range"]::-moz-range-thumb {
     position: relative;
 }
 
-.dbl_volume {
-    position: absolute;
-    display: none;
-    backdrop-filter: blur(1px);
-    /* bottom: 80px; */
-    z-index: 10;
-    height: 80px;
-    width: 92%;
-    /* background-color: black; */
-}
 
-
-
-.dbl_vol_active {
-    display: flex
-}
 
 .spanVolume {
     display: flex;

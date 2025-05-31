@@ -23,3 +23,28 @@ export function set(newPatternArray: boolean[][]) {
     PatternArray = newPatternArray
 }
 
+export function autoCompleteByIndex(index: number, value: string) {
+    var newPatternArray: boolean[] = [];
+    for (let i = 0; i < 32; i++) {
+        if (parseInt(value)) {
+            if (i % parseInt(value) === 0) {
+                newPatternArray.push(true)
+            }
+            else {
+                newPatternArray.push(false)
+            }
+        }
+        else {
+            if (Math.random() < 0.5) {
+                newPatternArray.push(true)
+            }
+            else {
+                newPatternArray.push(false)
+            }
+        }
+    }
+
+    PatternArray[index] = newPatternArray
+    console.log(PatternArray)
+}
+

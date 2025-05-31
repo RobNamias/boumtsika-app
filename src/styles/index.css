@@ -17,6 +17,7 @@
 
 @import "./App";
 @import "./components/drumbox";
+@import "./components/drumboxline";
 @import "./components/header";
 @import "./components/home";
 @import "./components/spanDrum";

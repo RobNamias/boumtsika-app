@@ -1,0 +1,199 @@
+.is_muted {
+    background-color: rgb(138, 0, 0)
+}
+
+.is_muted:hover {
+    background-color: rgb(151, 0, 0)
+}
+
+.container_selector_option {
+    height: 70px;
+    width: 70px;
+    padding: 5px;
+    background-color: red;
+    color: var(--scnd-bg-color);
+    position: absolute;
+    background-color: rgb(141, 141, 141);
+    left: -191px;
+    display: flex;
+    flex-direction: column;
+    /* width: 150px; */
+    padding: 5px 5px;
+    border-radius: 5px;
+    height: 70px;
+}
+
+
+
+.container_setGroove {
+    color: var(--scnd-bg-color);
+    position: absolute;
+    background-color: rgb(141, 141, 141);
+    bottom: 80px;
+    text-align: center;
+    display: flex;
+    /* width: 150px; */
+    padding: 5px 5px;
+    border-radius: 5px;
+    height: 40px;
+}
+
+.container_input_setter_groove {
+    display: flex;
+    margin: auto;
+    padding: 5px
+}
+
+.setters_Groove {
+    width: 60px;
+}
+
+.container_input_setter_groove input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    /* Override default look */
+    appearance: none;
+    margin-top: -17px;
+    /* Centers thumb on the track */
+
+    /*custom styles*/
+    background-color: var(--main-bg-color);
+    height: 15px;
+    width: 5px;
+}
+
+.setters_Groove_submit {
+    height: 32px;
+    margin: auto;
+    margin-top: 5px;
+    font-size: 20px;
+    width: fit-content
+}
+
+datalist {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 60px;
+    list-style: none;
+    font-family: 'Gothic';
+    font-size: 10px;
+    margin: auto;
+    margin-top: -15px;
+}
+
+.drum_line {
+    float: left;
+    width: 100%;
+    display: block;
+    margin: 2px 0;
+    height: fit-content;
+    border: 1px black;
+    backdrop-filter: blur(20px);
+}
+
+
+.drum_line_options {
+    position: absolute;
+    left: -25px;
+}
+
+.container_options {
+    position: absolute;
+    display: none;
+
+    z-index: 10;
+    height: 80px;
+    width: 92%;
+}
+
+.container_card {
+    height: 80px;
+    width: 100%;
+    perspective: 800px;
+}
+
+.card {
+    margin: auto;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 300ms;
+}
+
+
+.front,
+.back {
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 0 5px 2px rgba(50, 50, 50, 0.25);
+    position: absolute;
+    backface-visibility: hidden;
+}
+
+.back {
+    /* background-color: #3a3a3a; */
+    transform: rotateX(180deg);
+    display: flex;
+    align-items: center;
+    gap: 5rem;
+}
+
+.layer {
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 0 5px 2px rgba(50, 50, 50, 0.25);
+    position: absolute;
+    backface-visibility: hidden;
+    align-items: center;
+    display: none;
+}
+
+.layer_volume {
+    display: flex;
+}
+
+.autocomplete_container {
+    width: 250px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    margin: none;
+    font-family: 'Gothic';
+    color: var(--main-bg-color);
+}
+
+.autocomplete_container label {
+
+    font-family: 'Gothic';
+    color: var(--main-bg-color);
+    font-size: 20px;
+
+}
+
+.container_option_active {
+    display: flex
+}
+
+.small_button {
+    height: 25px;
+    width: 25px;
+    font-size: 20px;
+    display: block;
+}
+
+.drum_box_line {
+    display: flex;
+    height: 80px;
+    /* background-color: orange; */
+    max-width: 92%;
+}
+
+.separation {
+    width: 3px;
+    background-color: black;
+}
+
+.drum_kit_line_src {
+    float: left;
+}
