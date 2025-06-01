@@ -15,12 +15,11 @@
     position: absolute;
     background-color: rgb(141, 141, 141);
     left: -191px;
-    display: flex;
-    flex-direction: column;
-    /* width: 150px; */
-    padding: 5px 5px;
+    display: grid;
+    grid-template-columns: 35px 35px;
     border-radius: 5px;
-    height: 70px;
+    align-items: center;
+    justify-items: center;
 }
 
 
@@ -178,6 +177,7 @@ datalist {
 .small_button {
     height: 25px;
     width: 25px;
+    margin: 0;
     font-size: 20px;
     display: block;
 }

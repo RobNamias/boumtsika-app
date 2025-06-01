@@ -29,6 +29,18 @@ const DrumBox: React.FC = () => {
 
   const bpmInterval = 1000 / (bpm / 60) / 4;
 
+  document.onkeydown = function (event) {
+    switch (event.key) {
+      case " ":
+        isLectureActive ? stopLecture() : startLecture();
+        break;
+      default:
+        /* Si la touche n'est pas répertoriée dans le script, on affiche le code de cette touche pour pouvoir l'ajouter (utile seulement pendant le développement, pour connaître le code des touches */
+        // console.log(event.key);
+        break;
+    }
+  }
+
   const handleSwitchDrumSet = (event: React.MouseEvent) => {
     const numDrumKit = event.currentTarget.id.replace("button_", "");
     const newSet = switchDrumSet(numDrumKit);
@@ -36,20 +48,15 @@ const DrumBox: React.FC = () => {
 
     for (let i = 0; i < newSet.length; i++) {
       const buttonMute = document.getElementById("mute_" + newSet[i].type);
-      if (buttonMute?.classList.contains("is_muted")) {
-        newSet[i].is_active = false
-      }
+      newSet[i].is_active = !buttonMute?.classList.contains("is_muted")
     }
-
     if (!event.currentTarget?.classList.contains("drum_active")) {
       setDrums(newSet);
       for (let i = 0; i < listeButton.length; i++) {
         listeButton[i].classList.remove("drum_active")
       }
       event.currentTarget?.classList.add("drum_active");
-      if (isLectureActive) {
-        stopLecture()
-      }
+      isLectureActive ? stopLecture() : console.log("pourmeubler");
     }
   };
 
@@ -232,12 +239,7 @@ const DrumBox: React.FC = () => {
   }
 
   const toggle_classes = (id: string, className: string, shouldBeActivated: boolean = true) => {
-    if (shouldBeActivated) {
-      document.getElementById(id)?.classList.add(className)
-    }
-    else {
-      document.getElementById(id)?.classList.remove(className)
-    }
+    shouldBeActivated ? document.getElementById(id)?.classList.add(className) : document.getElementById(id)?.classList.remove(className)
   }
 
 

@@ -19,20 +19,18 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
     }
 
     const [localVolumesBySpan, setLocalVolumesBySpan] = useState(Volumes.VolumesBySpan);
-    const [degreesOfGroove, setDegreesOfGroove] = useState(Volumes.DegreesOfGroove)
+    const [degreesOfGroove, setDegreesOfGroove] = useState(Volumes.DegreesOfGroove);
+    const [isFlipped, setIsFlipped] = useState(false);
 
     const createGroove = (e: React.MouseEvent<HTMLInputElement>) => {
         const indexDrumType = parseInt(e.currentTarget.id.replace("setter_Groove_submit_", ""))
         const newVolumeBySpanArray: number[] = []
         for (let j = 0; j < 32; j++) {
-            if (Math.random() < 0.5) {
-                newVolumeBySpanArray.push(50 + Math.random() * 10 * degreesOfGroove[indexDrumType]);
-            }
-            else {
-                newVolumeBySpanArray.push(50 - Math.random() * 10 * degreesOfGroove[indexDrumType]);
-            }
+            var newValue = Math.random() < 0.5 ?
+                50 + Math.random() * 10 * degreesOfGroove[indexDrumType] : 50 - Math.random() * 10 * degreesOfGroove[indexDrumType]
+            newVolumeBySpanArray.push(newValue)
         }
-        Volumes.VolumesBySpan[indexDrumType] = newVolumeBySpanArray// setLocalVolumes([...Volumes.VolumeArray]);
+        Volumes.VolumesBySpan[indexDrumType] = newVolumeBySpanArray
         setLocalVolumesBySpan([...Volumes.VolumesBySpan])
     }
 
@@ -79,16 +77,11 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
         const listSpanByDrum = document.getElementsByClassName("sdd_" + drumType)
         console.log(listSpanByDrum)
         for (let j = 0; j < Pattern.PatternArray[DrumType[drumTypeKey]].length; j++) {
-            if (Pattern.PatternArray[DrumType[drumTypeKey]][j]) {
-                listSpanByDrum[j]?.children[0].classList.add("span_active")
-            }
-            else {
-                listSpanByDrum[j]?.children[0].classList.remove("span_active")
-            }
+            Pattern.PatternArray[DrumType[drumTypeKey]][j] ?
+                listSpanByDrum[j]?.children[0].classList.add("span_active") : listSpanByDrum[j]?.children[0].classList.remove("span_active")
         }
-
     }
-    var isFlipped = false
+
     const getLayer = (type: string, drumType: string) => {
         const card = document.getElementById("card" + drumType)
         const card_front = document.getElementById("card" + drumType + "_front")
@@ -107,19 +100,24 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                 if (isFlipped === false) {
                     card_back?.appendChild(layer)
                     card?.setAttribute("style", "transform: rotateX(0.5turn);")
-                    isFlipped = true
+
                     if (card_front?.children.length !== undefined && card_front?.children.length > 0) {
-                        card_front?.children[0].setAttribute("style", "display:none;")
+                        for (let i = 0; i < card_front.children.length; i++) {
+                            card_front.children[i].setAttribute("style", "display:none;")
+                        }
                     }
                 }
                 else {
                     card_front?.appendChild(layer)
                     card?.setAttribute("style", "transform: rotateX(1turn);")
-                    isFlipped = false
+
                     if (card_back?.children.length !== undefined && card_back?.children.length > 0) {
-                        card_back?.children[0].setAttribute("style", "display:none;")
+                        for (let i = 0; i < card_back?.children.length; i++) {
+                            card_back?.children[i].setAttribute("style", "display:none;")
+                        }
                     }
                 }
+                setIsFlipped(!isFlipped)
             }
         }
     }
@@ -132,6 +130,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                         <button className='button_menu small_button' onClick={() => getLayer("volume", drumType.drumType)}>Vol</button>
                         <button className='button_menu small_button' onClick={() => getLayer("delay", drumType.drumType)}>D</button>
                         <button className='button_menu small_button' onClick={() => getLayer("autocomplete", drumType.drumType)}>A</button>
+                        <button className='button_menu small_button'>F</button>
                     </div>
 
 
@@ -189,7 +188,12 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                             </div>
                             <div className="back" id={"card" + drumType.drumType + "_back"}></div>
                         </div>
+
+                        {/* DELAY */}
                         <div className={"dbl_delay layer card" + drumType.drumType + "_layer layer_delay"} id={"card" + drumType.drumType + "_layer_delay"} > <h1>Delay... lay...lay ....lay ..... lay</h1></div>
+
+
+                        {/* AUTOCOMPLETE */}
                         <div className={"dbl_autocomplete layer card" + drumType.drumType + "_layer layer_autocomplete"} id={"card" + drumType.drumType + "_layer_autocomplete"}>
                             <fieldset className='autocomplete_container'>
                                 <legend>Auto-complete</legend>
@@ -216,7 +220,6 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                                 // value="Complete"></input>
                                 value="Complete" onClick={() => autoComplete(drumType.drumType)}></input>
                         </div>
-                        {/* <div className="layer card1_layer layer3" id="card1_layer3"><h1>Layer Three</h1></div> */}
                     </div>
 
 
