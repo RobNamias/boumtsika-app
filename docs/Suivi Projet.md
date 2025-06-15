@@ -22,23 +22,24 @@
 - Option auto-complete implantée et fonctionnelle, le design reste à revoir
 - Les deux volets d'option "Delay" et "Fill" sont préparés
 
-#### Version 2.2 - en Cours
-- Ajout de la documentation 🟨
+#### Version 2.2 - 🟨
+- Ajout de la documentation 🟩
+- Remodelage du Suivi de Projet ✅
+- Ajout de commentaires 🟨
 - Option 'Delay' par DrumType :
-        - Développement de la fonction 🟩
-⚠️Sous réserve que cela ne nuit pas à la qualité de la lecture
-        - Implantation 🟥
+        - Développement de la fonction ✅
+⚠️Sous réserve que cela ne nuit pas à la qualité de la lecture : Implantation 🟥
 
-#### Version 2.3
+#### Version 2.3 🟥
 - Option 'Fill' : Mettre en place une 'probabilité de Lecture' (lire le son qu'1 fois sur 2, ou sur 3 etc...) --> création d'un fillManager
 
-#### Version 2.4 
+#### Version 2.4 🟥
 - Passer la fonction delay du DrumType au SpanDrum --> création d'un delayManager
 
-#### Version 2.5
+#### Version 2.5 🟥
 - Retravailler le style général des options
 ----
-## Version 3
+## Version 3 🟥
 - 4 volets d'options différentes : Volumes, Auto-Complete, Fill, Delay
 - Affichage toujours sur 16, mais possibilité de switcher entre 4 pages (4 mesures)
 - Plus de pistes (clap, conga)

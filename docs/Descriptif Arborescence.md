@@ -1,15 +1,19 @@
 ## Docs
-    Différentes documentations sur l'application
+- Sources : recueil des supports externes utilisés pour le développement de cette application
+- Suivi Projet :
+    - Suivi développement des fonctionnalités
+    - Prévision des futures améliorations
+    - Listing des bugs et difficultés rencontrées et les solutions envisagées
 
 ## Public
-    Ressources publiques de l'application
+- Diverses ressources publiques de l'application et la page d'accueil index.html
 
 ## Src
-    - Asset : ressources audios, fonts et images
-    - Components : les différents composants React 
-    - Models : les modèles pour chaque kit de batterie et chaque sample.
-    - Styles : fichiers CSS des composants
-    - Utilities : fonction de chargement de kit de batteries, des gestions de tableau des volumes et de patterns et une fonction pour la sauvegarde d'un fichier JSON
-
-## Racine
-    Merci de consulter le fichier README.md.
+- Asset : ressources audios, polices et images
+- Components : les différents composants React de l'application 
+- Models : les modèles pour chaque kit de batterie et chaque sample.
+- Styles : fichiers CSS par composant
+- Utilities : 
+    - fonction de chargement de kit de batteries
+    - gestions des tableaux d'effets (volume, delay, fill) et du pattern
+    - une fonction pour la sauvegarde d'un fichier JSON
