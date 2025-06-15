@@ -10,10 +10,10 @@ Une version deployée de la branche gh-pages est accessible sur GitHub Page : ht
 
 ### Documentation 
 
-Dans le dossier 'docs', veuillez trouver les documents suivants :
-    - Descriptif Arborescence
-    - Suivi Projet
-    - Sources
+Dans le dossier 'docs', veuillez trouver les documents  suivants :
+- Descriptif Arborescence
+- Suivi Projet
+- Sources
 
 
 ----
