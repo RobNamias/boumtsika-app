@@ -146,6 +146,7 @@ datalist {
     backface-visibility: hidden;
     align-items: center;
     display: none;
+    color: var(--scnd-bg-color);
 }
 
 .layer_volume {
@@ -159,13 +160,19 @@ datalist {
     align-items: center;
     margin: none;
     font-family: 'Gothic';
-    color: var(--main-bg-color);
+    color: var(--scnd-bg-color);
+    background-color: rgba(255, 255, 255, 0.212);
+}
+
+.autocomplete_container legend {
+
+    background-color: rgba(255, 255, 255, 0.212);
 }
 
 .autocomplete_container label {
 
     font-family: 'Gothic';
-    color: var(--main-bg-color);
+    color: var(--scnd-bg-color);
     font-size: 20px;
 
 }

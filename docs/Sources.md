@@ -1,0 +1,1 @@
+# Mettre la liste des vidéos et sites sources des différents élements. Rajouter une ligne sur le savoir exceptionnel de Galupio et Korkybob

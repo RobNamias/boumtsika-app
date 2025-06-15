@@ -1,4 +1,3 @@
-
 import React, { ChangeEvent, useState } from 'react';
 import SpanDrum from "./SpanDrum";
 import { getValue } from '@testing-library/user-event/dist/utils';
@@ -22,6 +21,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
     const [degreesOfGroove, setDegreesOfGroove] = useState(Volumes.DegreesOfGroove);
     const [isFlipped, setIsFlipped] = useState(false);
 
+    //Fonction pour générer avec une touche d'aléatoire un nouveau tableau de volume par drumtype
     const createGroove = (e: React.MouseEvent<HTMLInputElement>) => {
         const indexDrumType = parseInt(e.currentTarget.id.replace("setter_Groove_submit_", ""))
         const newVolumeBySpanArray: number[] = []
@@ -82,6 +82,8 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
         }
     }
 
+
+    //Fonction pour afficher le volet d'option souhaité, sur une flipcard
     const getLayer = (type: string, drumType: string) => {
         const card = document.getElementById("card" + drumType)
         const card_front = document.getElementById("card" + drumType + "_front")
