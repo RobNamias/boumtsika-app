@@ -1,6 +1,6 @@
 # Suivi de projet
 
-## Version 1.0 - ✅
+## Version 1.0 ✅
 - Mapping des composants au chargement d'un Drumset
 - Possibilité de changer de DrumSet
 - Ecrire un pattern
@@ -9,20 +9,20 @@
 - Afficher 4 ou 8 temps (16 ou 32 quart-temps)
 - Sauvegarder et Charger un fichier JSON
 
-## Version 2.0 - ✅
+## Version 2.0 ✅
 - Changer le volume par DrumType
 - Changer le volume pour chaque SpanDrum
 - Générer un tableau de volume aléatoire 
 - Solo/Muet pour chaque DrumType 
 
-#### Version 2.1 - ✅
+#### Version 2.1 ✅
 
 - Mise en place d'un sélecteur d'option pour chaque DrumType
 - Option volume reimplantée et fonctionnelle
 - Option auto-complete implantée et fonctionnelle, le design reste à revoir
 - Les deux volets d'option "Delay" et "Fill" sont préparés
 
-#### Version 2.2 - 🟨
+#### Version 2.2 🟨
 - Ajout de la documentation 🟩
 - Remodelage du Suivi de Projet ✅
 - Ajout de commentaires 🟨
@@ -45,14 +45,14 @@
 - Plus de pistes (clap, conga)
 
 
-## Version 4 
+## Version 4 🟥
 - Sélection du kit dans une liste ---> Création d'un composent 'Menu'
 - Possibilité de triolet
 
-## Version 5
+## Version 5 🟥
 - Possibilité de mixer les kits via Menu en Glisser/Déposer
 
-### V.X
+### V.X 🟥
 Création d'un système de session (migration sous Laravel) :
 - Possibilité pour l'utilisateur d'ajouter ses propres kits sous condition
 - Sauvegarder et charger depuis une base de donnée

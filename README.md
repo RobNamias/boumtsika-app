@@ -1,30 +1,32 @@
 # BOUM TSI KA 🥁
 
-### Présentation
+## Présentation
 
 BoumTsiKa est une boite à rythme utilisant le framework React et le langage typescript.
 
-### Version en ligne 
+## Version en ligne
 
-Une version deployée de la branche gh-pages est accessible sur GitHub Page : https://robnamias.github.io/boumtsika-app/
+Une version deployée de la branche gh-pages est accessible sur GitHub Page : <https://robnamias.github.io/boumtsika-app/>
 
-Elle peut par conséquent différée de la version disponible sur le repository : https://github.com/RobNamias/boumtsika-app
+Elle peut par conséquent différer de la version disponible sur le repository : <https://github.com/RobNamias/boumtsika-app>
 
 - Branche "gh-pages" : Version 2.1
 - Branche "main" : Version 2.1.1
 
-
-### Documentation 
+## Documentation
 
 Dans le dossier 'docs', veuillez trouver les documents  suivants :
+
 - Descriptif Arborescence
 - Suivi Projet
 - Sources
 
-### Contact
-Pour toutes questions,veuillez me contacter sur cet e-mail : cedric.rodien@hotmail.fr
+## Contact
+
+Pour toutes questions,veuillez me contacter sur cet e-mail : <cedric.rodien@hotmail.fr>
 
 ----
+
 ## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
