@@ -40,12 +40,6 @@ export function setByIndex(index: number, newValue: number) {
     VolumeArray[index] = newValue
 }
 
-export function getByType(drumSet: DrumSet) {
-    const drumTypeKey = drumSet.type as keyof typeof DrumType;
-    const index = DrumType[drumTypeKey];
-    return VolumeArray[index];
-}
-
 export function setVolumesBySpan(new_volumeBySpan: number[][]) {
     VolumesBySpan = new_volumeBySpan
     console.log("VolumesBySpan remappé")
@@ -55,6 +49,4 @@ export function setSpanVolume(i: number, j: number, new_volume: number) {
     VolumesBySpan[i][j] = new_volume
     // console.log("VolumesBySpan " + i + j + "est mis à jour à la valeur :" + new_volume)
 }
-export function getSpanVolume(i: number, j: number) {
-    return VolumesBySpan[i][j]
-}
+

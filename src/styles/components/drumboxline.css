@@ -177,6 +177,31 @@ datalist {
 
 }
 
+.delay_container {
+    display: flex;
+}
+
+.setters_Delay {
+    width: 60px;
+}
+
+.button_Delay {
+    height: 40px;
+}
+
+
+.button_active_delay:hover {
+    background-color: green;
+}
+
+.button_inactive_delay {
+    background-color: green;
+}
+
+.button_inactive_delay:hover {
+    background-color: red;
+}
+
 .container_option_active {
     display: flex
 }

@@ -2,8 +2,9 @@ import React, { ChangeEvent, useState } from 'react';
 import SpanDrum from "./SpanDrum";
 import { getValue } from '@testing-library/user-event/dist/utils';
 import { DrumType } from '../models/DrumType';
-import * as Volumes from '../utilities/volumesManager'
-import * as Pattern from '../utilities/patternManager'
+import * as Volumes from '../utilities/volumesManager';
+import * as Pattern from '../utilities/patternManager';
+import * as Delay from '../utilities/DelayManager';
 
 type Props = {
     drumType: string;
@@ -19,6 +20,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
 
     const [localVolumesBySpan, setLocalVolumesBySpan] = useState(Volumes.VolumesBySpan);
     const [degreesOfGroove, setDegreesOfGroove] = useState(Volumes.DegreesOfGroove);
+    const [localDataDelay, setLocalDataDelay] = useState(Delay.DelayArray);
     const [isFlipped, setIsFlipped] = useState(false);
 
     //Fonction pour générer avec une touche d'aléatoire un nouveau tableau de volume par drumtype
@@ -39,6 +41,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
         setDegreesOfGroove([...Volumes.DegreesOfGroove])
     }
 
+    // Affichage de 'Groove' sur le bouton
     const returnGroove = (indexDrumType: number) => {
         var labelGroove = 'Groo'
         for (let i = 0; i < degreesOfGroove[indexDrumType]; i++) {
@@ -59,7 +62,6 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
 
 
     const autoComplete = (drumType: string) => {
-
         var buttons = document.getElementsByName(drumType + "nb_autocomplete");
         var valeur;
         for (let i = 0; i < buttons.length; i++) {
@@ -73,7 +75,6 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
         if (valeur) {
             Pattern.autoCompleteByIndex(DrumType[drumTypeKey], valeur)
         }
-
         const listSpanByDrum = document.getElementsByClassName("sdd_" + drumType)
         console.log(listSpanByDrum)
         for (let j = 0; j < Pattern.PatternArray[DrumType[drumTypeKey]].length; j++) {
@@ -124,6 +125,22 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
         }
     }
 
+    const changeStepDelay = (e: ChangeEvent<HTMLInputElement>) => {
+        Delay.setStepDelay(parseInt(e?.currentTarget.value), drumType.index)
+        setLocalDataDelay([...Delay.DelayArray])
+    }
+    const changeFeedbackDelay = (e: ChangeEvent<HTMLInputElement>) => {
+        Delay.setFeedbackDelay(parseInt(e?.currentTarget.value), drumType.index)
+        setLocalDataDelay([...Delay.DelayArray])
+    }
+    const changeInputVolumeDelay = (e: ChangeEvent<HTMLInputElement>) => {
+        Delay.setInputVolumeDelay(parseInt(e?.currentTarget.value), drumType.index)
+        setLocalDataDelay([...Delay.DelayArray])
+    }
+    const switchIsActiveDelay = (newValue: boolean) => {
+        Delay.setIsActiveDelay(newValue, drumType.index)
+        setLocalDataDelay([...Delay.DelayArray])
+    }
     return (
         <>
             <div className='drum_box_line' id={'dbl_' + drumType.drumType}>
@@ -177,7 +194,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                                                     className='vertical spanVolumeInput'
                                                     id={index + "_vol" + drumType.drumType}
                                                     step="5"
-                                                    value={Volumes.VolumesBySpan[drumType.index][index - 1]}
+                                                    value={localVolumesBySpan[drumType.index][index - 1]}
                                                     onChange={setSpanVolume}
                                                 />
                                             </div>
@@ -192,7 +209,69 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                         </div>
 
                         {/* DELAY */}
-                        <div className={"dbl_delay layer card" + drumType.drumType + "_layer layer_delay"} id={"card" + drumType.drumType + "_layer_delay"} > <h1>Delay... lay...lay ....lay ..... lay</h1></div>
+                        <div className={"dbl_delay layer card" + drumType.drumType + "_layer layer_delay"} id={"card" + drumType.drumType + "_layer_delay"} >
+                            <div>
+                                <input
+                                    type="range"
+                                    className='setters_stepDelay setters_Delay'
+                                    id={"setter_stepDelay_" + drumType.index}
+                                    name={"setter_stepDelay_" + drumType.index}
+                                    onChange={changeStepDelay}
+                                    value={localDataDelay[drumType.index].step}
+                                    min={1}
+                                    max={4}
+                                    step={1}
+                                    list="markers_stepDelay"
+                                />
+                                <datalist id="markers_stepDelay">
+                                    <option value="1" label="1"></option>
+                                    <option value="2" label="2"></option>
+                                    <option value="3" label="3"></option>
+                                    <option value="4" label="4"></option>
+                                </datalist>
+                                Step
+                            </div>
+                            <div>
+                                <input
+                                    type="range"
+                                    className='setters_feedbackDelay setters_Delay'
+                                    id={"setter_feedbackDelay_" + drumType.index}
+                                    name={"setter_feedbackDelay_" + drumType.index}
+                                    onChange={changeFeedbackDelay}
+                                    value={Delay.DelayArray[drumType.index].feedback}
+                                    min={1}
+                                    max={4}
+                                    step={1}
+                                    list="markers_feedbackDelay"
+                                />
+                                <datalist id="markers_feedbackDelay">
+                                    <option value="1" label="1"></option>
+                                    <option value="2" label="2"></option>
+                                    <option value="3" label="3"></option>
+                                    <option value="4" label="4"></option>
+                                </datalist>
+                                Feedback
+                            </div>
+
+                            <div className='vertical-wrapper'>
+                                <input
+                                    type="range"
+                                    className='vertical'
+                                    id={"vol"}
+                                    step="5"
+                                    value={Delay.DelayArray[drumType.index].inputVolume}
+                                    onChange={changeInputVolumeDelay}
+                                />
+                            </div>
+                            VOLUME
+                            {Delay.DelayArray[drumType.index].is_active &&
+                                <button onClick={() => switchIsActiveDelay(false)} className="button_menu button_Delay button_inactive_delay">ON</button>
+                            }
+                            {!Delay.DelayArray[drumType.index].is_active &&
+                                <button onClick={() => switchIsActiveDelay(true)} className="button_menu button_Delay button_active_delay">OFF</button>
+                            }
+
+                        </div>
 
 
                         {/* AUTOCOMPLETE */}

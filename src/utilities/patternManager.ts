@@ -23,25 +23,15 @@ export function set(newPatternArray: boolean[][]) {
     PatternArray = newPatternArray
 }
 
+
+//value peut valoir 1 (tous les quart-temps), 2 (demi-temps), 4 (temps) ou Random
+//si value est un string contenant un nombre, on complète le tableau selon value, sinon value = Random
 export function autoCompleteByIndex(index: number, value: string) {
     var newPatternArray: boolean[] = [];
     for (let i = 0; i < 32; i++) {
-        if (parseInt(value)) {
-            if (i % parseInt(value) === 0) {
-                newPatternArray.push(true)
-            }
-            else {
-                newPatternArray.push(false)
-            }
-        }
-        else {
-            if (Math.random() < 0.5) {
-                newPatternArray.push(true)
-            }
-            else {
-                newPatternArray.push(false)
-            }
-        }
+        parseInt(value) ? (i % parseInt(value) === 0 ? newPatternArray.push(true) : newPatternArray.push(false))
+            :
+            (Math.random() < 0.5 ? newPatternArray.push(true) : newPatternArray.push(false))
     }
 
     PatternArray[index] = newPatternArray

@@ -11,7 +11,7 @@ Une version deployée de la branche gh-pages est accessible sur GitHub Page : <h
 Elle peut par conséquent différer de la version disponible sur le repository : <https://github.com/RobNamias/boumtsika-app>
 
 - Branche "gh-pages" : Version 2.1
-- Branche "main" : Version 2.1.1
+- Branche "main" : Version 2.1.6
 
 ## Documentation
 
@@ -23,7 +23,7 @@ Dans le dossier 'docs', veuillez trouver les documents  suivants :
 
 ## Contact
 
-Pour toutes questions,veuillez me contacter sur cet e-mail : <cedric.rodien@hotmail.fr>
+Pour toutes questions, veuillez me contacter sur cet e-mail : <cedric.rodien@hotmail.fr>
 
 ----
 

@@ -2,6 +2,7 @@ import React, { useState, useRef, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import * as Pattern from '../utilities/patternManager';
 import * as Volumes from '../utilities/volumesManager';
+import * as Delay from '../utilities/DelayManager'
 import { switchDrumSet } from '../utilities/loadDrumSet';
 import { saveDataToFile } from '../utilities/saveData';
 import { getValue } from '@testing-library/user-event/dist/utils';
@@ -69,13 +70,33 @@ const DrumBox: React.FC = () => {
   const handlePlayDrum = (drumSet: DrumSet, spanVolume: number) => {
     const audio = new Audio(drumSet.path);
     const drumTypeKey = drumSet.type as keyof typeof DrumType;
-    if (drums[DrumType[drumTypeKey]].is_active) {
-      audio.volume = Volumes.VolumeArray[DrumType[drumTypeKey]] / 100 * spanVolume / 100
-      // console.log(audio.volume)
+    const drumIndex = DrumType[drumTypeKey]
+    if (drums[drumIndex].is_active) {
+      audio.volume = Volumes.VolumeArray[drumIndex] / 100 * spanVolume / 100
+      console.log(audio.volume)
       audio.play();
+
+      if (Delay.DelayArray[drumIndex].is_active) {
+        var volume_lecture = audio.volume * Delay.DelayArray[drumIndex].inputVolume / 100
+        for (let i = 0; i <= Delay.DelayArray[drumIndex].feedback; i++) {
+          // eslint-disable-next-line no-loop-func
+          setTimeout(() => {
+            const audioDelay = new Audio(drumSet.path);
+            volume_lecture -= 0.1
+            if (volume_lecture < 0.1) {
+              volume_lecture = 0.1
+            }
+            audioDelay.volume = volume_lecture
+            console.log("le sample à ", i, " delay à ", volume_lecture)
+            audioDelay.play();
+          }
+            , Delay.DelayArray[drumIndex].step * i * bpmInterval);
+        }
+      }
     }
   };
 
+  // Changement de l'affichage entre 4 temps et 8 temps
   const toggle_display = (e: React.MouseEvent) => {
     if (e.currentTarget.id.replace("show_32_", "") !== show32.toString()) {
       stopLecture();
@@ -148,9 +169,10 @@ const DrumBox: React.FC = () => {
 
   const loadDataFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget.files && e.currentTarget.files.length > 0) {
-      stopLecture();
+      if (isLectureActive) {
+        stopLecture()
+      }
       const file = e.currentTarget.files[0];
-
       const reader = new FileReader();
       reader.onload = function (event) {
         try {
@@ -316,7 +338,7 @@ const DrumBox: React.FC = () => {
                   type="range"
                   className='vertical'
                   id={"vol" + drum.type}
-                  step="5"
+                  step={10}
                   value={localVolumes[DrumType[drum.type]]}
                   onChange={setVolumeSound}
                 />
