@@ -210,7 +210,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
 
                         {/* DELAY */}
                         <div className={"dbl_delay layer card" + drumType.drumType + "_layer layer_delay"} id={"card" + drumType.drumType + "_layer_delay"} >
-                            <div>
+                            <div className="container_setter_Delay">
                                 <input
                                     type="range"
                                     className='setters_stepDelay setters_Delay'
@@ -231,7 +231,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                                 </datalist>
                                 Step
                             </div>
-                            <div>
+                            <div className="container_setter_Delay">
                                 <input
                                     type="range"
                                     className='setters_feedbackDelay setters_Delay'
@@ -256,8 +256,8 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                             <div className='vertical-wrapper'>
                                 <input
                                     type="range"
-                                    className='vertical'
-                                    id={"vol"}
+                                    className='vertical volumeDelay'
+                                    id={"volDelay_" + drumType.drumType}
                                     step="5"
                                     value={Delay.DelayArray[drumType.index].inputVolume}
                                     onChange={changeInputVolumeDelay}

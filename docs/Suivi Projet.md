@@ -24,33 +24,34 @@
 - Option auto-complete implantée et fonctionnelle, le design reste à revoir
 - Les deux volets d'option "Delay" et "Fill" sont préparés
 
-### Version 2.2 🟨
+### Version 2.2 ✅
 
-- Ajout de la documentation 🟩
+- Ajout de la documentation ✅
 - Remodelage du Suivi de Projet ✅
-- Ajout de commentaires 🟨
+- Ajout de commentaires ✅
 - Option 'Delay' par DrumType :
         - Développement de la fonction ✅
         - Intégration : ajout d'un DelayManager, d'un modèle 'Delay'et mise en place prise en charge lors de la lecture ✅
-        - Interface 🟨
-        - prise en charge Sauvegarde/Chargement 🟥
+        - Interface ✅
+        - prise en charge Sauvegarde/Chargement ✅
 
 ### Version 2.3 🟥
 
-- Finalisation documentation
+- Finalisation documentation/commentaire 🟩
 - Option 'Fill' : Mettre en place une 'probabilité de Lecture' (lire le son qu'1 fois sur 2, ou sur 3 etc...) --> création d'un fillManager
-- Style 🟨
-- prise en charge Sauvegarde/Chargement
+- Style
+- prise en charge Sauvegarde/Chargement 'Fill'
 
 ### Version 2.4 🟥❓
 
-A repenser... Selon la solution employée pour l'option 'Fill'-
+A repenser... Selon la solution employée pour l'option 'Fill'
 
 - Passer la fonction delay du DrumType au SpanDrum --> création d'un delayManager
 
 ### Version 2.5 🟥
 
 - Retravailler le style général des options
+- Responsive ❗❗❗
 
 ----
 

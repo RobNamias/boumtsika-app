@@ -5,7 +5,7 @@ import { dataDelay } from "../models/Delay"
 const initialDelayArray: dataDelay[] = []
 
 for (let i = 0; i < 5; i++) {
-    var newDelay: dataDelay = { step: 2, feedback: 2, inputVolume: 80, is_active: false }
+    var newDelay: dataDelay = { step: 3, feedback: 2, inputVolume: 80, is_active: false }
     initialDelayArray.push(newDelay)
 }
 

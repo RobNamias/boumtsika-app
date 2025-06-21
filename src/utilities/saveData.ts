@@ -1,6 +1,7 @@
 import { DrumSet } from "../models/DrumSet";
+import { dataDelay } from "../models/Delay"
 
-export function saveDataToFile(drumSet: DrumSet[], bpm: number, volumeSoundArray: number[], patternArray: boolean[][], VolumesBySpan: number[][]) {
+export function saveDataToFile(drumSet: DrumSet[], bpm: number, volumeSoundArray: number[], patternArray: boolean[][], volumesBySpan: number[][], delayArray: dataDelay[]) {
 
     const setDrumSet = drumSet
     for (let i = 0; i < setDrumSet.length; i++) {
@@ -13,7 +14,8 @@ export function saveDataToFile(drumSet: DrumSet[], bpm: number, volumeSoundArray
         bpm,
         volumeSoundArray,
         patternArray,
-        VolumesBySpan
+        volumesBySpan,
+        delayArray
     };
 
     let jsonData = JSON.stringify(Data, null, 2);

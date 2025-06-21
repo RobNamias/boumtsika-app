@@ -24,6 +24,88 @@
 
 
 
+
+
+
+.drum_line {
+    float: left;
+    width: 100%;
+    display: block;
+    margin: 2px 0;
+    height: fit-content;
+    border: 1px black;
+    backdrop-filter: blur(20px);
+}
+
+
+.drum_line_options {
+    position: absolute;
+    left: -25px;
+}
+
+.container_options {
+    position: absolute;
+    display: none;
+
+    z-index: 10;
+    height: 80px;
+    width: 92%;
+}
+
+.container_card {
+    height: 80px;
+    width: 100%;
+    perspective: 800px;
+}
+
+.card {
+    margin: auto;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 300ms;
+}
+
+
+.front,
+.back {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+}
+
+.back {
+    /* background-color: #3a3a3a; */
+    transform: rotateX(180deg);
+    display: flex;
+    align-items: center;
+    gap: 5rem;
+}
+
+.layer {
+    height: 100%;
+    /* box-shadow: 0 0 5px 2px rgba(50, 50, 50, 0.25); */
+    position: absolute;
+    backface-visibility: hidden;
+    align-items: center;
+    display: none;
+    color: var(--scnd-bg-color);
+}
+
+.layer:hover {
+    background-color: var(--scnd-bg-color);
+    color: var(--main-bg-color)
+}
+
+
+/* VOLUME */
+.layer_volume {
+    display: flex;
+    width: 100%;
+}
+
 .container_setGroove {
     color: var(--scnd-bg-color);
     position: absolute;
@@ -80,113 +162,56 @@ datalist {
     margin-top: -15px;
 }
 
-.drum_line {
-    float: left;
-    width: 100%;
-    display: block;
-    margin: 2px 0;
-    height: fit-content;
-    border: 1px black;
-    backdrop-filter: blur(20px);
-}
 
-
-.drum_line_options {
-    position: absolute;
-    left: -25px;
-}
-
-.container_options {
-    position: absolute;
-    display: none;
-
-    z-index: 10;
-    height: 80px;
-    width: 92%;
-}
-
-.container_card {
-    height: 80px;
-    width: 100%;
-    perspective: 800px;
-}
-
-.card {
-    margin: auto;
-    height: 100%;
-    width: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 300ms;
-}
-
-
-.front,
-.back {
-    height: 100%;
-    width: 100%;
-    box-shadow: 0 0 5px 2px rgba(50, 50, 50, 0.25);
-    position: absolute;
-    backface-visibility: hidden;
-}
-
-.back {
-    /* background-color: #3a3a3a; */
-    transform: rotateX(180deg);
-    display: flex;
-    align-items: center;
-    gap: 5rem;
-}
-
-.layer {
-    height: 100%;
-    width: 100%;
-    box-shadow: 0 0 5px 2px rgba(50, 50, 50, 0.25);
-    position: absolute;
-    backface-visibility: hidden;
-    align-items: center;
-    display: none;
-    color: var(--scnd-bg-color);
-}
-
-.layer_volume {
-    display: flex;
-}
-
+/* AUTOCOMPLETE */
 .autocomplete_container {
-    width: 250px;
+    width: 215px;
     height: 40px;
     display: flex;
     align-items: center;
     margin: none;
     font-family: 'Gothic';
-    color: var(--scnd-bg-color);
-    background-color: rgba(255, 255, 255, 0.212);
+    /* color: var(--scnd-bg-color); */
 }
 
-.autocomplete_container legend {
-
-    background-color: rgba(255, 255, 255, 0.212);
-}
 
 .autocomplete_container label {
-
     font-family: 'Gothic';
-    color: var(--scnd-bg-color);
     font-size: 20px;
+    margin: 0 2px;
 
 }
 
+
+/* DELAY */
 .delay_container {
     display: flex;
 }
 
+.container_setter_Delay {
+    width: 85px
+}
+
 .setters_Delay {
-    width: 60px;
+    width: 50px;
+}
+
+
+.layer_delay datalist {
+    width: 50px
+}
+
+.setters_Delay:hover {
+    cursor: pointer;
+}
+
+.volumeDelay {
+    margin: 20px 0;
 }
 
 .button_Delay {
     height: 40px;
+    margin: 0 7px 0 25px;
 }
 
 
@@ -199,7 +224,7 @@ datalist {
 }
 
 .button_inactive_delay:hover {
-    background-color: red;
+    background-color: rgb(138, 0, 0);
 }
 
 .container_option_active {

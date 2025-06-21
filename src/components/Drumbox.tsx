@@ -20,15 +20,15 @@ const PadsWrapper = styled.main`
 `;
 
 const DrumBox: React.FC = () => {
-  const [drums, setDrums] = useState<DrumSet[]>(switchDrumSet("808"));
-  const [localVolumes, setLocalVolumes] = useState(Volumes.VolumeArray);
-  const [bpm, setBpm] = useState<number>(130);
+  const [drums, setDrums] = useState<DrumSet[]>(switchDrumSet("808")); //Gère le kit de batterie
+  const [localVolumes, setLocalVolumes] = useState(Volumes.VolumeArray);//Gère le volume par piste
+  const [bpm, setBpm] = useState<number>(130); //Gere le BPM
   const [isLectureActive, setIsLectureActive] = useState(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
-  const counterRef = useRef(0);
-  const [show32, setShow32] = useState(true);
+  const counterRef = useRef(0); //Compteur pour le défilement pendant la lecture
+  const [show32, setShow32] = useState(true); //Affichage sur 4 ou 8 temps
 
-  const bpmInterval = 1000 / (bpm / 60) / 4;
+  const bpmInterval = 1000 / (bpm / 60) / 4; //Calcul de l'interval pour la fonction timée startLecture()
 
   document.onkeydown = function (event) {
     switch (event.key) {
@@ -42,6 +42,7 @@ const DrumBox: React.FC = () => {
     }
   }
 
+  //Changement d'un kit de batterie à l'autre
   const handleSwitchDrumSet = (event: React.MouseEvent) => {
     const numDrumKit = event.currentTarget.id.replace("button_", "");
     const newSet = switchDrumSet(numDrumKit);
@@ -61,12 +62,14 @@ const DrumBox: React.FC = () => {
     }
   };
 
+  //Gestion du son par piste
   const setVolumeSound = (event: ChangeEvent<HTMLInputElement>) => {
     const drumTypeKey = event?.currentTarget.id.replace("vol", "") as keyof typeof DrumType;
     Volumes.setByType(drums[DrumType[drumTypeKey]], Number(getValue(event?.currentTarget)));
     setLocalVolumes([...Volumes.VolumeArray]);
   };
 
+  //Lecture d'un sample
   const handlePlayDrum = (drumSet: DrumSet, spanVolume: number) => {
     const audio = new Audio(drumSet.path);
     const drumTypeKey = drumSet.type as keyof typeof DrumType;
@@ -75,7 +78,7 @@ const DrumBox: React.FC = () => {
       audio.volume = Volumes.VolumeArray[drumIndex] / 100 * spanVolume / 100
       console.log(audio.volume)
       audio.play();
-
+      // Fonction Delay
       if (Delay.DelayArray[drumIndex].is_active) {
         var volume_lecture = audio.volume * Delay.DelayArray[drumIndex].inputVolume / 100
         for (let i = 0; i <= Delay.DelayArray[drumIndex].feedback; i++) {
@@ -125,6 +128,7 @@ const DrumBox: React.FC = () => {
     e?.currentTarget.classList.add("nb_time_active")
   }
 
+  //Mise à jour du tempo
   const setbpm = (e: React.FormEvent<HTMLInputElement>) => {
     stopLecture();
     const newBpm = Number(getValue(e.currentTarget));
@@ -133,6 +137,7 @@ const DrumBox: React.FC = () => {
     }
   };
 
+  //Arreter la lecture
   const stopLecture = () => {
     if (intervalId.current) {
       clearInterval(intervalId.current);
@@ -141,6 +146,7 @@ const DrumBox: React.FC = () => {
     counterRef.current = 0
   };
 
+  //Lecture
   const Lecture = () => {
     var nb_Time: number = show32 ? 32 : 16;
     if (counterRef.current === nb_Time) {
@@ -161,12 +167,13 @@ const DrumBox: React.FC = () => {
     }
   };
 
-
+  //Lance la lecture
   const startLecture = () => {
     setIsLectureActive(true);
     intervalId.current = setInterval(Lecture, bpmInterval);
   };
 
+  //Chargemement depuis un fichier
   const loadDataFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget.files && e.currentTarget.files.length > 0) {
       if (isLectureActive) {
@@ -185,7 +192,8 @@ const DrumBox: React.FC = () => {
               setBpm(Data.bpm ?? 120);
               Pattern.set(Data.patternArray);
               Volumes.set(Data.volumeSoundArray);
-              Volumes.setVolumesBySpan(Data.VolumesBySpan);
+              Volumes.setVolumesBySpan(Data.volumesBySpan);
+              Delay.setDelay(Data.delayArray)
               setLocalVolumes([...Volumes.VolumeArray]);
 
               for (let i = 0; i < Pattern.PatternArray.length; i++) {
@@ -226,6 +234,7 @@ const DrumBox: React.FC = () => {
     }
   };
 
+  //Reset du pattern
   const clearPattern = () => {
     Pattern.setClear()
     const spanList = document.getElementsByClassName("span_drum")
@@ -233,6 +242,7 @@ const DrumBox: React.FC = () => {
       spanList[i].classList.remove("span_active")
   }
 
+  //Mute et solo
   const switchMuted = (e: React.MouseEvent<HTMLButtonElement>) => {
     const drumTypeKey = e.currentTarget.id.replace("mute_", "") as keyof typeof DrumType;
     const index = DrumType[drumTypeKey];
@@ -260,11 +270,13 @@ const DrumBox: React.FC = () => {
     }
   }
 
+
+  //Changement de classe d'un élement
   const toggle_classes = (id: string, className: string, shouldBeActivated: boolean = true) => {
     shouldBeActivated ? document.getElementById(id)?.classList.add(className) : document.getElementById(id)?.classList.remove(className)
   }
 
-
+  //Affichage des options
   const drumFunction = (drumType: string) => {
     const isActivated = document.getElementById("co_" + drumType)?.classList.contains("container_option_active")
     console.log(isActivated)
@@ -274,7 +286,7 @@ const DrumBox: React.FC = () => {
 
   return (
     <div className='container_drumbox'>
-
+      {/* SELECTION DU KIT DE BATTERIE */}
       <div id="container_button_setDrum">
         <button className="button_menu button_kit_menu" id="button_707" onClick={handleSwitchDrumSet}>
           707
@@ -288,28 +300,30 @@ const DrumBox: React.FC = () => {
         <button className="button_menu button_kit_menu" id="button_Tribe" onClick={handleSwitchDrumSet}>
           Tribe
         </button>
-
-        <button className="button_menu" onClick={() => saveDataToFile(drums, bpm, Volumes.VolumeArray, Pattern.PatternArray, Volumes.VolumesBySpan)}>💾 Exporter</button>
-
+        {/* SAUVEGARDE */}
+        <button className="button_menu" onClick={() => saveDataToFile(drums, bpm, Volumes.VolumeArray, Pattern.PatternArray, Volumes.VolumesBySpan, Delay.DelayArray)}>💾 Exporter</button>
+        {/* CHARGEMENT */}
         <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} />
         <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()}>📂 Importer</button>
+        {/* RESET DU PATTERN */}
         <button className="button_menu" onClick={() => clearPattern()}>❌ Effacer</button>
 
       </div>
 
       <div id="container_input">
-
+        {/* AFFICHAGE SUR 4 OU 8 TEMPS */}
         <div id="container_set_time">
           <button onClick={toggle_display} className='button_menu button_set_nb_time' id="show_32_false">16</button>
           <button onClick={toggle_display} className='button_menu button_set_nb_time nb_time_active' id="show_32_true">32</button>
         </div>
+        {/* LECTURE/STOP */}
         {!isLectureActive &&
           <button onClick={startLecture} className="button_menu" id="button_lecture">PLAY</button>
         }
         {isLectureActive &&
           <button onClick={stopLecture} className="button_menu lecture_en_cours" id="button_stop">STOP</button>
         }
-
+        {/* TEMPO */}
         <label htmlFor="setter_bpm">BPM :</label>
 
         <input
@@ -321,10 +335,13 @@ const DrumBox: React.FC = () => {
         />
       </div>
 
+      {/* DRUMBOX */}
       <PadsWrapper>
         {drums.length > 0 ? (
           drums.map(drum => (
+            // PISTE
             <div className="drum_line" id={drum.type} key={drum.type}>
+
               <div className="drum_line_options" id={"dlo_" + drum.type}>
                 <button className="button_menu small_button" id={"mute_" + drum.type} onClick={switchMuted}>M</button>
                 <button className="button_menu small_button" id={"solo_" + drum.type} onClick={switchSolo}>S</button>
@@ -333,6 +350,7 @@ const DrumBox: React.FC = () => {
                 drumType={drum.type}
                 onClick={() => drumFunction(drum.type)}
               />
+              {/* VOLUME DE LA PISTE */}
               <div className='vertical-wrapper'>
                 <input
                   type="range"
@@ -343,10 +361,12 @@ const DrumBox: React.FC = () => {
                   onChange={setVolumeSound}
                 />
               </div>
+
               <DrumBoxLine
                 drumType={drum.type}
                 index={DrumType[drum.type]}
               />
+
             </div>
           ))
         ) : (
