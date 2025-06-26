@@ -1,5 +1,6 @@
 import { DrumSet } from "../models/DrumSet"
 import { DrumType } from "../models/DrumType"
+import { patternLength } from "./patternManager"
 
 const initialVolumeArray: number[] = [80, 80, 80, 80, 80]
 const initialVolumesBySpan: number[][] = [[], [], [], [], []]
@@ -7,7 +8,7 @@ const initialDegreesOfGroove: number[] = [3, 3, 3, 3, 3]
 
 // for (let i = 0; i < initialVolumesBySpan.length; i++) {
 for (let i = 0; i < initialVolumesBySpan.length; i++) {
-    for (let j = 0; j < 32; j++) {
+    for (let j = 0; j < patternLength; j++) {
         initialVolumesBySpan[i].push(50);
         // initialVolumesBySpan[i].push(Math.random() * 100);
     }
@@ -43,7 +44,7 @@ export function setByIndex(index: number, newValue: number) {
 export function setVolumesBySpan(new_volumeBySpan: number[][]) {
     VolumesBySpan = new_volumeBySpan
     console.log("VolumesBySpan remappé")
-    console.log(VolumesBySpan)
+    // console.log(VolumesBySpan)
 }
 export function setSpanVolume(i: number, j: number, new_volume: number) {
     VolumesBySpan[i][j] = new_volume

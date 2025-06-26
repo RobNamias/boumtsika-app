@@ -59,11 +59,5 @@ input[type="range"]::-moz-range-thumb {
 .spanVolume {
     display: flex;
     margin: 0 2.3px 0 0;
-    width: 6%;
-
-    /* background-color: rgba(0, 0, 0, 0.1) */
-}
-
-.spanVolumeInput {
-    width: 60px;
+    width: 80px;
 }

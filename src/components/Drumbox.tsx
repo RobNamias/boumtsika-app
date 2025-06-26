@@ -2,7 +2,8 @@ import React, { useState, useRef, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import * as Pattern from '../utilities/patternManager';
 import * as Volumes from '../utilities/volumesManager';
-import * as Delay from '../utilities/DelayManager'
+import * as Delay from '../utilities/delayManager';
+import * as Fill from '../utilities/fillManager';
 import { switchDrumSet } from '../utilities/loadDrumSet';
 import { saveDataToFile } from '../utilities/saveData';
 import { getValue } from '@testing-library/user-event/dist/utils';
@@ -21,12 +22,12 @@ const PadsWrapper = styled.main`
 
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>(switchDrumSet("808")); //Gère le kit de batterie
-  const [localVolumes, setLocalVolumes] = useState(Volumes.VolumeArray);//Gère le volume par piste
   const [bpm, setBpm] = useState<number>(130); //Gere le BPM
-  const [isLectureActive, setIsLectureActive] = useState(false);
+  const [show32, setShow32] = useState(false); //Affichage sur 4 ou 8 temps
+  const [localVolumes, setLocalVolumes] = useState(Volumes.VolumeArray);//Gère le volume par piste
   const intervalId = useRef<NodeJS.Timeout | null>(null);
   const counterRef = useRef(0); //Compteur pour le défilement pendant la lecture
-  const [show32, setShow32] = useState(true); //Affichage sur 4 ou 8 temps
+  const [isLectureActive, setIsLectureActive] = useState(false);
 
   const bpmInterval = 1000 / (bpm / 60) / 4; //Calcul de l'interval pour la fonction timée startLecture()
 
@@ -70,18 +71,17 @@ const DrumBox: React.FC = () => {
   };
 
   //Lecture d'un sample
-  const handlePlayDrum = (drumSet: DrumSet, spanVolume: number) => {
+  const handlePlayDrum = (drumSet: DrumSet, drumTypeIndex: number, spanIndex: number) => {
     const audio = new Audio(drumSet.path);
-    const drumTypeKey = drumSet.type as keyof typeof DrumType;
-    const drumIndex = DrumType[drumTypeKey]
-    if (drums[drumIndex].is_active) {
-      audio.volume = Volumes.VolumeArray[drumIndex] / 100 * spanVolume / 100
-      console.log(audio.volume)
+    //Check si la piste est activée et la probabilité de lecture ---> FillArray
+    if (drums[drumTypeIndex].is_active && Math.random() < 1 / Fill.FillArray[drumTypeIndex][spanIndex]) {
+      audio.volume = Volumes.VolumeArray[drumTypeIndex] / 100 * Volumes.VolumesBySpan[drumTypeIndex][spanIndex] / 100
+      // console.log(audio.volume)
       audio.play();
       // Fonction Delay
-      if (Delay.DelayArray[drumIndex].is_active) {
-        var volume_lecture = audio.volume * Delay.DelayArray[drumIndex].inputVolume / 100
-        for (let i = 0; i <= Delay.DelayArray[drumIndex].feedback; i++) {
+      if (Delay.DelayArray[drumTypeIndex].is_active) {
+        var volume_lecture = audio.volume * Delay.DelayArray[drumTypeIndex].inputVolume / 100
+        for (let i = 0; i <= Delay.DelayArray[drumTypeIndex].feedback; i++) {
           // eslint-disable-next-line no-loop-func
           setTimeout(() => {
             const audioDelay = new Audio(drumSet.path);
@@ -90,10 +90,10 @@ const DrumBox: React.FC = () => {
               volume_lecture = 0.1
             }
             audioDelay.volume = volume_lecture
-            console.log("le sample à ", i, " delay à ", volume_lecture)
+            // console.log("le sample à ", i, " delay à ", volume_lecture)
             audioDelay.play();
           }
-            , Delay.DelayArray[drumIndex].step * i * bpmInterval);
+            , Delay.DelayArray[drumTypeIndex].step * i * bpmInterval);
         }
       }
     }
@@ -162,7 +162,7 @@ const DrumBox: React.FC = () => {
 
       if (spanClass[i].classList.contains("span_active")) {
         const drumTypeKey = drums[i].type as keyof typeof DrumType;
-        handlePlayDrum(drums[i], Volumes.VolumesBySpan[DrumType[drumTypeKey]][counterRef.current - 1]);
+        handlePlayDrum(drums[i], DrumType[drumTypeKey], counterRef.current - 1);
       }
     }
   };
@@ -190,10 +190,13 @@ const DrumBox: React.FC = () => {
             if (Data && typeof Data === "object") {
               setDrums(Data.setDrumSet ?? []);
               setBpm(Data.bpm ?? 120);
-              Pattern.set(Data.patternArray);
-              Volumes.set(Data.volumeSoundArray);
-              Volumes.setVolumesBySpan(Data.volumesBySpan);
-              Delay.setDelay(Data.delayArray)
+              Pattern.set(Data.PatternArray);
+              console.log(Data.VolumeArray)
+              Volumes.set(Data.VolumeArray);
+              Volumes.setVolumesBySpan(Data.VolumesBySpan);
+              Delay.setDelay(Data.DelayArray)
+
+              Fill.set(Data.FillArray)
               setLocalVolumes([...Volumes.VolumeArray]);
 
               for (let i = 0; i < Pattern.PatternArray.length; i++) {
@@ -279,7 +282,7 @@ const DrumBox: React.FC = () => {
   //Affichage des options
   const drumFunction = (drumType: string) => {
     const isActivated = document.getElementById("co_" + drumType)?.classList.contains("container_option_active")
-    console.log(isActivated)
+    // console.log(isActivated)
     toggle_classes("co_" + drumType, "container_option_active", !isActivated)
   }
 
@@ -301,7 +304,7 @@ const DrumBox: React.FC = () => {
           Tribe
         </button>
         {/* SAUVEGARDE */}
-        <button className="button_menu" onClick={() => saveDataToFile(drums, bpm, Volumes.VolumeArray, Pattern.PatternArray, Volumes.VolumesBySpan, Delay.DelayArray)}>💾 Exporter</button>
+        <button className="button_menu" onClick={() => saveDataToFile(drums, bpm)}>💾 Exporter</button>
         {/* CHARGEMENT */}
         <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} />
         <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()}>📂 Importer</button>
@@ -313,8 +316,8 @@ const DrumBox: React.FC = () => {
       <div id="container_input">
         {/* AFFICHAGE SUR 4 OU 8 TEMPS */}
         <div id="container_set_time">
-          <button onClick={toggle_display} className='button_menu button_set_nb_time' id="show_32_false">16</button>
-          <button onClick={toggle_display} className='button_menu button_set_nb_time nb_time_active' id="show_32_true">32</button>
+          <button onClick={toggle_display} className='button_menu button_set_nb_time nb_time_active' id="show_32_false">16</button>
+          {/* <button onClick={toggle_display} className='button_menu button_set_nb_time nb_time_active' id="show_32_true">32</button> */}
         </div>
         {/* LECTURE/STOP */}
         {!isLectureActive &&

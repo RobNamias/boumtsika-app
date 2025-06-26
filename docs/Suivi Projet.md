@@ -26,40 +26,37 @@
 
 ### Version 2.2 ✅
 
-- Ajout de la documentation ✅
-- Remodelage du Suivi de Projet ✅
-- Ajout de commentaires ✅
+- Ajout de la documentation
+- Remodelage du Suivi de Projet
+- Ajout de commentaires
 - Option 'Delay' par DrumType :
-        - Développement de la fonction ✅
-        - Intégration : ajout d'un DelayManager, d'un modèle 'Delay'et mise en place prise en charge lors de la lecture ✅
-        - Interface ✅
-        - prise en charge Sauvegarde/Chargement ✅
+        - Développement de la fonction
+        - Intégration : ajout d'un DelayManager, d'un modèle 'Delay'et mise en place prise en charge lors de la lecture
+        - Interface
+        - prise en charge Sauvegarde/Chargement
 
-### Version 2.3 🟥
+### Version 2.3 🟨
 
 - Finalisation documentation/commentaire 🟩
-- Option 'Fill' : Mettre en place une 'probabilité de Lecture' (lire le son qu'1 fois sur 2, ou sur 3 etc...) --> création d'un fillManager
-- Style
-- prise en charge Sauvegarde/Chargement 'Fill'
+- Mise en place d'une variable patternLength (et la fonction setLength() ) dans le patternManager afin de centraliser la longueur du pattern et générer les tableaux en fonction de cette longueur ✅
+- Option 'Fill' : Mettre en place une 'probabilité de Lecture' (lire le son qu'1 fois sur 2, ou sur 3 etc...) :
+        - développement et intégration ✅
+        - interface 🟧
+        - prise en charge Sauvegarde/Chargement 'Fill'✅
 
 ### Version 2.4 🟥❓
 
-A repenser... Selon la solution employée pour l'option 'Fill'
-
-- Passer la fonction delay du DrumType au SpanDrum --> création d'un delayManager
+- Préparation de la transition vers l'affichage prévue de la version 3 🟧
+- Revoir la fonction de fichier de sauvegarde pour récupérer les data via les Manager et non directement par la drumBox ✅
 
 ### Version 2.5 🟥
 
 - Retravailler le style général des options
-- Responsive ❗❗❗
+- Responsive ❗❗❗ (version mobile ET Chrome)
 
 ----
 
 #### Version 2.5 ---> Version 3
-
-- Gestion de l'affichage : Faire 4 pages différentes pour avoir 16 temps au total, mais toujours afficher qu'une mesure
-- Possibilité de choisir la longueur de la boucle (1, 2, 3 ou 4 page(s))
-- Création des boutons de sélection et d'activation de pages, ainsi qu'une classe CSS supplémentaire pour le survol à la lecture
 
 ----
 
@@ -67,7 +64,11 @@ A repenser... Selon la solution employée pour l'option 'Fill'
 
 - 4 volets d'options différentes : Volumes, Auto-Complete, Fill, Delay
 - Affichage toujours sur 16, mais possibilité de switcher entre 4 pages (4 mesures)
+- Possibilité de choisir la longueur de la boucle (1, 2, 3 ou 4 page(s))
+- Faire une vraie fenetre de sauvegarde pour choisir l'emplacement et le nom du fichier de sauvegarde
+- Exporter la partie "création de data" dans l'importation de fichier de sauvegarde et ne garder que le mapping dans la Drumbox
 - Plus de pistes (clap, conga)
+- Compatibilité navigateurs
 
 ## Version 4 🟥
 

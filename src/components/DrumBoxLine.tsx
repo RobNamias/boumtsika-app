@@ -4,7 +4,8 @@ import { getValue } from '@testing-library/user-event/dist/utils';
 import { DrumType } from '../models/DrumType';
 import * as Volumes from '../utilities/volumesManager';
 import * as Pattern from '../utilities/patternManager';
-import * as Delay from '../utilities/DelayManager';
+import * as Delay from '../utilities/delayManager';
+import * as Fill from '../utilities/fillManager';
 
 type Props = {
     drumType: string;
@@ -14,13 +15,14 @@ type Props = {
 const DrumBoxLine: React.FC<Props> = (drumType) => {
     let indexes: number[] = [];
     let i: number;
-    for (i = 1; i <= 32; i++) {
+    for (i = 1; i <= 16; i++) {
         indexes.push(i);
     }
 
     const [localVolumesBySpan, setLocalVolumesBySpan] = useState(Volumes.VolumesBySpan);
     const [degreesOfGroove, setDegreesOfGroove] = useState(Volumes.DegreesOfGroove);
     const [localDataDelay, setLocalDataDelay] = useState(Delay.DelayArray);
+    const [localFill, setLocalFill] = useState(Fill.FillArray);
     const [isFlipped, setIsFlipped] = useState(false);
 
     //Fonction pour générer avec une touche d'aléatoire un nouveau tableau de volume par drumtype
@@ -71,12 +73,11 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
             }
         }
         const drumTypeKey = drumType as keyof typeof DrumType;
-        console.log(valeur)
         if (valeur) {
             Pattern.autoCompleteByIndex(DrumType[drumTypeKey], valeur)
         }
         const listSpanByDrum = document.getElementsByClassName("sdd_" + drumType)
-        console.log(listSpanByDrum)
+        // console.log(listSpanByDrum)
         for (let j = 0; j < Pattern.PatternArray[DrumType[drumTypeKey]].length; j++) {
             Pattern.PatternArray[DrumType[drumTypeKey]][j] ?
                 listSpanByDrum[j]?.children[0].classList.add("span_active") : listSpanByDrum[j]?.children[0].classList.remove("span_active")
@@ -89,9 +90,9 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
         const card = document.getElementById("card" + drumType)
         const card_front = document.getElementById("card" + drumType + "_front")
         const card_back = document.getElementById("card" + drumType + "_back")
-        console.log(card_back, card_front)
+        // console.log(card_back, card_front)
         const layer = document.getElementById("card" + drumType + "_layer_" + type)
-        console.log(layer)
+        // console.log(layer)
         if (layer) {
             if (!layer?.classList.contains("current_layer")) {
                 const display_layers = document.getElementsByClassName("card" + drumType + "_layer")
@@ -125,6 +126,8 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
         }
     }
 
+
+
     const changeStepDelay = (e: ChangeEvent<HTMLInputElement>) => {
         Delay.setStepDelay(parseInt(e?.currentTarget.value), drumType.index)
         setLocalDataDelay([...Delay.DelayArray])
@@ -141,6 +144,15 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
         Delay.setIsActiveDelay(newValue, drumType.index)
         setLocalDataDelay([...Delay.DelayArray])
     }
+
+    const setFillBySpan = (e: React.FormEvent<HTMLInputElement>) => {
+        const timeIndex = Number(e.currentTarget.id.replace('spanFillInput_' + drumType.drumType + '_', "")) - 1
+        // console.log(Number(e.currentTarget.id.replace('spanFillInput_' + drumType.drumType + '_', "")))
+        const newValue = Number(getValue(e.currentTarget));
+        Fill.setBySpan(newValue, drumType.index, timeIndex)
+        setLocalFill([...Fill.FillArray])
+    }
+
     return (
         <>
             <div className='drum_box_line' id={'dbl_' + drumType.drumType}>
@@ -149,7 +161,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                         <button className='button_menu small_button' onClick={() => getLayer("volume", drumType.drumType)}>Vol</button>
                         <button className='button_menu small_button' onClick={() => getLayer("delay", drumType.drumType)}>D</button>
                         <button className='button_menu small_button' onClick={() => getLayer("autocomplete", drumType.drumType)}>A</button>
-                        <button className='button_menu small_button'>F</button>
+                        <button className='button_menu small_button' onClick={() => getLayer("fill", drumType.drumType)}>F</button>
                     </div>
 
 
@@ -194,9 +206,10 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                                                     className='vertical spanVolumeInput'
                                                     id={index + "_vol" + drumType.drumType}
                                                     step="5"
-                                                    value={localVolumesBySpan[drumType.index][index - 1]}
+                                                    value={Volumes.VolumesBySpan[drumType.index][index - 1]}
                                                     onChange={setSpanVolume}
                                                 />
+                                                {index % 4 === 0 && index < 16 && <div className={"separation sep_" + index / 4}></div>}
                                             </div>
                                         </>
                                     ))
@@ -217,7 +230,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                                     id={"setter_stepDelay_" + drumType.index}
                                     name={"setter_stepDelay_" + drumType.index}
                                     onChange={changeStepDelay}
-                                    value={localDataDelay[drumType.index].step}
+                                    value={Delay.DelayArray[drumType.index].step}
                                     min={1}
                                     max={4}
                                     step={1}
@@ -301,15 +314,33 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                                 // value="Complete"></input>
                                 value="Complete" onClick={() => autoComplete(drumType.drumType)}></input>
                         </div>
+
+                        {/* FILL */}
+                        <div className={"dbl_fill layer card" + drumType.drumType + "_layer layer_fill"} id={"card" + drumType.drumType + "_layer_fill"}>
+                            <div className='container_fill' id={'container_fill' + drumType.drumType}>
+                                {
+                                    indexes.map(index => (
+                                        <>
+                                            <div className='spanFill'>
+                                                <label htmlFor={'spanFillInput_' + drumType.drumType + '_' + (index)}>1/</label>
+                                                <input
+                                                    type="number"
+                                                    id={'spanFillInput_' + drumType.drumType + '_' + (index)}
+                                                    name={'spanFillInput_' + drumType.drumType + '_' + (index)}
+                                                    min="1"
+                                                    max="10"
+                                                    onChange={setFillBySpan}
+                                                    value={Fill.FillArray[drumType.index][index - 1]}
+                                                />
+                                            </div>
+                                            {index % 4 === 0 && index < 16 && <div className={"separation sep_" + index / 4}></div>}
+                                        </>
+                                    ))
+                                }
+                            </div>
+                        </div>
                     </div>
-
-
-
-
                 </div >
-
-
-
                 {
                     indexes.map(index => (
                         <>
@@ -318,7 +349,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                                 index={index}
                             />
                             {/* affichage conditionnel */}
-                            {index % 4 === 0 && index < 32 && <div className={"separation sep_" + index / 4}></div>}
+                            {index % 4 === 0 && index < 16 && <div className={"separation sep_" + index / 4}></div>}
                         </>
                     ))
                 }

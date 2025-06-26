@@ -1,8 +1,14 @@
 import { DrumSet } from "../models/DrumSet";
-import { dataDelay } from "../models/Delay"
+// import { dataDelay } from "../models/Delay"
+import { VolumeArray } from "./volumesManager";
+import { PatternArray } from '../utilities/patternManager';
+import { VolumesBySpan } from "./volumesManager";
+import { DelayArray } from '../utilities/delayManager';
+import { FillArray } from '../utilities/fillManager';
 
-export function saveDataToFile(drumSet: DrumSet[], bpm: number, volumeSoundArray: number[], patternArray: boolean[][], volumesBySpan: number[][], delayArray: dataDelay[]) {
+export function saveDataToFile(drumSet: DrumSet[], bpm: number,) {
 
+    //On réactive toutes les pistes pour la sauvegarde, par convention personnelle
     const setDrumSet = drumSet
     for (let i = 0; i < setDrumSet.length; i++) {
         setDrumSet[i].is_active = true
@@ -12,10 +18,12 @@ export function saveDataToFile(drumSet: DrumSet[], bpm: number, volumeSoundArray
     let Data = {
         setDrumSet,
         bpm,
-        volumeSoundArray,
-        patternArray,
-        volumesBySpan,
-        delayArray
+        VolumeArray,
+        PatternArray,
+        VolumesBySpan,
+        DelayArray,
+        FillArray
+
     };
 
     let jsonData = JSON.stringify(Data, null, 2);

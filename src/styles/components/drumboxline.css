@@ -30,6 +30,7 @@
 .drum_line {
     float: left;
     width: 100%;
+    min-width: 1450px;
     display: block;
     margin: 2px 0;
     height: fit-content;
@@ -225,6 +226,31 @@ datalist {
 
 .button_inactive_delay:hover {
     background-color: rgb(138, 0, 0);
+}
+
+/* FILL */
+
+.container_fill {
+    /* background-color: blue; */
+    display: flex;
+}
+
+.spanFill {
+    align-items: center;
+    justify-content: center;
+    /* background-color: red; */
+    height: 80px;
+    overflow: hidden;
+    width: 80px;
+    margin: 0 1px;
+}
+
+.spanFill label {
+    font-family: 'Gothic';
+}
+
+.spanFill input {
+    width: 35px;
 }
 
 .container_option_active {

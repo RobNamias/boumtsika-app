@@ -52,10 +52,21 @@
         height: 40px;
     }
 
+    .drum_line {
+        min-width: 0;
+        width: 100%
+    }
+
     .dbl_volume {
         height: 40px;
         width: 92%;
         min-width: 650px;
+    }
+
+    .container_selector_option {
+        left: -131px;
+        height: 40px;
+        width: 40px
     }
 
     #container_button_setDrum {
