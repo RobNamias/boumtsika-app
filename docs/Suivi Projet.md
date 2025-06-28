@@ -35,19 +35,21 @@
         - Interface
         - prise en charge Sauvegarde/Chargement
 
-### Version 2.3 🟨
+### Version 2.3 ✅
 
-- Finalisation documentation/commentaire 🟩
+- Finalisation documentation/commentaire ✅
 - Mise en place d'une variable patternLength (et la fonction setLength() ) dans le patternManager afin de centraliser la longueur du pattern et générer les tableaux en fonction de cette longueur ✅
 - Option 'Fill' : Mettre en place une 'probabilité de Lecture' (lire le son qu'1 fois sur 2, ou sur 3 etc...) :
         - développement et intégration ✅
-        - interface 🟧
+        - interface ✅
         - prise en charge Sauvegarde/Chargement 'Fill'✅
 
-### Version 2.4 🟥❓
+### Version 2.4 🟨
 
 - Préparation de la transition vers l'affichage prévue de la version 3 🟧
-- Revoir la fonction de fichier de sauvegarde pour récupérer les data via les Manager et non directement par la drumBox ✅
+        - Mise en place d'une variable patternLength (v2.3) ✅
+        - Découpe des tableaux en page de 16 cellules 🟥
+- Revoir la fonction de fichier de sauvegarde pour récupérer les data via les Manager et non par la drumBox ✅
 
 ### Version 2.5 🟥
 
@@ -63,7 +65,8 @@
 ## Version 3 🟥
 
 - 4 volets d'options différentes : Volumes, Auto-Complete, Fill, Delay
-- Affichage toujours sur 16, mais possibilité de switcher entre 4 pages (4 mesures)
+- Affichage toujours sur 16, mais possibilité de switcher entre 4 pages (4 mesures) :
+        - découpe des tableaux en 16 cellules (pour 1 page)
 - Possibilité de choisir la longueur de la boucle (1, 2, 3 ou 4 page(s))
 - Faire une vraie fenetre de sauvegarde pour choisir l'emplacement et le nom du fichier de sauvegarde
 - Exporter la partie "création de data" dans l'importation de fichier de sauvegarde et ne garder que le mapping dans la Drumbox

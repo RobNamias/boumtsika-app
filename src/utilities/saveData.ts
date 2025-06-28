@@ -14,7 +14,6 @@ export function saveDataToFile(drumSet: DrumSet[], bpm: number,) {
         setDrumSet[i].is_active = true
     }
 
-
     let Data = {
         setDrumSet,
         bpm,

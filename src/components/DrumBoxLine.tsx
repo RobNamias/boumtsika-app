@@ -146,11 +146,15 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
     }
 
     const setFillBySpan = (e: React.FormEvent<HTMLInputElement>) => {
-        const timeIndex = Number(e.currentTarget.id.replace('spanFillInput_' + drumType.drumType + '_', "")) - 1
-        // console.log(Number(e.currentTarget.id.replace('spanFillInput_' + drumType.drumType + '_', "")))
         const newValue = Number(getValue(e.currentTarget));
-        Fill.setBySpan(newValue, drumType.index, timeIndex)
-        setLocalFill([...Fill.FillArray])
+
+        console.log(newValue)
+        if (newValue > 0 && newValue <= 10) {
+            // console.log(Number(e.currentTarget.id.replace('spanFillInput_' + drumType.drumType + '_', "")))
+            const timeIndex = Number(e.currentTarget.id.replace('spanFillInput_' + drumType.drumType + '_', "")) - 1
+            Fill.setBySpan(newValue, drumType.index, timeIndex)
+            setLocalFill([...Fill.FillArray])
+        }
     }
 
     return (
@@ -322,7 +326,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                                     indexes.map(index => (
                                         <>
                                             <div className='spanFill'>
-                                                <label htmlFor={'spanFillInput_' + drumType.drumType + '_' + (index)}>1/</label>
+                                                <label htmlFor={'spanFillInput_' + drumType.drumType + '_' + (index)}>1/ </label>
                                                 <input
                                                     type="number"
                                                     id={'spanFillInput_' + drumType.drumType + '_' + (index)}
@@ -331,6 +335,7 @@ const DrumBoxLine: React.FC<Props> = (drumType) => {
                                                     max="10"
                                                     onChange={setFillBySpan}
                                                     value={Fill.FillArray[drumType.index][index - 1]}
+                                                    placeholder="Sélectionner la probabilité de lire le sample"
                                                 />
                                             </div>
                                             {index % 4 === 0 && index < 16 && <div className={"separation sep_" + index / 4}></div>}
