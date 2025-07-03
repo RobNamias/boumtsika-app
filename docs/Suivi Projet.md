@@ -48,12 +48,18 @@
 
 - Préparation de la transition vers l'affichage prévue de la version 3 🟧
         - Mise en place d'une variable patternLength (v2.3) ✅
-        - Découpe des tableaux en page de 16 cellules 🟥
+        - Modification de la fonction de lecture pour utiliser le PatternArray plutôt que la classe span_active ✅
+        - Création d'un useState numeroPage
+        - Création des boutons de changements de pages (non-fonctionnelles)
+        - Activation des spanDrum en fonction de Pattern.getCurrentPatternArray(numero_page) en changeant de page.
+
+        --> ❗❗❗ problème dans la modification du pattern via le spanDrum, il faut prendre en compte la variable Pattern.numeroPage
+
 - Revoir la fonction de fichier de sauvegarde pour récupérer les data via les Manager et non par la drumBox ✅
+- Travail CSS grand écran ✅
 
 ### Version 2.5 🟥
 
-- Retravailler le style général des options
 - Responsive ❗❗❗ (version mobile ET Chrome)
 
 ----

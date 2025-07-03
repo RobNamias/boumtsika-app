@@ -1,51 +1,42 @@
 import React from 'react';
 import * as Pattern from '../utilities/patternManager';
 
-
-const setSpan = (event: React.MouseEvent) => {
-    var i: number = 0
-    switch (event?.currentTarget?.classList[1].replace("sdd_", "")) {
-        case "Kick":
-            i = 0
-            break;
-        case "Snare":
-            i = 1
-            break;
-        case "ClHat":
-            i = 2
-            break;
-        case "OpHat":
-            i = 3
-            break;
-        case "Crash":
-            i = 4
-            break;
-    }
-    const classList = event?.currentTarget?.children[0].classList;
-    const j = parseInt(event?.currentTarget?.classList[2].replace("sdd_", "")) - 1
-    switch (classList.contains("span_active")) {
-        case true: {
-            classList.remove("span_active");
-            Pattern.setSpanActive(i, j, false)
-            break;
-        }
-        case false: {
-            classList.add("span_active");
-            Pattern.setSpanActive(i, j, true)
-            break;
-        }
-        default: {
-            console.log("La séléction de Span ne marche pas")
-            break;
-        }
-    }
-    // console.log(getPattern());
-}
-
 type Props = {
     drumType: string;
     index: number
 };
+
+
+const setSpan = (event: React.MouseEvent) => {
+    const drumType = event?.currentTarget?.className.replace('sdd_', '').replace('span_drum_div', '').replace('sdd_', '').replace((parseInt(event?.currentTarget?.classList[2].replace("sdd_", "")).toString()), "").replace(' ', '').replace(' ', '');
+    var drumTypeIndex: number = 0
+    switch (drumType) {
+        case 'Kick':
+            drumTypeIndex = 0;
+            break;
+        case 'Snare':
+            drumTypeIndex = 1;
+            break;
+        case 'ClHat':
+            drumTypeIndex = 2;
+            break;
+        case 'OpHat':
+            drumTypeIndex = 3;
+            break;
+        case 'Crash':
+            drumTypeIndex = 4;
+            break;
+        default:
+            break
+    }
+    const classList = event?.currentTarget?.children[0].classList;
+    const j = parseInt(event?.currentTarget?.classList[2].replace("sdd_", "")) - 1
+    classList.contains("span_active") ? classList.remove("span_active") : classList.add("span_active")
+    Pattern.setSpanActive(drumTypeIndex, j + (Pattern.numeroPage - 1) * 16, classList.contains("span_active"))
+    // console.log(Pattern.PatternArray[drumTypeIndex][j + (Pattern.numeroPage - 1) * 16]);
+}
+
+
 
 const SpanDrum: React.FC<Props> = (drumType) => {
     return (

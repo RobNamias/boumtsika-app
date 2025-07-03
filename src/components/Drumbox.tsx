@@ -23,7 +23,7 @@ const PadsWrapper = styled.main`
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>(switchDrumSet("808")); //Gère le kit de batterie
   const [bpm, setBpm] = useState<number>(130); //Gere le BPM
-  const [show32, setShow32] = useState(false); //Affichage sur 4 ou 8 temps
+  const [numeroPage, setNumeroPage] = useState(Pattern.numeroPage); //Affichage sur 4 ou 8 temps
   const [localVolumes, setLocalVolumes] = useState(Volumes.VolumeArray);//Gère le volume par piste
   const intervalId = useRef<NodeJS.Timeout | null>(null);
   const counterRef = useRef(0); //Compteur pour le défilement pendant la lecture
@@ -76,7 +76,7 @@ const DrumBox: React.FC = () => {
     //Check si la piste est activée et la probabilité de lecture ---> FillArray
     if (drums[drumTypeIndex].is_active && Math.random() < 1 / Fill.FillArray[drumTypeIndex][spanIndex]) {
       audio.volume = Volumes.VolumeArray[drumTypeIndex] / 100 * Volumes.VolumesBySpan[drumTypeIndex][spanIndex] / 100
-      // console.log(audio.volume)
+      console.log(audio.volume)
       audio.play();
       // Fonction Delay
       if (Delay.DelayArray[drumTypeIndex].is_active) {
@@ -99,33 +99,29 @@ const DrumBox: React.FC = () => {
     }
   };
 
-  // Changement de l'affichage entre 4 temps et 8 temps
-  const toggle_display = (e: React.MouseEvent) => {
-    if (e.currentTarget.id.replace("show_32_", "") !== show32.toString()) {
-      stopLecture();
-      var settingToggle: string = show32 ? "display:none" : "display:flex";
-      for (let i = 17; i < 33; i++) {
-        const listInputVol = document.getElementsByClassName("spanVolume" + i);
-        const listeSpan = document.getElementsByClassName("sdd_" + i);
-        for (let j = 0; j < listeSpan.length; j++) {
-          listeSpan[j].setAttribute("style", settingToggle)
-          listInputVol[j].setAttribute("style", settingToggle)
+
+  function toggle_page(numero_page: number) {
+    if (numero_page !== numeroPage) {
+      console.log("Page demandée : " + numero_page)
+      Pattern.setPage(numero_page);
+      console.log(Pattern.numeroPage)
+      setNumeroPage(numero_page);
+      // console.log('show_page' + numero_page)
+      const listeButton = document.getElementsByClassName("button_set_nb_time");
+      for (let i = 0; i < listeButton.length; i++) {
+        listeButton[i].classList.remove("nb_time_active");
+        if (listeButton[i].id === "show_page" + numero_page) {
+          listeButton[i].classList.add("nb_time_active");
         }
       }
-      for (let i = 4; i < 8; i++) {
-        const listeSeparation = document.getElementsByClassName("sep_" + i)
-        for (let j = 0; j < listeSeparation.length; j++) {
-          listeSeparation[j].setAttribute("style", settingToggle)
+      for (let i = 0; i < Pattern.PatternArray.length; i++) {
+        const listSpanByDrum = document.getElementsByClassName("sdd_" + drums[i].type);
+        for (let j = 0; j < Pattern.PatternArray[i].length; j++) {
+          toggle_classes(listSpanByDrum[j]?.children[0].id, "span_active", Pattern.getCurrentPatternArray(numero_page)[i][j]);
         }
       }
-      setShow32(!show32)
+      console.log("Page actuelle : " + numeroPage)
     }
-    // 
-    const listeButton = document.getElementsByClassName("button_set_nb_time");
-    for (let i = 0; i < listeButton.length; i++) {
-      listeButton[i].classList.remove("nb_time_active")
-    }
-    e?.currentTarget.classList.add("nb_time_active")
   }
 
   //Mise à jour du tempo
@@ -148,19 +144,24 @@ const DrumBox: React.FC = () => {
 
   //Lecture
   const Lecture = () => {
-    var nb_Time: number = show32 ? 32 : 16;
-    if (counterRef.current === nb_Time) {
+    // console.log(Pattern.patternLength)
+    if (counterRef.current === Pattern.patternLength) {
       counterRef.current = 0;
     }
     counterRef.current++;
-    const spanClass = document.getElementsByClassName("span_" + counterRef.current);
-    for (let i = 0; i < spanClass.length; i++) {
-      spanClass[i].classList.add("span_survol");
-      setTimeout(() => {
-        spanClass[i].classList.remove("span_survol");
-      }, bpmInterval);
-
-      if (spanClass[i].classList.contains("span_active")) {
+    if (Math.trunc(counterRef.current / 16) === numeroPage - 1) {
+      const survol = counterRef.current - 16 * (numeroPage - 1)
+      const spanClass = document.getElementsByClassName("span_" + survol.toString());
+      for (let i = 0; i < spanClass.length; i++) {
+        spanClass[i].classList.add("span_survol");
+        setTimeout(() => {
+          spanClass[i].classList.remove("span_survol");
+        }, bpmInterval);
+      }
+    }
+    //Lecture du pattern
+    for (let i = 0; i < Pattern.PatternArray.length; i++) {
+      if (Pattern.PatternArray[i][counterRef.current - 1]) {
         const drumTypeKey = drums[i].type as keyof typeof DrumType;
         handlePlayDrum(drums[i], DrumType[drumTypeKey], counterRef.current - 1);
       }
@@ -316,7 +317,13 @@ const DrumBox: React.FC = () => {
       <div id="container_input">
         {/* AFFICHAGE SUR 4 OU 8 TEMPS */}
         <div id="container_set_time">
-          <button onClick={toggle_display} className='button_menu button_set_nb_time nb_time_active' id="show_32_false">16</button>
+
+          <button onClick={() => toggle_page(1)} className='button_menu button_set_nb_time nb_time_active' id="show_page1">1</button>
+          <button onClick={() => toggle_page(2)} className='button_menu button_set_nb_time' id="show_page2">2</button>
+          <button onClick={() => toggle_page(3)} className='button_menu button_set_nb_time' id="show_page3">3</button>
+          <button onClick={() => toggle_page(4)} className='button_menu button_set_nb_time' id="show_page4">4</button>
+
+
           {/* <button onClick={toggle_display} className='button_menu button_set_nb_time nb_time_active' id="show_32_true">32</button> */}
         </div>
         {/* LECTURE/STOP */}

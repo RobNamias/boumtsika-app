@@ -10,7 +10,7 @@
     height: 70px;
     width: 70px;
     padding: 5px;
-    background-color: red;
+    /* background-color: red; */
     color: var(--scnd-bg-color);
     position: absolute;
     background-color: rgb(141, 141, 141);
@@ -30,7 +30,7 @@
 .drum_line {
     float: left;
     width: 100%;
-    min-width: 1450px;
+    max-width: 1450px;
     display: block;
     margin: 2px 0;
     height: fit-content;
@@ -47,15 +47,18 @@
 .container_options {
     position: absolute;
     display: none;
-
+    /* background-color: blue; */
     z-index: 10;
     height: 80px;
-    width: 92%;
+    width: 100%;
+    max-width: 1320px
 }
 
 .container_card {
     height: 80px;
     width: 100%;
+    max-width: 1320px;
+
     perspective: 800px;
 }
 
@@ -96,7 +99,8 @@
 }
 
 .layer:hover {
-    background-color: var(--scnd-bg-color);
+    /* background-color: var(--scnd-bg-color); */
+    background-color: rgb(114, 114, 114, 0.7);
     color: var(--main-bg-color)
 }
 
@@ -104,7 +108,6 @@
 /* VOLUME */
 .layer_volume {
     display: flex;
-    width: 100%;
 }
 
 .container_setGroove {
@@ -166,7 +169,7 @@ datalist {
 
 /* AUTOCOMPLETE */
 .autocomplete_container {
-    width: 215px;
+
     height: 40px;
     display: flex;
     align-items: center;
@@ -181,6 +184,10 @@ datalist {
     font-size: 20px;
     margin: 0 2px;
 
+}
+
+.autocomplete_submit {
+    margin: 0 12.5px;
 }
 
 
@@ -244,6 +251,7 @@ datalist {
     overflow: hidden;
     width: 80px;
     margin: 0 1px;
+    border-radius: 5px;
 }
 
 .spanFill label {
@@ -277,7 +285,7 @@ datalist {
     display: flex;
     height: 80px;
     /* background-color: orange; */
-    max-width: 92%;
+    max-width: 1320px;
 }
 
 .separation {

@@ -1,10 +1,14 @@
 const initialPatternLength = 64
 export var patternLength = initialPatternLength
+export var numeroPage = 1
 
 export function setLength(newValue: number) {
     patternLength = newValue
 }
 
+export function setPage(newPage: number) {
+    numeroPage = newPage
+}
 
 const initialPatternArray: boolean[][] = [[], [], [], [], []]
 
@@ -15,6 +19,18 @@ for (let i = 0; i < initialPatternArray.length; i++) {
     }
 }
 export var PatternArray = initialPatternArray
+
+export function getCurrentPatternArray(numberPage: number) {
+    var currentPatternArray: boolean[][] = [[], [], [], [], []];
+    const start = (numberPage - 1) * 16;
+    // console.log("getCurrentPatternArray", PatternArray, numberPage)
+    for (let j = 0; j < PatternArray.length; j++) {
+        for (let i = start; i < start + 16; i++) {
+            currentPatternArray[j].push(PatternArray[j][i]);
+        }
+    }
+    return currentPatternArray;
+}
 
 
 
