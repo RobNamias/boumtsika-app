@@ -10,8 +10,8 @@ Une version deployée de la branche gh-pages est accessible sur GitHub Page : <h
 
 Elle peut par conséquent différer de la version disponible sur le repository : <https://github.com/RobNamias/boumtsika-app>
 
-- Branche "gh-pages" : Version 2.3 28/06/2025
-- Branche "main" : Version 2.3 28/06/2025
+- Branche "gh-pages" : Version 2.4 03/07/2025
+- Branche "main" : Version 2.4 03/07/2025
 
 ## Documentation
 
