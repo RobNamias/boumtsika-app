@@ -23,7 +23,7 @@ const PadsWrapper = styled.main`
 const DrumBox: React.FC = () => {
   const [drums, setDrums] = useState<DrumSet[]>(switchDrumSet("808")); //Gère le kit de batterie
   const [bpm, setBpm] = useState<number>(130); //Gere le BPM
-  const [numeroPage, setNumeroPage] = useState(Pattern.numeroPage); //Affichage sur 4 ou 8 temps
+  // const [numeroPage, setNumeroPage] = useState(Pattern.numeroPage); //Affichage sur 4 ou 8 temps
   const [localVolumes, setLocalVolumes] = useState(Volumes.VolumeArray);//Gère le volume par piste
   const intervalId = useRef<NodeJS.Timeout | null>(null);
   const counterRef = useRef(0); //Compteur pour le défilement pendant la lecture
@@ -101,11 +101,11 @@ const DrumBox: React.FC = () => {
 
 
   function toggle_page(numero_page: number) {
-    if (numero_page !== numeroPage) {
+    if (numero_page !== Pattern.numeroPage) {
       console.log("Page demandée : " + numero_page)
       Pattern.setPage(numero_page);
       console.log(Pattern.numeroPage)
-      setNumeroPage(numero_page);
+      // setNumeroPage(numero_page);
       // console.log('show_page' + numero_page)
       const listeButton = document.getElementsByClassName("button_set_nb_time");
       for (let i = 0; i < listeButton.length; i++) {
@@ -120,7 +120,7 @@ const DrumBox: React.FC = () => {
           toggle_classes(listSpanByDrum[j]?.children[0].id, "span_active", Pattern.getCurrentPatternArray(numero_page)[i][j]);
         }
       }
-      console.log("Page actuelle : " + numeroPage)
+      // console.log("Page actuelle : " + numeroPage)
     }
   }
 
@@ -149,8 +149,8 @@ const DrumBox: React.FC = () => {
       counterRef.current = 0;
     }
     counterRef.current++;
-    if (Math.trunc(counterRef.current / 16) === numeroPage - 1) {
-      const survol = counterRef.current - 16 * (numeroPage - 1)
+    if (Math.trunc(counterRef.current / 16) === Pattern.numeroPage - 1) {
+      const survol = counterRef.current - 16 * (Pattern.numeroPage - 1)
       const spanClass = document.getElementsByClassName("span_" + survol.toString());
       for (let i = 0; i < spanClass.length; i++) {
         spanClass[i].classList.add("span_survol");

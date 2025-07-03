@@ -44,16 +44,13 @@
         - interface ✅
         - prise en charge Sauvegarde/Chargement 'Fill'✅
 
-### Version 2.4 🟨
+### Version 2.4 ✅
 
-- Préparation de la transition vers l'affichage prévue de la version 3 🟧
+- Préparation de la transition vers l'affichage prévue de la version 3 ✅
         - Mise en place d'une variable patternLength (v2.3) ✅
         - Modification de la fonction de lecture pour utiliser le PatternArray plutôt que la classe span_active ✅
-        - Création d'un useState numeroPage
         - Création des boutons de changements de pages (non-fonctionnelles)
-        - Activation des spanDrum en fonction de Pattern.getCurrentPatternArray(numero_page) en changeant de page.
-
-        --> ❗❗❗ problème dans la modification du pattern via le spanDrum, il faut prendre en compte la variable Pattern.numeroPage
+        - Activation des spanDrum en fonction de Pattern.getCurrentPatternArray(numero_page) en changeant de page
 
 - Revoir la fonction de fichier de sauvegarde pour récupérer les data via les Manager et non par la drumBox ✅
 - Travail CSS grand écran ✅
@@ -64,15 +61,18 @@
 
 ----
 
+#### Version 2.6
+
+- Ajout d'une fonction de lecture pageunique
+
 #### Version 2.5 ---> Version 3
 
 ----
 
 ## Version 3 🟥
 
-- 4 volets d'options différentes : Volumes, Auto-Complete, Fill, Delay
-- Affichage toujours sur 16, mais possibilité de switcher entre 4 pages (4 mesures) :
-        - découpe des tableaux en 16 cellules (pour 1 page)
+- 4 volets d'options différentes : Volumes, Auto-Complete, Fill, Delay ✅
+- Affichage toujours sur 16, mais possibilité de switcher entre 4 pages (4 mesures) ✅
 - Possibilité de choisir la longueur de la boucle (1, 2, 3 ou 4 page(s))
 - Faire une vraie fenetre de sauvegarde pour choisir l'emplacement et le nom du fichier de sauvegarde
 - Exporter la partie "création de data" dans l'importation de fichier de sauvegarde et ne garder que le mapping dans la Drumbox
