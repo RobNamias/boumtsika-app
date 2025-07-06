@@ -15,6 +15,6 @@
 
 .titre {
     font-size: 15vh;
-    color: darkgrey;
+    color: var(--font-color-medium);
     font-family: 'Traffic', sans-serif;
 }

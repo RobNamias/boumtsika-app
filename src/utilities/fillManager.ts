@@ -12,10 +12,8 @@ export var FillArray: number[][] = initialFillArray
 
 export function set(newFillArray: number[][]) {
     FillArray = newFillArray
-    console.log(FillArray)
 }
 
 export function setBySpan(newValue: number, drumTypeIndex: number, timeIndex: number) {
     FillArray[drumTypeIndex][timeIndex] = newValue
-    console.log(FillArray)
 }

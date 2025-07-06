@@ -55,9 +55,17 @@
 - Revoir la fonction de fichier de sauvegarde pour récupérer les data via les Manager et non par la drumBox ✅
 - Travail CSS grand écran ✅
 
-### Version 2.5 🟥
+### Version 2.5 : Intégration de l'outil Intelligence Artificielle dans la programmation 🟥
 
-- Responsive ❗❗❗ (version mobile ET Chrome)
+- refonte poussée du système de fonctionnement et de la structure de l'application
+- unification des thèmes
+- ajout de fonctions : enregistrement, Visualizator
+- ajout d'une doc Rapport IA pour suivre les modifications apportés via IA, rédigé par l'IA
+
+- Responsive ❗❗❗ :
+        - Mobile 🟥
+        - Chrome ✅
+        - Opéra
 
 ----
 

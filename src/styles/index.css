@@ -3,6 +3,11 @@
   --scnd-bg-color: rgb(102, 102, 102);
   --button-color: rgb(102, 102, 102);
   --button-color-active: green;
+
+  /* Variables de couleur pour le texte */
+  --font-color-light: #f5f5f5;
+  --font-color-medium: #b0b0b0;
+  --font-color-dark: #444444;
 }
 
 @font-face {
@@ -23,6 +28,7 @@
 @import "./components/spanDrum";
 @import "./components/inputVolume";
 @import "./mob_Version.css";
+@import "./components/visualizator.css";
 
 
 

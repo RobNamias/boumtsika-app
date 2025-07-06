@@ -1,5 +1,5 @@
+import React from 'react';
 import styled from 'styled-components';
-// import SliderVolumeComponent from './SliderVolumeComponent';
 
 const StyledDrum = styled.div`
   @font-face {
@@ -12,9 +12,6 @@ const StyledDrum = styled.div`
   height: 80px;
   border-radius: 5px;
   background-color: var(--main-bg-color);
-  filter: drop-shadow(2px 2px 2px black);
-  cursor: pointer;
-  // border: 2px solid black;
   transition: all 0.1s;
   color: darkgrey;
   display: flex;
@@ -26,11 +23,11 @@ const StyledDrum = styled.div`
   :active {
     background: darkgrey;
   }
-    @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1280px) {
     height : 40px;
     width: 40px;
     font-size: 3vh;
-}
+  }
 `;
 
 type Props = {
@@ -46,4 +43,4 @@ const Drum: React.FC<Props> = ({ drumType, onClick }) => (
   </div>
 );
 
-export default Drum;
+export default React.memo(Drum);

@@ -23,13 +23,12 @@
     color: white;
     overflow: hidden;
     transition: height 1s ease-in-out;
-    z-index: 1;
+    z-index: 100;
 }
 
 .App-header button {
     background-color: #282c3400;
     border: none;
-    z-index: 2;
 }
 
 .unable_orientation {

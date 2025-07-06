@@ -1,33 +1,42 @@
 .span_drum_div {
     /* height: 100%; */
-    border-radius: 5px;
+    border-radius: 8px;
     width: 80px;
-    background-color: grey;
-    margin: 0 1px;
+    background: linear-gradient(135deg, #444 0%, #666 100%);
+    margin: 0 2px;
     display: flex;
     align-items: center;
     justify-content: center;
-    -webkit-transition: background-color 200ms linear;
-    -ms-transition: background-color 200ms linear;
-    transition: background-color 200ms linear;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px #0002;
 }
 
 .span_drum_div:hover {
-    background-color: rgb(136, 136, 136);
+    background: linear-gradient(135deg, #666 0%, #888 100%);
     cursor: pointer;
+    box-shadow: 0 4px 16px #0003;
 }
 
 .span_drum {
-    height: 20px;
-    width: 20px;
-    border-radius: 10px;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background: #bbb;
+    box-shadow: 0 1px 4px #0002;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--font-color-dark);
 }
 
 .span_active {
-    background-color: darkgrey;
+    background: linear-gradient(135deg, #ffffff 0%, #000000 100%);
+    box-shadow: 0 0 0 3px #c4c142, 0 2px 2px #0003;
 }
 
 .span_survol {
-    background-color: darkgrey;
-    filter: invert(1);
+    background: #fff;
+    filter: inv ert(1) brightness(1.2);
+    box-shadow: 0 0 0 2px #fff, 0 2px 8px #0003;
 }

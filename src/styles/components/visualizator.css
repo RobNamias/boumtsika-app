@@ -1,0 +1,86 @@
+.container_visu {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    min-width: 150px;
+    min-height: 100px;
+    background: #222;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px #0006;
+    z-index: 50;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.visu-header {
+    user-select: none;
+}
+
+
+.resize-handle {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 18px;
+    height: 18px;
+    cursor: nesw-resize;
+    background: rgba(255, 255, 255, 0.50);
+    border-bottom-left-radius: 8px;
+    z-index: 51;
+}
+
+.visu-grid {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    gap: 4px;
+    grid-template-columns: repeat(5, 1fr);
+    /* 5 colonnes fixes */
+}
+
+.visu-grid-cell {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px #0002;
+    transition: opacity 0.15s, filter 0.15s;
+}
+
+.visu-grid-cell.active {
+    animation: pulse 0.25s;
+    box-shadow: 0 0 12px 2px #fff8;
+    backdrop-filter: blur(2px);
+    background: rgba(255, 255, 255, 0.10);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.10);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.visu-volume-bar-bg {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: 8px;
+    height: 7px;
+    border-radius: 4px;
+    background: rgb(255, 255, 255);
+    overflow: hidden;
+    z-index: 2;
+}
+
+.visu-volume-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.18s cubic-bezier(.4, 2, .6, 1);
+}

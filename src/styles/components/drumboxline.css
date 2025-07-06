@@ -68,12 +68,22 @@
     width: 100%;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 300ms;
+    transition: transform 400ms cubic-bezier(.4, 2, .6, 1);
+    box-shadow: 0 6px 32px 0 rgba(0, 0, 0, 0.10), 0 1.5px 6px 0 rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, #888 0%, #bbb 100%);
+    border-radius: 12px;
+    z-index: 20;
 }
 
 
 .front,
 .back {
+    background: linear-gradient(135deg, #888 0%, #bbb 100%);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0003;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 100%;
     width: 100%;
     position: absolute;
@@ -81,11 +91,21 @@
 }
 
 .back {
-    /* background-color: #3a3a3a; */
     transform: rotateX(180deg);
-    display: flex;
-    align-items: center;
     gap: 5rem;
+}
+
+/* Accentue la couche active */
+.card:focus-within,
+.card:hover {
+    box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.28), 0 2px 12px 0 rgba(0, 0, 0, 0.18);
+    background: linear-gradient(135deg, #555 0%, #888 100%);
+}
+
+/* Optionnel : effet sur la couche affichée */
+.layer.current_layer {
+    background: rgba(80, 80, 80, 0.18);
+    z-index: 21;
 }
 
 .layer {
@@ -180,10 +200,7 @@ datalist {
 
 
 .autocomplete_container label {
-    font-family: 'Gothic';
-    font-size: 20px;
-    margin: 0 2px;
-
+    color: var(--font-color-light);
 }
 
 .autocomplete_submit {
@@ -213,8 +230,17 @@ datalist {
     cursor: pointer;
 }
 
-.volumeDelay {
-    margin: 20px 0;
+.container_setter_Delay input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    /* Override default look */
+    appearance: none;
+    margin-top: -17px;
+    /* Centers thumb on the track */
+
+    /*custom styles*/
+    background-color: var(--main-bg-color);
+    height: 15px;
+    width: 5px;
 }
 
 .button_Delay {
@@ -255,10 +281,11 @@ datalist {
 }
 
 .spanFill label {
-    font-family: 'Gothic';
+    color: var(--font-color-light);
 }
 
 .spanFill input {
+    color: var(--font-color-light);
     width: 30px;
     height: 16px;
     border-radius: 4px;
@@ -282,6 +309,7 @@ datalist {
 }
 
 .drum_box_line {
+    color: var(--font-color-medium);
     display: flex;
     height: 80px;
     /* background-color: orange; */

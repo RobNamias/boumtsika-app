@@ -2,6 +2,7 @@
 
 ## Docs
 
+- `Rapport IA` : Suivi des modifications effectuées avec l'aide de l'IA, et rédigé par IA
 - `Sources` : recueil des supports externes utilisés pour le développement de cette application
 - `Suivi Projet` :
   - Suivi développement des fonctionnalités
