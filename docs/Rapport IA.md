@@ -37,7 +37,6 @@
 - Ajout des boutons pour démarrer, arrêter, télécharger et supprimer l’enregistrement audio.
 - Affichage du lecteur audio intégré après enregistrement, avec gestion des erreurs de lecture.
 - Possibilité de relancer un enregistrement après suppression ou arrêt du précédent.
-- Affichage de l’URL du fichier audio généré pour faciliter le debug.
 - Désactivation des boutons selon l’état du recorder ou du chargement pour éviter les actions incohérentes.
 
 ## 6. Robustesse et expérience utilisateur

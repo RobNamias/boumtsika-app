@@ -450,10 +450,21 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
 
       <div id="container_input">
         <div id="container_set_time">
-          <button onClick={() => toggle_page(1)} className='button_menu button_set_nb_time nb_time_active' id="show_page1">1</button>
-          <button onClick={() => toggle_page(2)} className='button_menu button_set_nb_time' id="show_page2">2</button>
-          <button onClick={() => toggle_page(3)} className='button_menu button_set_nb_time' id="show_page3">3</button>
-          <button onClick={() => toggle_page(4)} className='button_menu button_set_nb_time' id="show_page4">4</button>
+          {[1, 2, 3, 4].map(pageNum => (
+            <button
+              key={pageNum}
+              onClick={() => toggle_page(pageNum)}
+              className={
+                'button_menu button_set_nb_time' +
+                (Pattern.numeroPage === pageNum ? ' nb_time_active' : '')
+              }
+              id={`show_page${pageNum}`}
+              tabIndex={0}
+              type="button"
+            >
+              {pageNum}
+            </button>
+          ))}
         </div>
         {/* LECTURE/STOP */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

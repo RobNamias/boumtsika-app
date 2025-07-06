@@ -17,6 +17,7 @@
 
 - `assets` : ressources audios, polices et images
 - `components` : les différents composants React de l'application
+- `hooks` : les hooks pour la gestion de l'audio
 - `models` : les modèles pour chaque kit de batterie et chaque sample.
 - `styles` : fichiers CSS par composant
 - `utilities` :
