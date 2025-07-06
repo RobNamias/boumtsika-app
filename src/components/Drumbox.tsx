@@ -1,4 +1,4 @@
-import React, { useState, useRef, ChangeEvent, useEffect } from 'react';
+import React, { useState, useRef, ChangeEvent, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import * as Pattern from '../utilities/patternManager';
 import * as Volumes from '../utilities/volumesManager';
@@ -36,11 +36,12 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
   const counterRef = useRef(0);
   const [isLectureActive, setIsLectureActive] = useState(false);
   const [loopPageOnly, setLoopPageOnly] = useState(false);
+  const [pendingLecture, setPendingLecture] = useState(false);
 
   const bpmInterval = 1000 / (bpm / 60) / 4;
 
   // Web Audio API
-  const { audioCtx, mediaDestination } = useWebAudio();
+  const { audioCtx, mediaDestination, initAudio } = useWebAudio();
   const { buffers, loading } = useAudioBuffers(audioCtx, drums);
 
   // Gestion de l'enregistrement audio
@@ -48,21 +49,28 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const chunksRef = useRef<BlobPart[]>([]);
 
+  // Nettoyage mémoire : AudioContext, timers à la destruction du composant
+  useEffect(() => {
+    return () => {
+      if (audioCtx && typeof audioCtx.close === "function" && audioCtx.state !== "closed") {
+        audioCtx.close();
+      }
+      if (intervalId.current) clearInterval(intervalId.current);
+      if (audioURL) URL.revokeObjectURL(audioURL);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (mediaDestination) {
-      console.log("Création d'un nouveau MediaRecorder");
       const newRecorder = new MediaRecorder(mediaDestination.stream, { mimeType: 'audio/webm;codecs=opus' });
       newRecorder.ondataavailable = e => {
-        console.log("ondataavailable", e.data);
         chunksRef.current.push(e.data);
       };
       newRecorder.onstop = () => {
-        console.log("Arrêt de l'enregistrement, création du blob");
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
-        console.log("Blob créé :", blob);
         const url = URL.createObjectURL(blob);
         setAudioURL(url);
-        console.log("audioURL générée :", url);
         chunksRef.current = [];
       };
       setRecorder(newRecorder);
@@ -70,77 +78,90 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
   }, [mediaDestination]);
 
   const startRecording = () => {
-    console.log("Début de l'enregistrement");
+    initAudio(); // <-- Important : initialise l'audio après interaction utilisateur
     chunksRef.current = [];
-
-    // Si la lecture est déjà active, on l'arrête
     if (isLectureActive) {
       stopLecture();
     }
-
-    // On remet le compteur au début de la boucle
     if (loopPageOnly) {
       const page = Pattern.numeroPage;
       counterRef.current = (page - 1) * 16;
     } else {
       counterRef.current = 0;
     }
-
     if (recorder) {
       recorder.start();
-      console.log("recorder.start() appelé");
-      // On démarre la lecture juste après avoir lancé l'enregistrement
       setIsLectureActive(true);
       intervalId.current = setInterval(Lecture, bpmInterval);
-    } else {
-      console.warn("Recorder non initialisé !");
     }
   };
   const stopRecording = () => {
     if (recorder && recorder.state === "recording") {
       recorder.stop();
-      console.log("recorder.stop() appelé");
-    } else {
-      console.warn("Recorder non initialisé ou pas en cours d'enregistrement !");
     }
   };
 
   // Ajoute/retire un drum actif
-  const addActiveDrum = (type: string, volume: number) => {
+  const addActiveDrum = useCallback((type: string, volume: number) => {
     setActiveDrums(prev => {
       if (prev.some(d => d.type === type && d.volume === volume)) return prev;
       return [...prev, { type, volume }];
     });
-  };
-  const removeActiveDrum = (type: string, volume: number) => {
+  }, [setActiveDrums]);
+  const removeActiveDrum = useCallback((type: string, volume: number) => {
     setActiveDrums(prev => prev.filter(d => !(d.type === type && d.volume === volume)));
-  };
+  }, [setActiveDrums]);
 
-  // Fonction pour jouer un drum (sans FILL ici)
-  const playDrum = (drumSet: DrumSet, drumTypeIndex: number, spanIndex: number, volumeOverride?: number) => {
-    const volume =
-      typeof volumeOverride === 'number'
-        ? volumeOverride
-        : Volumes.VolumeArray[drumTypeIndex] / 100 *
-        Volumes.VolumesBySpan[drumTypeIndex][spanIndex] / 100;
+  // Fonction pour jouer un drum (avec contrôles/logs)
+  const playDrum = useCallback(
+    (drumSet: DrumSet, drumTypeIndex: number, spanIndex: number, volumeOverride?: number) => {
+      const volume =
+        typeof volumeOverride === 'number'
+          ? volumeOverride
+          : Volumes.VolumeArray[drumTypeIndex] / 100 *
+          Volumes.VolumesBySpan[drumTypeIndex][spanIndex] / 100;
 
-    const buffer = buffers[drumSet.type];
-    if (!buffer) return;
-    playSample(audioCtx, buffer, volume, mediaDestination ?? undefined); // <-- toujours passer mediaDestination
-    addActiveDrum(drumSet.type, volume);
-    setTimeout(() => removeActiveDrum(drumSet.type, volume), 200);
-
-    // Effet delay (si activé)
-    if (Delay.DelayArray[drumTypeIndex].is_active) {
-      let initialVolume = volume * Delay.DelayArray[drumTypeIndex].inputVolume / 100;
-      for (let i = 0; i <= Delay.DelayArray[drumTypeIndex].feedback; i++) {
-        const delayVolume = Math.max(0.1, initialVolume - 0.1 * i);
-        setTimeout(() => {
-          playSample(audioCtx, buffer, delayVolume, mediaDestination ?? undefined); // <-- toujours passer mediaDestination
-        }, Delay.DelayArray[drumTypeIndex].step * i * bpmInterval);
+      const buffer = buffers[drumSet.type];
+      if (!buffer) {
+        console.error("playDrum: Pas de buffer pour", drumSet.type);
+        return;
       }
-    }
-  };
+      if (!audioCtx) {
+        console.error("playDrum: Pas d'audioCtx");
+        return;
+      }
+      if (audioCtx.state !== "running") {
+        console.warn("playDrum: AudioContext fermé, impossible de jouer le son.", audioCtx.state);
+        return;
+      }
+      const destination: AudioNode | undefined =
+        recorder && recorder.state === "recording" && mediaDestination
+          ? mediaDestination
+          : undefined;
+      // console.log("playDrum: lecture", {
+      //   drumType: drumSet.type,
+      //   volume,
+      //   destination,
+      //   audioCtxState: audioCtx.state,
+      //   isRecording: recorder?.state
+      // });
+      playSample(audioCtx, buffer, volume, destination);
+      addActiveDrum(drumSet.type, volume);
+      setTimeout(() => removeActiveDrum(drumSet.type, volume), 200);
+
+      // Effet delay (si activé)
+      if (Delay.DelayArray[drumTypeIndex].is_active) {
+        let initialVolume = volume * Delay.DelayArray[drumTypeIndex].inputVolume / 100;
+        for (let i = 0; i <= Delay.DelayArray[drumTypeIndex].feedback; i++) {
+          const delayVolume = Math.max(0.1, initialVolume - 0.1 * i);
+          setTimeout(() => {
+            playSample(audioCtx, buffer, delayVolume, destination);
+          }, Delay.DelayArray[drumTypeIndex].step * i * bpmInterval);
+        }
+      }
+    },
+    [audioCtx, buffers, mediaDestination, addActiveDrum, removeActiveDrum, bpmInterval, recorder]
+  );
 
   //Changement d'un kit de batterie à l'autre
   const handleSwitchDrumSet = (event: React.MouseEvent) => {
@@ -199,7 +220,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
   };
 
   //Arreter la lecture
-  const stopLecture = () => {
+  const stopLecture = useCallback(() => {
     if (intervalId.current) {
       clearInterval(intervalId.current);
     }
@@ -208,19 +229,17 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
     Array.from(document.getElementsByClassName("button_set_nb_time")).forEach((element) => {
       (element as HTMLElement).classList.remove("button_set_nb_time_survol");
     });
-  };
+  }, []);
 
   //Lecture avec logique FILL déplacée ici
-  const Lecture = () => {
+  const Lecture = useCallback(() => {
     if (loopPageOnly) {
-      // Lecture en boucle sur la page courante
       const page = Pattern.numeroPage;
       const startStep = (page - 1) * 16;
       const endStep = page * 16;
       if (counterRef.current < startStep || counterRef.current >= endStep) {
         counterRef.current = startStep;
       }
-      // Animation sur la grille
       const survol = (counterRef.current - startStep) + 1;
       Array.from(document.getElementsByClassName("span_" + survol)).forEach((element) => {
         element.classList.add("span_survol");
@@ -229,7 +248,6 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
         }, bpmInterval)
       });
 
-      // Lecture du pattern sur la page (avec FILL ici)
       for (let i = 0; i < Pattern.PatternArray.length; i++) {
         if (
           drums[i].is_active &&
@@ -242,13 +260,11 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
         }
       }
 
-
       counterRef.current++;
       if (counterRef.current >= endStep) {
         counterRef.current = startStep;
       }
     } else {
-      // Lecture en boucle sur tout le pattern (4 pages)
       if (counterRef.current >= Pattern.patternLength) {
         counterRef.current = 0;
       }
@@ -268,7 +284,6 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
           }, bpmInterval)
         })
       }
-      // Lecture du pattern sur tout le pattern (avec FILL ici)
       for (let i = 0; i < Pattern.PatternArray.length; i++) {
         if (
           drums[i].is_active &&
@@ -287,10 +302,14 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
       }
       counterRef.current++;
     }
-  };
+  }, [loopPageOnly, bpmInterval, drums, playDrum]);
 
-  //Lance la lecture
-  const startLecture = () => {
+  const startLecture = useCallback(() => {
+    if (!audioCtx) {
+      initAudio();
+      setPendingLecture(true); // On attend que l'audioCtx soit prêt et les buffers chargés
+      return;
+    }
     setIsLectureActive(true);
     if (loopPageOnly) {
       const page = Pattern.numeroPage;
@@ -299,7 +318,38 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
       counterRef.current = 0;
     }
     intervalId.current = setInterval(Lecture, bpmInterval);
-  };
+  }, [audioCtx, loopPageOnly, bpmInterval, Lecture, initAudio]);
+
+  // Quand audioCtx ET buffers sont prêts, on lance la lecture si on attendait
+  useEffect(() => {
+    if (pendingLecture && audioCtx && buffers && Object.keys(buffers).length > 0) {
+      setPendingLecture(false);
+      startLecture();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audioCtx, buffers]);
+
+  // Gestion lecture/stop avec barre espace
+  useEffect(() => {
+    const handleSpace = (e: KeyboardEvent) => {
+      if (
+        document.activeElement &&
+        (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA")
+      ) {
+        return;
+      }
+      if (e.code === "Space" || e.key === " ") {
+        e.preventDefault();
+        if (isLectureActive) {
+          stopLecture();
+        } else if (!loading) {
+          startLecture();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleSpace);
+    return () => window.removeEventListener("keydown", handleSpace);
+  }, [isLectureActive, loading, startLecture, stopLecture]);
 
   //Chargement depuis un fichier
   const loadDataFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -577,7 +627,10 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
             </a>
             <button
               className="button_menu"
-              onClick={() => setAudioURL(null)}
+              onClick={() => {
+                if (audioURL) URL.revokeObjectURL(audioURL);
+                setAudioURL(null);
+              }}
               style={{ marginRight: 8 }}
             >
               Supprimer

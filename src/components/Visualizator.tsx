@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 // On attend un prop drums (array d'objets DrumBox)
 type Drum = {
@@ -47,29 +47,30 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [] }) 
         e.preventDefault();
     };
 
-    React.useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            if (resizing) {
-                const dx = startPos.x - e.clientX;
-                const dy = e.clientY - startPos.y;
-                setSize({
-                    width: Math.max(150, startSize.width + dx),
-                    height: Math.max(100, startSize.height + dy),
-                });
-            }
-            if (dragging) {
-                setPosition(pos => ({
-                    top: Math.max(0, pos.top + (e.clientY - startPos.y)),
-                    right: Math.max(0, pos.right - (e.clientX - startPos.x)),
-                }));
-                setStartPos({ x: e.clientX, y: e.clientY });
-            }
-        };
-        const handleMouseUp = () => {
-            setResizing(false);
-            setDragging(false);
-        };
+    // Move handlers outside so they are accessible for cleanup
+    const handleMouseMove = React.useCallback((e: MouseEvent) => {
+        if (resizing) {
+            const dx = startPos.x - e.clientX;
+            const dy = e.clientY - startPos.y;
+            setSize({
+                width: Math.max(150, startSize.width + dx),
+                height: Math.max(100, startSize.height + dy),
+            });
+        }
+        if (dragging) {
+            setPosition(pos => ({
+                top: Math.max(0, pos.top + (e.clientY - startPos.y)),
+                right: Math.max(0, pos.right - (e.clientX - startPos.x)),
+            }));
+            setStartPos({ x: e.clientX, y: e.clientY });
+        }
+    }, [resizing, dragging, startPos, startSize]);
+    const handleMouseUp = React.useCallback(() => {
+        setResizing(false);
+        setDragging(false);
+    }, []);
 
+    React.useEffect(() => {
         if (resizing || dragging) {
             window.addEventListener('mousemove', handleMouseMove);
             window.addEventListener('mouseup', handleMouseUp);
@@ -78,11 +79,26 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [] }) 
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [resizing, dragging, startPos, startSize]);
+    }, [resizing, dragging, handleMouseMove, handleMouseUp]);
 
     // Calcul du nombre de colonnes pour une grille carrée
     const gridCols = Math.ceil(Math.sqrt(drums.length));
     const gridRows = Math.ceil(drums.length / gridCols);
+
+    // Si tu utilises des timers :
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    useEffect(() => {
+        const timer = timerRef.current;
+        return () => {
+            if (timer) clearTimeout(timer);
+        };
+    }, []);
+
+    // Si tu utilises des blobs :
+    // const [audioURL, setAudioURL] = useState<string|null>(null);
+    // useEffect(() => {
+    //   return () => { if (audioURL) URL.revokeObjectURL(audioURL); };
+    // }, [audioURL]);
 
     return (
         <div

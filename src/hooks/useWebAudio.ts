@@ -1,18 +1,19 @@
-import { useRef } from 'react';
+import { useState, useCallback } from 'react';
 
 export function useWebAudio() {
-    const ctxRef = useRef<AudioContext | null>(null);
-    const destRef = useRef<MediaStreamAudioDestinationNode | null>(null);
+    const [audioCtx, setAudioCtx] = useState<AudioContext | null>(null);
+    const [mediaDestination, setMediaDestination] = useState<MediaStreamAudioDestinationNode | null>(null);
 
-    if (!ctxRef.current) {
-        ctxRef.current = new (
-            window.AudioContext ||
-            (window as any).webkitAudioContext
-        )();
-    }
-    if (!destRef.current && ctxRef.current) {
-        destRef.current = ctxRef.current.createMediaStreamDestination();
-    }
+    // Fonction à appeler lors d'une interaction utilisateur
+    const initAudio = useCallback(() => {
+        if (!audioCtx || audioCtx.state === "closed") {
+            const ctx = new window.AudioContext();
+            setAudioCtx(ctx);
+            setMediaDestination(ctx.createMediaStreamDestination());
+        } else if (audioCtx.state === "suspended") {
+            audioCtx.resume();
+        }
+    }, [audioCtx]);
 
-    return { audioCtx: ctxRef.current, mediaDestination: destRef.current };
+    return { audioCtx, mediaDestination, initAudio };
 }
