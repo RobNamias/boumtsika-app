@@ -1,21 +1,17 @@
 import React, { useState, useRef, ChangeEvent, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import * as Pattern from '../utilities/patternManager';
-import * as Volumes from '../utilities/volumesManager';
-import * as Delay from '../utilities/delayManager';
-import * as Fill from '../utilities/fillManager';
-import { switchDrumSet } from '../utilities/loadDrumSet';
-import { saveDataToFile } from '../utilities/saveData';
 import { getValue } from '@testing-library/user-event/dist/utils';
+
+import { switchDrumSet, saveDataToFile, clearTimeouts, playSample } from '../utilities/';
+import * as Util from '../utilities/';
+
+import { useWebAudio, useAudioBuffers } from '../hooks/';
 
 import Drum from './Drum';
 import DrumBoxLine from './DrumBoxLine';
-import { DrumType } from '../models/DrumType';
-import { DrumSet } from '../models/DrumSet';
+import Visualizator from './Visualizator';
+import { DrumType, DrumSet } from '../models/';
 
-import { useWebAudio } from '../hooks/useWebAudio';
-import { useAudioBuffers } from '../hooks/useAudioBuffers';
-import { playSample } from '../utilities/playSample';
 
 const PadsWrapper = styled.main`
   flex: 1;
@@ -31,17 +27,23 @@ type DrumBoxProps = {
 
 const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, activeDrums }) => {
   const [bpm, setBpm] = useState<number>(130);
-  const [localVolumes, setLocalVolumes] = useState(Volumes.VolumeArray);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [localVolumes, setLocalVolumes] = useState(Util.Volumes.VolumeArray);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
+  const hoverTimeouts = useRef<NodeJS.Timeout[]>([]); // AJOUT pour stocker les timeouts de survol
+  const delayTimeouts = useRef<NodeJS.Timeout[]>([]);
+
   const counterRef = useRef(0);
   const [isLectureActive, setIsLectureActive] = useState(false);
   const [loopPageOnly, setLoopPageOnly] = useState(false);
   const [pendingLecture, setPendingLecture] = useState(false);
+  const [isBlinking, setIsBlinking] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
 
   const bpmInterval = 1000 / (bpm / 60) / 4;
 
   // Web Audio API
-  const { audioCtx, mediaDestination, initAudio } = useWebAudio();
+  const { audioCtx, mediaDestination, analyser, initAudio } = useWebAudio();
   const { buffers, loading } = useAudioBuffers(audioCtx, drums);
 
   // Gestion de l'enregistrement audio
@@ -49,25 +51,36 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const chunksRef = useRef<BlobPart[]>([]);
 
-  // Nettoyage mémoire : AudioContext, timers à la destruction du composant
+  // Nettoyage mémoire : AudioContext, timers, MediaRecorder, URL à la destruction du composant
   useEffect(() => {
     return () => {
       if (audioCtx && typeof audioCtx.close === "function" && audioCtx.state !== "closed") {
         audioCtx.close();
       }
       if (intervalId.current) clearInterval(intervalId.current);
+      hoverTimeouts.current.forEach(timeout => clearTimeout(timeout));
+      hoverTimeouts.current = [];
+      delayTimeouts.current.forEach(timeout => clearTimeout(timeout));
+      delayTimeouts.current = [];
+      if (recorder && recorder.state !== "inactive") {
+        recorder.stop();
+      }
       if (audioURL) URL.revokeObjectURL(audioURL);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Nettoyage de l'ancien recorder avant d'en créer un nouveau
   useEffect(() => {
+    if (recorder && recorder.state !== "inactive") {
+      recorder.stop();
+    }
     if (mediaDestination) {
       const newRecorder = new MediaRecorder(mediaDestination.stream, { mimeType: 'audio/webm;codecs=opus' });
       newRecorder.ondataavailable = e => {
         chunksRef.current.push(e.data);
       };
       newRecorder.onstop = () => {
+        if (audioURL) URL.revokeObjectURL(audioURL); // Révoque l'ancienne URL avant d'en créer une nouvelle
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
         const url = URL.createObjectURL(blob);
         setAudioURL(url);
@@ -75,6 +88,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
       };
       setRecorder(newRecorder);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaDestination]);
 
   const startRecording = () => {
@@ -84,7 +98,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
       stopLecture();
     }
     if (loopPageOnly) {
-      const page = Pattern.numeroPage;
+      const page = Util.Pattern.numeroPage;
       counterRef.current = (page - 1) * 16;
     } else {
       counterRef.current = 0;
@@ -98,6 +112,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
   const stopRecording = () => {
     if (recorder && recorder.state === "recording") {
       recorder.stop();
+      stopLecture();
     }
   };
 
@@ -118,8 +133,19 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
       const volume =
         typeof volumeOverride === 'number'
           ? volumeOverride
-          : Volumes.VolumeArray[drumTypeIndex] / 100 *
-          Volumes.VolumesBySpan[drumTypeIndex][spanIndex] / 100;
+          : Util.Volumes.VolumeArray[drumTypeIndex] / 100 *
+          Util.Volumes.VolumesBySpan[drumTypeIndex][spanIndex] / 100;
+
+
+      if (!Number.isFinite(volume)) {
+        console.error("playDrum: volume non valide", volume, {
+          drumTypeIndex,
+          spanIndex,
+          VolumesArray: Util.Volumes.VolumeArray,
+          VolumesBySpan: Util.Volumes.VolumesBySpan
+        });
+        return;
+      }
 
       const buffer = buffers[drumSet.type];
       if (!buffer) {
@@ -145,22 +171,23 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
       //   audioCtxState: audioCtx.state,
       //   isRecording: recorder?.state
       // });
-      playSample(audioCtx, buffer, volume, destination);
+      playSample(audioCtx, buffer, volume, destination, analyser ?? undefined);
       addActiveDrum(drumSet.type, volume);
       setTimeout(() => removeActiveDrum(drumSet.type, volume), 200);
 
       // Effet delay (si activé)
-      if (Delay.DelayArray[drumTypeIndex].is_active) {
-        let initialVolume = volume * Delay.DelayArray[drumTypeIndex].inputVolume / 100;
-        for (let i = 0; i <= Delay.DelayArray[drumTypeIndex].feedback; i++) {
+      if (Util.Delay.DelayArray[drumTypeIndex].is_active) {
+        let initialVolume = volume * Util.Delay.DelayArray[drumTypeIndex].inputVolume / 100;
+        for (let i = 0; i <= Util.Delay.DelayArray[drumTypeIndex].feedback; i++) {
           const delayVolume = Math.max(0.1, initialVolume - 0.1 * i);
-          setTimeout(() => {
+          const timeout = setTimeout(() => {
             playSample(audioCtx, buffer, delayVolume, destination);
-          }, Delay.DelayArray[drumTypeIndex].step * i * bpmInterval);
+          }, Util.Delay.DelayArray[drumTypeIndex].step * i * bpmInterval);
+          delayTimeouts.current.push(timeout);
         }
       }
     },
-    [audioCtx, buffers, mediaDestination, addActiveDrum, removeActiveDrum, bpmInterval, recorder]
+    [buffers, audioCtx, recorder, mediaDestination, analyser, addActiveDrum, removeActiveDrum, bpmInterval]
   );
 
   //Changement d'un kit de batterie à l'autre
@@ -186,14 +213,19 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
   //Gestion du son par piste
   const setVolumeSound = (event: ChangeEvent<HTMLInputElement>) => {
     const drumTypeKey = event?.currentTarget.id.replace("vol", "") as keyof typeof DrumType;
-    Volumes.setByType(drums[DrumType[drumTypeKey]], Number(getValue(event?.currentTarget)));
-    setLocalVolumes([...Volumes.VolumeArray]);
+    Util.Volumes.setByType(drums[DrumType[drumTypeKey]], Number(getValue(event?.currentTarget)));
+    setLocalVolumes([...Util.Volumes.VolumeArray]);
   };
 
   //Changement de page
   function toggle_page(numero_page: number) {
-    if (numero_page !== Pattern.numeroPage) {
-      Pattern.setPage(numero_page);
+    if (numero_page !== currentPage) {
+      // Nettoyage des classes avant de changer de page
+      document.querySelectorAll('.span_survol').forEach(el => el.classList.remove('span_survol'));
+      document.querySelectorAll('.span_active').forEach(el => el.classList.remove('span_active'));
+
+      Util.Pattern.setPage(numero_page);
+      setCurrentPage(numero_page); // <-- Ajoute ceci !
       const listeButton = document.getElementsByClassName("button_set_nb_time");
       for (let i = 0; i < listeButton.length; i++) {
         listeButton[i].classList.remove("nb_time_active");
@@ -201,10 +233,10 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
           listeButton[i].classList.add("nb_time_active");
         }
       }
-      for (let i = 0; i < Pattern.PatternArray.length; i++) {
+      for (let i = 0; i < Util.Pattern.PatternArray.length; i++) {
         const listSpanByDrum = document.getElementsByClassName("sdd_" + drums[i].type);
-        for (let j = 0; j < Pattern.PatternArray[i].length; j++) {
-          toggle_classes(listSpanByDrum[j]?.children[0].id, "span_active", Pattern.getCurrentPatternArray(numero_page)[i][j]);
+        for (let j = 0; j < Util.Pattern.PatternArray[i].length; j++) {
+          toggle_classes(listSpanByDrum[j]?.children[0].id, "span_active", Util.Pattern.getCurrentPatternArray(numero_page)[i][j]);
         }
       }
     }
@@ -224,6 +256,14 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
     if (intervalId.current) {
       clearInterval(intervalId.current);
     }
+    // Retire la classe span_survol de tous les éléments concernés
+    document.querySelectorAll('.span_survol').forEach(el => el.classList.remove('span_survol'));
+
+    // Nettoyage des timeouts de survol à l'arrêt de la lecture
+    hoverTimeouts.current.forEach(timeout => clearTimeout(timeout));
+    hoverTimeouts.current = [];
+    delayTimeouts.current.forEach(timeout => clearTimeout(timeout));
+    delayTimeouts.current = [];
     setIsLectureActive(false)
     counterRef.current = 0
     Array.from(document.getElementsByClassName("button_set_nb_time")).forEach((element) => {
@@ -234,7 +274,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
   //Lecture avec logique FILL déplacée ici
   const Lecture = useCallback(() => {
     if (loopPageOnly) {
-      const page = Pattern.numeroPage;
+      const page = Util.Pattern.numeroPage;
       const startStep = (page - 1) * 16;
       const endStep = page * 16;
       if (counterRef.current < startStep || counterRef.current >= endStep) {
@@ -243,17 +283,19 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
       const survol = (counterRef.current - startStep) + 1;
       Array.from(document.getElementsByClassName("span_" + survol)).forEach((element) => {
         element.classList.add("span_survol");
-        setTimeout(() => {
+        // Stocke chaque timeout pour pouvoir le clear plus tard
+        const timeout = setTimeout(() => {
           element.classList.remove("span_survol");
-        }, bpmInterval)
+        }, bpmInterval);
+        hoverTimeouts.current.push(timeout);
       });
 
-      for (let i = 0; i < Pattern.PatternArray.length; i++) {
+      for (let i = 0; i < Util.Pattern.PatternArray.length; i++) {
         if (
           drums[i].is_active &&
-          Pattern.PatternArray[i][counterRef.current]
+          Util.Pattern.PatternArray[i][counterRef.current]
         ) {
-          const fillValue = Fill.FillArray[i][counterRef.current];
+          const fillValue = Util.Fill.FillArray[i][counterRef.current];
           if (fillValue <= 1 || Math.random() < 1 / fillValue) {
             playDrum(drums[i], i, counterRef.current);
           }
@@ -262,10 +304,14 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
 
       counterRef.current++;
       if (counterRef.current >= endStep) {
+        // ...fin de pattern...
+        clearTimeouts(hoverTimeouts);
+        clearTimeouts(delayTimeouts);
+        document.querySelectorAll('.span_survol').forEach(el => el.classList.remove('span_survol'))
         counterRef.current = startStep;
       }
     } else {
-      if (counterRef.current >= Pattern.patternLength) {
+      if (counterRef.current >= Util.Pattern.patternLength) {
         counterRef.current = 0;
       }
       const page_survolee = Math.trunc(counterRef.current / 16) + 1;
@@ -275,29 +321,24 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
       } else {
         document.getElementById("show_page4")?.classList.remove("button_set_nb_time_survol");
       }
-      if (Math.trunc(counterRef.current / 16) === Pattern.numeroPage - 1) {
-        const survol = counterRef.current - 16 * (Pattern.numeroPage - 1) + 1;
+      if (Math.trunc(counterRef.current / 16) === Util.Pattern.numeroPage - 1) {
+        const survol = counterRef.current - 16 * (Util.Pattern.numeroPage - 1) + 1;
         Array.from(document.getElementsByClassName("span_" + survol)).forEach((element) => {
           element.classList.add("span_survol");
-          setTimeout(() => {
+          // Stocke chaque timeout pour pouvoir le clear plus tard
+          const timeout = setTimeout(() => {
             element.classList.remove("span_survol");
-          }, bpmInterval)
-        })
+          }, bpmInterval);
+          hoverTimeouts.current.push(timeout);
+        });
       }
-      for (let i = 0; i < Pattern.PatternArray.length; i++) {
+      for (let i = 0; i < Util.Pattern.PatternArray.length; i++) {
         if (
           drums[i].is_active &&
-          Pattern.PatternArray[i][counterRef.current]
+          Util.Pattern.PatternArray[i][counterRef.current]
         ) {
           playDrum(drums[i], i, counterRef.current);
 
-          if (Fill.FillArray[i][counterRef.current] > 1) {
-            for (let fill = 1; fill < Fill.FillArray[i][counterRef.current]; fill++) {
-              if (Math.random() < 1 / Fill.FillArray[i][counterRef.current]) {
-                playDrum(drums[i], i, counterRef.current);
-              }
-            }
-          }
         }
       }
       counterRef.current++;
@@ -312,7 +353,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
     }
     setIsLectureActive(true);
     if (loopPageOnly) {
-      const page = Pattern.numeroPage;
+      const page = Util.Pattern.numeroPage;
       counterRef.current = (page - 1) * 16;
     } else {
       counterRef.current = 0;
@@ -328,7 +369,6 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioCtx, buffers]);
-
   // Gestion lecture/stop avec barre espace
   useEffect(() => {
     const handleSpace = (e: KeyboardEvent) => {
@@ -351,57 +391,73 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
     return () => window.removeEventListener("keydown", handleSpace);
   }, [isLectureActive, loading, startLecture, stopLecture]);
 
-  //Chargement depuis un fichier
-  const loadDataFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget.files && e.currentTarget.files.length > 0) {
-      if (isLectureActive) {
-        stopLecture()
-      }
-      const file = e.currentTarget.files[0];
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        try {
-          const content = event.target?.result;
-          if (typeof content === "string") {
-            const Data = JSON.parse(content);
-            setDrums(Data.setDrumSet ?? []);
-            setBpm(Data.bpm ?? 120);
-            Pattern.set(Data.PatternArray);
-            Volumes.set(Data.VolumeArray);
-            Volumes.setVolumesBySpan(Data.VolumesBySpan);
-            Delay.setDelay(Data.DelayArray)
-            Fill.set(Data.FillArray)
-            setLocalVolumes([...Volumes.VolumeArray]);
-            for (let i = 0; i < Pattern.PatternArray.length; i++) {
-              const listSpanByDrum = document.getElementsByClassName("sdd_" + drums[i].type)
-              for (let j = 0; j < Pattern.PatternArray[i].length; j++) {
-                Pattern.PatternArray[i][j] ? listSpanByDrum[j]?.children[0].classList.add("span_active") : listSpanByDrum[j]?.children[0].classList.remove("span_active")
-              }
-            }
-            const listeButton = document.getElementsByClassName("button_kit_menu");
-            for (let i = 0; i < listeButton.length; i++) {
-              listeButton[i].classList.remove("drum_active")
-            }
-            document.getElementById("button_" + Data.setDrumSet[0].drumKit)?.classList.add("drum_active");
-            for (let i = 0; i < Data.setDrumSet.length; i++) {
-              const buttonMute = document.getElementById("mute_" + Data.setDrumSet[i].type);
-              if (buttonMute?.classList.contains("is_muted")) {
-                Data.setDrumSet[i].is_active = false
-              }
-            }
-          }
-        }
-        catch (error) {
-          alert("❌ Erreur : Impossible de lire le fichier JSON !");
-        }
-      };
-      reader.readAsText(file);
+  // Ajout pour le clignotement du bouton STOP
+  useEffect(() => {
+    let blinkInterval: NodeJS.Timeout | null = null;
+    if (isLectureActive) {
+      setIsBlinking(true);
+      blinkInterval = setInterval(() => {
+        setIsBlinking(prev => !prev);
+      }, 60000 / bpm); // 60_000 ms / bpm
+    } else {
+      setIsBlinking(false);
     }
-  };
+    return () => {
+      if (blinkInterval) clearInterval(blinkInterval);
+    };
+  }, [isLectureActive, bpm]);
+
+  //Chargement depuis un fichier
+  // const loadDataFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.currentTarget.files && e.currentTarget.files.length > 0) {
+  //     if (isLectureActive) {
+  //       stopLecture()
+  //     }
+  //     const file = e.currentTarget.files[0];
+  //     const reader = new FileReader();
+  //     reader.onload = function (event) {
+  //       try {
+  //         const content = event.target?.result;
+  //         if (typeof content === "string") {
+  //           const Data = JSON.parse(content);
+  //           setDrums(Data.setDrumSet ?? []);
+  //           setBpm(Data.bpm ?? 120);
+  //           Pattern.set(Data.PatternArray);
+  //           Volumes.set(Data.VolumeArray);
+  //           Volumes.setVolumesBySpan(Data.VolumesBySpan);
+  //           Delay.setDelay(Data.DelayArray)
+  //           Fill.set(Data.FillArray)
+  //           setLocalVolumes([...Volumes.VolumeArray]);
+  //           for (let i = 0; i < Pattern.PatternArray.length; i++) {
+  //             const listSpanByDrum = document.getElementsByClassName("sdd_" + drums[i].type)
+  //             for (let j = 0; j < Pattern.PatternArray[i].length; j++) {
+  //               Pattern.PatternArray[i][j] ? listSpanByDrum[j]?.children[0].classList.add("span_active") : listSpanByDrum[j]?.children[0].classList.remove("span_active")
+  //             }
+  //           }
+  //           const listeButton = document.getElementsByClassName("button_kit_menu");
+  //           for (let i = 0; i < listeButton.length; i++) {
+  //             listeButton[i].classList.remove("drum_active")
+  //           }
+  //           document.getElementById("button_" + Data.setDrumSet[0].drumKit)?.classList.add("drum_active");
+  //           for (let i = 0; i < Data.setDrumSet.length; i++) {
+  //             const buttonMute = document.getElementById("mute_" + Data.setDrumSet[i].type);
+  //             if (buttonMute?.classList.contains("is_muted")) {
+  //               Data.setDrumSet[i].is_active = false
+  //             }
+  //           }
+  //         }
+  //       }
+  //       catch (error) {
+  //         alert("❌ Erreur : Impossible de lire le fichier JSON !");
+  //       }
+  //     };
+  //     reader.readAsText(file);
+  //   }
+  // };
 
   //Reset du pattern
   const clearPattern = () => {
-    Pattern.setClear()
+    Util.Pattern.setClear()
     const spanList = document.getElementsByClassName("span_drum")
     for (let i = 0; i < spanList.length; i++)
       spanList[i].classList.remove("span_active")
@@ -449,7 +505,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
   // Affichage du loader pendant le chargement des samples
   return (
     <div className='container_drumbox' style={{ position: 'relative' }}>
-      {loading && (
+      {showLoader && (
         <div style={{
           position: 'absolute',
           top: 0, left: 0, right: 0, bottom: 0,
@@ -492,10 +548,39 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
         {/* SAUVEGARDE */}
         <button className="button_menu" onClick={() => saveDataToFile(drums, bpm)} disabled={loading}>💾 Exporter</button>
         {/* CHARGEMENT */}
-        <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} />
-        <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()} disabled={loading}>📂 Importer</button>
+        {/* <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} /> */}
+        {/* <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()} disabled={loading}>📂 Importer</button> */}
         {/* RESET DU PATTERN */}
         <button className="button_menu" onClick={() => clearPattern()} disabled={loading}>❌ Effacer</button>
+        {audioURL && (
+          <>
+            <audio
+              controls
+              src={audioURL}
+              onPlay={() => console.log("Lecture audio démarrée", audioURL)}
+              onError={e => console.error("Erreur de lecture audio", e)}
+              style={{ marginRight: 8 }}
+            />
+            <a
+              className="button_menu"
+              href={audioURL}
+              download="drumbox_recording.webm"
+              style={{ textDecoration: "none", marginRight: 8 }}
+            >
+              Télécharger
+            </a>
+            <button
+              className="button_menu"
+              onClick={() => {
+                if (audioURL) URL.revokeObjectURL(audioURL);
+                setAudioURL(null);
+              }}
+              style={{ marginRight: 8 }}
+            >
+              Supprimer
+            </button>
+          </>
+        )}
       </div>
 
       <div id="container_input">
@@ -506,7 +591,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
               onClick={() => toggle_page(pageNum)}
               className={
                 'button_menu button_set_nb_time' +
-                (Pattern.numeroPage === pageNum ? ' nb_time_active' : '')
+                (Util.Pattern.numeroPage === pageNum ? ' nb_time_active' : '')
               }
               id={`show_page${pageNum}`}
               tabIndex={0}
@@ -540,7 +625,13 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
           }
           {isLectureActive &&
             <>
-              <button onClick={stopLecture} className="button_menu lecture_en_cours" id="button_stop">STOP</button>
+              <button
+                onClick={stopLecture}
+                className={`button_menu lecture_en_cours${isBlinking ? " blinking-red" : ""}`}
+                id="button_stop"
+              >
+                STOP
+              </button>
               <div className="checkbox-switch-vertical"></div>
             </>
           }
@@ -585,6 +676,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
               <DrumBoxLine
                 drumType={drum.type}
                 index={DrumType[drum.type]}
+                page={currentPage} // <-- Ajoute cette prop !
               />
             </div>
           ))
@@ -594,50 +686,32 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
       </PadsWrapper>
       {/* ENREGISTREMENT AUDIO */}
       <div style={{ marginTop: 16, display: 'flex', gap: 8, alignItems: 'center' }}>
-        <button
-          className="button_menu"
-          onClick={startRecording}
-          disabled={!recorder || loading}
-        >
-          Enregistrer
-        </button>
-        <button
-          className="button_menu"
-          onClick={stopRecording}
-          disabled={!recorder || loading}
-        >
-          Arrêter
-        </button>
-        {audioURL && (
-          <>
-            <audio
-              controls
-              src={audioURL}
-              onPlay={() => console.log("Lecture audio démarrée", audioURL)}
-              onError={e => console.error("Erreur de lecture audio", e)}
-              style={{ marginRight: 8 }}
-            />
-            <a
-              className="button_menu"
-              href={audioURL}
-              download="drumbox_recording.webm"
-              style={{ textDecoration: "none", marginRight: 8 }}
-            >
-              Télécharger
-            </a>
-            <button
-              className="button_menu"
-              onClick={() => {
-                if (audioURL) URL.revokeObjectURL(audioURL);
-                setAudioURL(null);
-              }}
-              style={{ marginRight: 8 }}
-            >
-              Supprimer
-            </button>
-          </>
+        {(!recorder || recorder.state !== "recording") && (
+          <button
+            className="button_menu"
+            onClick={startRecording}
+            disabled={!recorder || loading}
+          >
+            🔴REC
+          </button>
         )}
+        {recorder && recorder.state === "recording" && (
+          <button
+            className="button_menu lecture_en_cours"
+            onClick={stopRecording}
+            disabled={!recorder || loading}
+          >
+            Arrêter
+          </button>
+        )}
+
       </div>
+      <Visualizator
+        drums={drums}
+        activeDrums={activeDrums}
+        analyser={analyser}
+        isLectureActive={isLectureActive}
+      />
     </div>
   );
 };

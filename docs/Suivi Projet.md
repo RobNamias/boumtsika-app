@@ -57,23 +57,65 @@
 
 ### Version 2.5 : Intégration de l'outil Intelligence Artificielle dans la programmation 🟥
 
-- refonte poussée du système de fonctionnement et de la structure de l'application
-- unification des thèmes
-- ajout de fonctions : enregistrement, Visualizator
-- ajout d'une doc Rapport IA pour suivre les modifications apportés via IA, rédigé par l'IA
+- refonte poussée du système de fonctionnement et de la structure de l'application  
+        - Réorganisation complète des hooks et utilitaires (ex : centralisation des caches audio, refonte du patternManager)
+        - Simplification de la logique de lecture et de gestion des états React
+        - Nettoyage du code et suppression des redondances
 
-- Responsive ❗❗❗ :
-        - Mobile 🟥
-        - Chrome ✅
-        - Opéra
+- unification des thèmes  
+        - Harmonisation des couleurs et des boutons sur tous les écrans
+        - Uniformisation des styles CSS pour les flipcards et les options
+        - Mise en place d’une palette de debug CSS pour faciliter le développement
+
+- ajout de fonctions : enregistrement, Visualizator  
+        - Ajout d’un bouton d’enregistrement et gestion du flux audio
+        - Création du composant Visualizator pour afficher la forme d’onde ou le niveau sonore
+        - Intégration de la gestion du volume et du mute pendant l’enregistrement
+
+- reprise un à un 'à la main' des composants et du CSS afin de palier aux défaillances  
+         - Correction des transitions et animations sur les flipcards
+        - Refonte du composant DrumBoxLine pour une meilleure gestion des layers/options
+        - Correction des conflits de display et des bugs d’affichage sur grand écran
+
+- ajout d'une doc Rapport IA pour suivre les modifications apportés via IA, rédigé par l'IA  
+         - Création d’un fichier de suivi détaillant chaque optimisation ou correction IA
+        - Ajout de résumés de session et de rapports de fin de session automatisés
+        - Documentation des choix techniques et des solutions apportées
+
+- Optimisation des ressources et de la mémoire  
+        - Mise en place d’un cache global pour les AudioBuffer et les HTMLAudioElement
+        - Réduction drastique du nombre de requêtes réseau (ex : 13 000 → quelques dizaines)
+        - Surveillance et profilage mémoire sous Chrome et Firefox pour éviter les fuites et ralentissements
+
+- Responsive et compatibilité multi-navigateur :  
+        - Mobile 🟥  
+            - Détection et suivi des problèmes d’affichage sur petits écrans
+            - Premiers tests d’adaptation des layouts en flex/grid
+            - Préparation de la refonte responsive pour la prochaine version
+        - Chrome ✅  
+            - Optimisation des performances et compatibilité totale sur Chrome
+            - Tests de lecture audio et de transitions CSS
+            - Correction des bugs spécifiques à Chrome (ex : gestion du focus)
+        - Opéra  
+            - Premiers tests de compatibilité
+            - Vérification du rendu des composants principaux
+            - Suivi des éventuels bugs spécifiques à ce navigateur
+        - Firefox
+
+**Résumé :**  
+La version 2.5 marque une étape majeure avec l’intégration de l’outil d’Intelligence Artificielle dans la programmation. Cette version a permis une refonte profonde de la structure de l’application, l’unification des thèmes graphiques, et l’ajout de nouvelles fonctionnalités telles que l’enregistrement et le Visualizator.  
+Un travail minutieux a été mené sur chaque composant et sur le CSS pour corriger les défaillances et améliorer la robustesse de l’interface.  
+La documentation a été enrichie par la création d’un rapport IA retraçant toutes les modifications apportées par l’IA.  
+Un effort particulier a également été porté sur l’optimisation de l’utilisation des ressources et de la mémoire, afin d’assurer des performances fluides et une expérience utilisateur optimale, notamment sur Firefox et lors de l’utilisation intensive de l’application.  
+Enfin, cette version pose les bases d’une application plus maintenable, plus moderne et mieux adaptée à l’évolution future, tout en préparant l’optimisation du responsive et la compatibilité multi-navigateurs.
 
 ----
 
 #### Version 2.6
 
-- Ajout d'une fonction de lecture pageunique
-
 #### Version 2.5 ---> Version 3
+
+Redéfinir tout le versionning prévisionnel
 
 ----
 

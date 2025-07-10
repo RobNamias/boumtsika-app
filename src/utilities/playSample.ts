@@ -2,7 +2,8 @@ export function playSample(
     audioCtx: AudioContext,
     buffer: AudioBuffer,
     volume: number,
-    mediaDestination?: AudioNode
+    mediaDestination?: AudioNode,
+    analyser?: AnalyserNode
 ) {
     if (!audioCtx) {
         console.error("playSample: audioCtx manquant");
@@ -25,12 +26,26 @@ export function playSample(
     const gain = audioCtx.createGain();
     gain.gain.value = volume;
     source.connect(gain);
-    if (mediaDestination) {
+
+    if (analyser) {
+        gain.connect(analyser);
+        if (mediaDestination) {
+            analyser.connect(mediaDestination);
+        } else {
+            analyser.connect(audioCtx.destination);
+        }
+    } else if (mediaDestination) {
         gain.connect(mediaDestination);
-        // console.log("playSample: connecté à mediaDestination");
     } else {
         gain.connect(audioCtx.destination);
-        // console.log("playSample: connecté à audioCtx.destination");
     }
+
+    // Nettoyage AVANT start
+    source.onended = () => {
+        try { source.disconnect(); } catch {}
+        try { gain.disconnect(); } catch {}
+        // Ne pas déconnecter analyser ici, il peut être partagé !
+    };
+
     source.start();
 }

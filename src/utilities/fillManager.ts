@@ -10,7 +10,7 @@ for (let i = 0; i < 5; i++) {
 
 export var FillArray: number[][] = initialFillArray
 
-export function set(newFillArray: number[][]) {
+export function setFillArray(newFillArray: number[][]) {
     FillArray = newFillArray
 }
 

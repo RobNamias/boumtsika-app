@@ -1,35 +1,39 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-// On attend un prop drums (array d'objets DrumBox)
 type Drum = {
     type: string;
-    // autres propriétés si besoin
 };
 
 type VisualizatorProps = {
     drums: Drum[];
     activeDrums?: { type: string, volume: number }[];
+    analyser?: AnalyserNode | null;
+    isLectureActive?: boolean;
 };
 
 const DRUM_COLORS: Record<string, string> = {
-    Kick: '#FF6F61',    // Rouge corail
-    Snare: '#6B5B95',   // Violet doux
-    ClHat: '#88B04B',   // Vert frais
-    OpHat: '#F7CAC9',   // Rose pâle
-    Crash: '#92A8D1',   // Bleu pastel
-    // Tom: '#FFD662',     // Jaune doux
-    // Clap: '#955251',    // Marron rosé
-    // Perc: '#B565A7',    // Violet vif
-    // FX: '#009B77',      // Vert canard
+    Kick: '#FF6F61',
+    Snare: '#6B5B95',
+    ClHat: '#88B04B',
+    OpHat: '#F7CAC9',
+    Crash: '#92A8D1',
 };
 
-const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [] }) => {
+const BAND_COLORS = ["#2ecc40", "#ffdc00", "#ff851b", "#0074d9", "#b10dc9"];
+
+const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [], analyser, isLectureActive }) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [size, setSize] = useState({ width: 250, height: 150 });
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    // Dimensions de départ discrètes mais lisibles
+    const defaultWidth = Math.max(220, drums.length * 56); // 56px par drum, minimum 220px
+    const defaultHeight = 240; // 160 * 1.5
+
+    const [size, setSize] = useState({ width: defaultWidth, height: defaultHeight });
     const [resizing, setResizing] = useState(false);
     const [dragging, setDragging] = useState(false);
     const [startPos, setStartPos] = useState({ x: 0, y: 0 });
-    const [startSize, setStartSize] = useState({ width: 250, height: 150 });
+    const [startSize, setStartSize] = useState({ width: defaultWidth, height: defaultHeight });
     const [position, setPosition] = useState({ top: 15, right: 15 });
 
     // Redimensionnement depuis le coin inférieur gauche
@@ -47,7 +51,6 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [] }) 
         e.preventDefault();
     };
 
-    // Move handlers outside so they are accessible for cleanup
     const handleMouseMove = React.useCallback((e: MouseEvent) => {
         if (resizing) {
             const dx = startPos.x - e.clientX;
@@ -70,7 +73,7 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [] }) 
         setDragging(false);
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (resizing || dragging) {
             window.addEventListener('mousemove', handleMouseMove);
             window.addEventListener('mouseup', handleMouseUp);
@@ -81,11 +84,7 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [] }) 
         };
     }, [resizing, dragging, handleMouseMove, handleMouseUp]);
 
-    // Calcul du nombre de colonnes pour une grille carrée
-    const gridCols = Math.ceil(Math.sqrt(drums.length));
-    const gridRows = Math.ceil(drums.length / gridCols);
-
-    // Si tu utilises des timers :
+    // Nettoyage éventuel de timers
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     useEffect(() => {
         const timer = timerRef.current;
@@ -94,11 +93,50 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [] }) 
         };
     }, []);
 
-    // Si tu utilises des blobs :
-    // const [audioURL, setAudioURL] = useState<string|null>(null);
-    // useEffect(() => {
-    //   return () => { if (audioURL) URL.revokeObjectURL(audioURL); };
-    // }, [audioURL]);
+    // Analyseur de fréquences : 1 bande par drum, alignée sur la grille
+    useEffect(() => {
+        if (!analyser || !isLectureActive || !canvasRef.current) return;
+        let running = true;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        function draw() {
+            if (!running) return;
+            if (analyser) {
+                analyser.getByteFrequencyData(dataArray);
+            }
+            ctx!.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Découpage en N bandes (N = drums.length)
+            const bands = drums.length;
+            const bandWidth = Math.floor(bufferLength / bands);
+            const bandValues = [];
+            for (let b = 0; b < bands; b++) {
+                let sum = 0;
+                for (let i = b * bandWidth; i < (b + 1) * bandWidth && i < bufferLength; i++) {
+                    sum += dataArray[i];
+                }
+                bandValues.push(sum / bandWidth);
+            }
+
+            // Affichage des bandes alignées avec la grille
+            for (let b = 0; b < bands; b++) {
+                const value = bandValues[b];
+                const percent = value / 255;
+                const height = canvas.height * percent;
+                const offset = canvas.height - height;
+                const barWidth = canvas.width / bands;
+                ctx!.fillStyle = DRUM_COLORS[drums[b]?.type] || BAND_COLORS[b % BAND_COLORS.length];
+                ctx!.fillRect(b * barWidth, offset, barWidth - 4, height);
+            }
+
+            requestAnimationFrame(draw);
+        }
+        draw();
+        return () => { running = false; };
+    }, [analyser, isLectureActive, drums, size.width, size.height]);
 
     return (
         <div
@@ -112,33 +150,17 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [] }) 
                 userSelect: resizing || dragging ? 'none' : 'auto',
                 position: 'fixed',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
             }}
         >
             <div
                 className="visu-header"
                 onMouseDown={handleDragMouseDown}
-                style={{
-                    width: '100%',
-                    height: 24,
-                    cursor: 'move',
-                    background: 'rgba(255,255,255,0.08)',
-                    borderTopLeftRadius: 8,
-                    borderTopRightRadius: 8,
-                    flexShrink: 0
-                }}
             />
-            <div
-                className="visu-grid"
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
-                    gridTemplateRows: `repeat(${gridRows}, 1fr)`,
-                    width: '100%',
-                    height: `calc(100% - 24px)`,
-                    position: 'relative'
-                }}
-            >
+            {/* Grille sur une seule ligne, largeur identique au canvas */}
+            <div className="visu-grid" style={{ width: size.width }}>
                 {drums.map((drum) => {
                     const active = activeDrums.find(d => d.type === drum.type);
                     const opacity = active
@@ -152,17 +174,7 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [] }) 
                             style={{
                                 background: DRUM_COLORS[drum.type] || '#eee',
                                 opacity: opacity,
-                                border: '2px solid #fff2',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontWeight: 'bold',
-                                fontSize: '1rem',
-                                color: '#222',
-                                transition: 'opacity 0.3s cubic-bezier(.4,2,.6,1), filter 0.3s cubic-bezier(.4,2,.6,1), transform 0.2s',
                                 filter: active ? 'brightness(0.7)' : 'none',
-                                userSelect: 'none',
-                                position: 'relative'
                             }}
                         >
                             {drum.type}
@@ -179,6 +191,13 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [] }) 
                     );
                 })}
             </div>
+            <canvas
+                ref={canvasRef}
+                width={size.width}
+                height={size.height}
+                className="visu-analyser-canvas"
+                style={{ display: 'block', margin: 0 }}
+            />
             <div
                 className="resize-handle"
                 onMouseDown={handleResizeMouseDown}

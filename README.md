@@ -10,15 +10,15 @@ Une version deployée de la branche gh-pages est accessible sur GitHub Page : <h
 
 Elle peut par conséquent différer de la version disponible sur le repository : <https://github.com/RobNamias/boumtsika-app>
 
-- Branche "gh-pages" : Version 2.4 03/07/2025
-- Branche "main" : Version 2.5 : Refonte via IA 06/07/2025
+- Branche "gh-pages" : Version 2.5 10/07/2025
+- Branche "main" : Version 2.5 : Refonte via IA 10/07/2025
 
 ## Documentation
 
 Dans le dossier 'docs', veuillez trouver les documents  suivants :
 
 - Descriptif Arborescence
-- Rapport IA
+- Rapport IA  <-- Indique session par session tous les changements effectués par vibe-coding avec le Copilot GPT4.1
 - Suivi Projet
 - Sources
 

@@ -84,10 +84,9 @@
 }
 
 .button_menu {
-    height: 70px;
-    width: 70px;
+    height: 60px;
+    width: 60px;
     border: 1.5px solid var(--scnd-bg-color);
-    margin: 0 15px;
     border-radius: 7px;
     background: linear-gradient(135deg, #888 0%, #555 100%);
     color: var(--font-color-light);
@@ -103,7 +102,11 @@
 
 #button_Tribe {
     font-family: 'Traffic';
-    font-size: 30px;
+    font-size: 26px;
+}
+
+#button_Tribe.drum_active {
+    font-size: 28px;
 }
 
 .button_menu:active {
@@ -123,11 +126,9 @@
 .button_kit_menu {
     font-family: 'Gothic';
     background: linear-gradient(135deg, #444 0%, #888 100%);
-    color: var(--font-color-light);
+    /* color: var(--font-color-light); */
     border: 2px solid #444;
     font-size: 22px;
-    width: 60px;
-    height: 60px;
     margin: 0 8px;
     border-radius: 7px;
     transition: background 0.18s, border 0.18s, color 0.18s;
@@ -138,7 +139,7 @@
     background: linear-gradient(135deg, #222 0%, #666 100%);
     color: var(--font-color-light);
     border: 2px solid #222;
-    font-size: 26px;
+    font-size: 1.5em;
 }
 
 /* Boutons de choix de pages */
@@ -265,4 +266,11 @@
 
 #veritable_boite_a_rythme {
     margin-top: 5vh;
+}
+
+.blinking-red {
+    background: #ff2222 !important;
+    color: #fff !important;
+    animation: none !important;
+    transition: background 0.1s;
 }

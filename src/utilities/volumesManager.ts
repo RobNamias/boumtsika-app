@@ -27,7 +27,7 @@ export function setDegOfGrooveByIndex(index: number, newValue: number) {
     DegreesOfGroove[index] = newValue
 }
 
-export function set(newVolumeArray: number[]) {
+export function setVolumeArray(newVolumeArray: number[]) {
     VolumeArray = newVolumeArray
     // console.log(Volumerray)
 }

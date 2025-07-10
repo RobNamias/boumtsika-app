@@ -1,17 +1,22 @@
-import React, { ChangeEvent } from 'react';
+import React, { useEffect, ChangeEvent } from 'react';
 import * as Volumes from '../utilities/volumesManager';
+import { patternLength } from '../utilities/patternManager';
 
 type Props = {
     drumType: string;
     index: number;
+    page: number; // <-- Ajoute cette prop
     degreesOfGroove: number[];
     setDegreesOfGroove: (v: number[]) => void;
     setLocalVolumesBySpan: (v: number[][]) => void;
+    localVolumesBySpan: number[];
+    volumesRefreshKey: number;
 };
 
 const DrumBoxLineVolume: React.FC<Props> = ({
-    drumType, index, degreesOfGroove, setDegreesOfGroove, setLocalVolumesBySpan
+    drumType, index, page, degreesOfGroove, setDegreesOfGroove, setLocalVolumesBySpan, localVolumesBySpan, volumesRefreshKey
 }) => {
+    const pageOffset = (page - 1) * 16;
     const indexes = Array.from({ length: 16 }, (_, i) => i + 1);
 
     const changeGroove = (event: ChangeEvent<HTMLInputElement>) => {
@@ -19,9 +24,14 @@ const DrumBoxLineVolume: React.FC<Props> = ({
         setDegreesOfGroove([...Volumes.DegreesOfGroove]);
     };
 
+    // Synchronise les volumes à chaque changement de page
+    useEffect(() => {
+        setLocalVolumesBySpan([...Volumes.VolumesBySpan]);
+    }, [page, setLocalVolumesBySpan, volumesRefreshKey]);
+
     const createGroove = () => {
         const newVolumeBySpanArray: number[] = [];
-        for (let j = 0; j < 32; j++) {
+        for (let j = 0; j < patternLength; j++) {
             const deg = degreesOfGroove[index];
             const newValue = Math.random() < 0.5
                 ? 50 + Math.random() * 10 * deg
@@ -41,13 +51,14 @@ const DrumBoxLineVolume: React.FC<Props> = ({
 
     const setSpanVolume = (event: ChangeEvent<HTMLInputElement>) => {
         const e = event.currentTarget;
-        const idx = parseInt(e.id);
-        Volumes.setSpanVolume(index, idx - 1, Number(e.value));
+        const idx = parseInt(e.id); // idx = 1 à 16
+        Volumes.setSpanVolume(index, pageOffset + idx - 1, Number(e.value));
         setLocalVolumesBySpan([...Volumes.VolumesBySpan]);
     };
 
+
     return (
-        <div className={"dbl_volume layer card" + drumType + "_layer layer_volume current_layer"} id={"card" + drumType + "_layer_volume"}>
+        <div className={"layer dbl_volume " + drumType + "_layer"} id={"card" + drumType + "_layer_volume"}>
             <div className="container_setGroove">
                 <div className='container_input_setter_groove'>
                     <input
@@ -74,16 +85,15 @@ const DrumBoxLineVolume: React.FC<Props> = ({
                 />
             </div>
             {indexes.map(idx => (
-                <div className={'vertical-wrapper spanVolume spanVolume' + idx} key={idx}>
+                <div key={idx} className={'vertical-wrapper spanVolume spanVolume' + idx} id={idx + "_vol_" + drumType}>
                     <input
                         type="range"
                         className='vertical spanVolumeInput'
                         id={idx + "_vol" + drumType}
                         step="5"
-                        value={Volumes.VolumesBySpan[index][idx - 1]}
+                        value={localVolumesBySpan[pageOffset + idx - 1]} // <-- Décalage ici
                         onChange={setSpanVolume}
                     />
-                    {idx % 4 === 0 && idx < 16 && <div className={"separation sep_" + idx / 4} />}
                 </div>
             ))}
         </div>

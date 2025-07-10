@@ -8,6 +8,16 @@
   --font-color-light: #f5f5f5;
   --font-color-medium: #b0b0b0;
   --font-color-dark: #444444;
+
+  /* Palette de debug */
+  --debug-green: #51ff00;
+  --debug-red: #ff5151;
+  --debug-blue: #51aaff;
+  --debug-yellow: #ffe651;
+  --debug-purple: #c651ff;
+  --debug-orange: #ffb651;
+  --debug-pink: #ff51c6;
+  --debug-grey: #bdbdbd;
 }
 
 @font-face {
@@ -34,7 +44,6 @@
 
 body {
   margin: 0;
-  font-family: 'Traffic';
 }
 
 code {

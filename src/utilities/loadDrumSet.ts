@@ -1,4 +1,5 @@
 import { DrumType } from "../models/DrumType";
+import { getAudio } from '../utilities/audioCache'; // adapte le chemin si besoin
 
 var audioFiles: __WebpackModuleApi.RequireContext;
 
@@ -29,7 +30,7 @@ export function switchDrumSet(numDrumKit: string) {
         type: file.replace(idDossier, "").replace(" ", "").replace(".ogg", "") as keyof typeof DrumType, // Extract filename without extension
         drumKit: numDrumKit,
         path: audioFiles(file),
-        audio: new Audio(audioFiles(file)),
+        audio: getAudio(audioFiles(file)),
         is_active: true
     }));
 

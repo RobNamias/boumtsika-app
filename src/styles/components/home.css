@@ -13,12 +13,12 @@
     position: fixed;
     width: 100%;
     background-color: #282c34ee;
-    min-height: 100vh;
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-family: 'Traffic', sans-serif;
     font-size: calc(50px + 2vmin);
     color: white;
     overflow: hidden;

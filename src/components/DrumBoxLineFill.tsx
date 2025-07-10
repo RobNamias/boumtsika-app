@@ -1,24 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as Fill from '../utilities/fillManager';
 
 type Props = {
     drumType: string;
     index: number;
-    localFill: typeof Fill.FillArray;
+    page: number; // <-- Ajoute cette prop
+    localFill: number[]; // <--- c'est bien un tableau de 16 valeurs pour la page courante
     setLocalFill: (v: typeof Fill.FillArray) => void;
+    pageOffset: number;
 };
 
-const DrumBoxLineFill: React.FC<Props> = ({ drumType, index, localFill, setLocalFill }) => {
+const DrumBoxLineFill: React.FC<Props> = ({ drumType, index, page, localFill, setLocalFill, pageOffset }) => {
     const indexes = Array.from({ length: 16 }, (_, i) => i + 1);
 
     const setFillBySpan = (e: React.FormEvent<HTMLInputElement>) => {
         const newValue = Number(e.currentTarget.value);
         if (newValue > 0 && newValue <= 10) {
-            const timeIndex = Number(e.currentTarget.id.replace('spanFillInput_' + drumType + '_', "")) - 1;
-            Fill.setBySpan(newValue, index, timeIndex);
+            const spanIdx = Number(e.currentTarget.id.replace('spanFillInput_' + drumType + '_', "")) - 1;
+            // Met à jour la valeur globale à la bonne position (pageOffset + spanIdx)
+            Fill.setBySpan(newValue, index, pageOffset + spanIdx);
             setLocalFill([...Fill.FillArray]);
         }
     };
+
+    useEffect(() => {
+        // Synchronise les fills à chaque changement de page
+        setLocalFill([...Fill.FillArray]);
+    }, [page]);
 
     return (
         <div className={"dbl_fill layer card" + drumType + "_layer layer_fill"} id={"card" + drumType + "_layer_fill"}>
@@ -34,7 +42,7 @@ const DrumBoxLineFill: React.FC<Props> = ({ drumType, index, localFill, setLocal
                                 min="1"
                                 max="10"
                                 onChange={setFillBySpan}
-                                value={Fill.FillArray[index][idx - 1]}
+                                value={localFill[idx - 1] ?? 1}
                                 placeholder="Sélectionner la probabilité de lire le sample"
                             />
                         </div>
