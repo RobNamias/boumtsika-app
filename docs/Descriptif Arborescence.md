@@ -2,6 +2,7 @@
 
 ## Docs
 
+- `Liste d'instruction IA` : Liste personnalisée d'instructions pour faciler l'utilisation de l'IA
 - `Rapport IA` : Suivi des modifications effectuées avec l'aide de l'IA, et rédigé par IA
 - `Sources` : recueil des supports externes utilisés pour le développement de cette application
 - `Suivi Projet` :

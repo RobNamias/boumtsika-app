@@ -181,10 +181,16 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
         for (let i = 0; i <= Util.Delay.DelayArray[drumTypeIndex].feedback; i++) {
           const delayVolume = Math.max(0.1, initialVolume - 0.1 * i);
           const timeout = setTimeout(() => {
+            console.log("on joue le sample après : " + Util.Delay.DelayArray[drumTypeIndex].step * i * (bpmInterval) + "ms");
             playSample(audioCtx, buffer, delayVolume, destination);
-          }, Util.Delay.DelayArray[drumTypeIndex].step * i * bpmInterval);
+          }, Util.Delay.DelayArray[drumTypeIndex].step * i * (bpmInterval));
           delayTimeouts.current.push(timeout);
         }
+      } else {
+        playSample(audioCtx, buffer, volume, destination, analyser ?? undefined);
+        addActiveDrum(drumSet.type, volume);
+        console.log("On ne passe pas dans le delay")
+        setTimeout(() => removeActiveDrum(drumSet.type, volume), 200);
       }
     },
     [buffers, audioCtx, recorder, mediaDestination, analyser, addActiveDrum, removeActiveDrum, bpmInterval]
@@ -407,53 +413,66 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
     };
   }, [isLectureActive, bpm]);
 
-  //Chargement depuis un fichier
-  // const loadDataFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.currentTarget.files && e.currentTarget.files.length > 0) {
-  //     if (isLectureActive) {
-  //       stopLecture()
-  //     }
-  //     const file = e.currentTarget.files[0];
-  //     const reader = new FileReader();
-  //     reader.onload = function (event) {
-  //       try {
-  //         const content = event.target?.result;
-  //         if (typeof content === "string") {
-  //           const Data = JSON.parse(content);
-  //           setDrums(Data.setDrumSet ?? []);
-  //           setBpm(Data.bpm ?? 120);
-  //           Pattern.set(Data.PatternArray);
-  //           Volumes.set(Data.VolumeArray);
-  //           Volumes.setVolumesBySpan(Data.VolumesBySpan);
-  //           Delay.setDelay(Data.DelayArray)
-  //           Fill.set(Data.FillArray)
-  //           setLocalVolumes([...Volumes.VolumeArray]);
-  //           for (let i = 0; i < Pattern.PatternArray.length; i++) {
-  //             const listSpanByDrum = document.getElementsByClassName("sdd_" + drums[i].type)
-  //             for (let j = 0; j < Pattern.PatternArray[i].length; j++) {
-  //               Pattern.PatternArray[i][j] ? listSpanByDrum[j]?.children[0].classList.add("span_active") : listSpanByDrum[j]?.children[0].classList.remove("span_active")
-  //             }
-  //           }
-  //           const listeButton = document.getElementsByClassName("button_kit_menu");
-  //           for (let i = 0; i < listeButton.length; i++) {
-  //             listeButton[i].classList.remove("drum_active")
-  //           }
-  //           document.getElementById("button_" + Data.setDrumSet[0].drumKit)?.classList.add("drum_active");
-  //           for (let i = 0; i < Data.setDrumSet.length; i++) {
-  //             const buttonMute = document.getElementById("mute_" + Data.setDrumSet[i].type);
-  //             if (buttonMute?.classList.contains("is_muted")) {
-  //               Data.setDrumSet[i].is_active = false
-  //             }
-  //           }
-  //         }
-  //       }
-  //       catch (error) {
-  //         alert("❌ Erreur : Impossible de lire le fichier JSON !");
-  //       }
-  //     };
-  //     reader.readAsText(file);
-  //   }
-  // };
+  // Chargement depuis un fichier
+  const loadDataFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.currentTarget.files && e.currentTarget.files.length > 0) {
+      if (isLectureActive) {
+        stopLecture();
+      }
+      const file = e.currentTarget.files[0];
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        try {
+          const content = event.target?.result;
+          if (typeof content === "string") {
+            const Data = JSON.parse(content);
+
+            // Vérification et assignation des données essentielles
+            setDrums(Array.isArray(Data.setDrumSet) ? Data.setDrumSet : []);
+            setBpm(typeof Data.bpm === "number" ? Data.bpm : 120);
+
+            if (Array.isArray(Data.PatternArray)) Util.Pattern.set(Data.PatternArray);
+            if (Array.isArray(Data.VolumeArray)) Util.Volumes.setVolumeArray(Data.VolumeArray);
+            if (Array.isArray(Data.VolumesBySpan)) Util.Volumes.setVolumesBySpan(Data.VolumesBySpan);
+            if (Array.isArray(Data.DelayArray)) Util.Delay.setDelay(Data.DelayArray);
+            if (Array.isArray(Data.FillArray)) Util.Fill.setFillArray(Data.FillArray);
+
+            setLocalVolumes([...Util.Volumes.VolumeArray]);
+
+            // Mise à jour de l'affichage des spans actifs
+            for (let i = 0; i < Util.Pattern.PatternArray.length; i++) {
+              const listSpanByDrum = document.getElementsByClassName("sdd_" + Data.setDrumSet[i]?.type);
+              for (let j = 0; j < Util.Pattern.PatternArray[i].length; j++) {
+                Util.Pattern.PatternArray[i][j]
+                  ? listSpanByDrum[j]?.children[0].classList.add("span_active")
+                  : listSpanByDrum[j]?.children[0].classList.remove("span_active");
+              }
+            }
+
+            // Mise à jour des boutons kit actifs
+            const listeButton = document.getElementsByClassName("button_kit_menu");
+            for (let i = 0; i < listeButton.length; i++) {
+              listeButton[i].classList.remove("drum_active");
+            }
+            if (Data.setDrumSet?.[0]?.drumKit) {
+              document.getElementById("button_" + Data.setDrumSet[0].drumKit)?.classList.add("drum_active");
+            }
+
+            // Mise à jour des boutons mute
+            for (let i = 0; i < Data.setDrumSet.length; i++) {
+              const buttonMute = document.getElementById("mute_" + Data.setDrumSet[i].type);
+              if (buttonMute?.classList.contains("is_muted")) {
+                Data.setDrumSet[i].is_active = false;
+              }
+            }
+          }
+        } catch (error) {
+          alert("❌ Erreur : Impossible de lire le fichier JSON !");
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
 
   //Reset du pattern
   const clearPattern = () => {
@@ -547,10 +566,8 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
         </button>
         {/* SAUVEGARDE */}
         <button className="button_menu" onClick={() => saveDataToFile(drums, bpm)} disabled={loading}>💾 Exporter</button>
-        {/* CHARGEMENT */}
-        {/* <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} /> */}
-        {/* <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()} disabled={loading}>📂 Importer</button> */}
-        {/* RESET DU PATTERN */}
+        <input type="file" id="loadFileInput" accept=".json" hidden onChange={loadDataFromFile} />
+        <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()} disabled={loading}>📂 Importer</button>
         <button className="button_menu" onClick={() => clearPattern()} disabled={loading}>❌ Effacer</button>
         {audioURL && (
           <>

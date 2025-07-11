@@ -4,9 +4,7 @@ import DrumBoxLineVolume from './DrumBoxLineVolume';
 import DrumBoxLineDelay from './DrumBoxLineDelay';
 import DrumBoxLineAutocomplete from './DrumBoxLineAutocomplete';
 import DrumBoxLineFill from './DrumBoxLineFill';
-import * as Volumes from '../utilities/volumesManager';
-import * as Delay from '../utilities/delayManager';
-import * as Fill from '../utilities/fillManager';
+import * as Util from '../utilities/';
 
 type Props = {
     drumType: string;
@@ -22,10 +20,10 @@ const DrumBoxLine: React.FC<Props> = ({ drumType, index, page }) => {
         indexes.push(i);
     }
 
-    const [localVolumesBySpan, setLocalVolumesBySpan] = useState(Volumes.VolumesBySpan);
-    const [degreesOfGroove, setDegreesOfGroove] = useState(Volumes.DegreesOfGroove);
-    const [localDataDelay, setLocalDataDelay] = useState(Delay.DelayArray);
-    const [localFill, setLocalFill] = useState(Fill.FillArray);
+    const [localVolumesBySpan, setLocalVolumesBySpan] = useState(Util.Volumes.VolumesBySpan);
+    const [degreesOfGroove, setDegreesOfGroove] = useState(Util.Volumes.DegreesOfGroove);
+    const [localDataDelay, setLocalDataDelay] = useState(Util.Delay.DelayArray);
+    const [localFill, setLocalFill] = useState(Util.Fill.FillArray);
     const [volumesRefreshKey, setVolumesRefreshKey] = useState(0);
 
     // Flipcard state
@@ -37,8 +35,8 @@ const DrumBoxLine: React.FC<Props> = ({ drumType, index, page }) => {
 
     // Synchronise les valeurs locales à chaque changement de page
     useEffect(() => {
-        setLocalVolumesBySpan([...Volumes.VolumesBySpan]);
-        setLocalFill([...Fill.FillArray]);
+        setLocalVolumesBySpan([...Util.Volumes.VolumesBySpan]);
+        setLocalFill([...Util.Fill.FillArray]);
         // ...autres synchronisations si besoin
     }, [page]);
 

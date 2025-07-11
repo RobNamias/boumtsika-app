@@ -17,10 +17,11 @@ Elle peut par conséquent différer de la version disponible sur le repository :
 
 Dans le dossier 'docs', veuillez trouver les documents  suivants :
 
-- Descriptif Arborescence
-- Rapport IA  <-- Indique session par session tous les changements effectués par vibe-coding avec le Copilot GPT4.1
-- Suivi Projet
-- Sources
+- Liste Instructions IA : une suite d'instructions par mot-clé personnalisée à faire relire par l'IA en début de session.
+- Descriptif Arborescence : descriptif de toute l'arborescence du dossier
+- Rapport IA  : Indique session par session tous les changements effectués par vibe-coding avec le Copilot GPT4.1
+- Suivi Projet : Indique le versionning prévisionnel et actuel du versionning
+- Sources : Les sources utilisées pour le projet
 
 ## Contact
 
@@ -48,6 +49,12 @@ You will also see any lint errors in the console.
 
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+----
+
+!!! Make sure to use the packageLocal.json by running ' node switch-package.js Local ' in your Terminal before runnig 'npm run build' !!!
+
+----
 
 #### `npm run build`
 

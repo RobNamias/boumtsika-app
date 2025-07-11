@@ -1,6 +1,6 @@
 import React, { useEffect, ChangeEvent } from 'react';
-import * as Volumes from '../utilities/volumesManager';
-import { patternLength } from '../utilities/patternManager';
+// import * as Volumes from '../utilities/volumesManager';
+import { Pattern, Volumes } from '../utilities/';
 
 type Props = {
     drumType: string;
@@ -31,7 +31,7 @@ const DrumBoxLineVolume: React.FC<Props> = ({
 
     const createGroove = () => {
         const newVolumeBySpanArray: number[] = [];
-        for (let j = 0; j < patternLength; j++) {
+        for (let j = 0; j < Pattern.patternLength; j++) {
             const deg = degreesOfGroove[index];
             const newValue = Math.random() < 0.5
                 ? 50 + Math.random() * 10 * deg

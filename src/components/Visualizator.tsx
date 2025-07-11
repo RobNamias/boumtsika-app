@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import '../styles/components/visualizator.css';
 
 type Drum = {
     type: string;
@@ -19,30 +20,39 @@ const DRUM_COLORS: Record<string, string> = {
     Crash: '#92A8D1',
 };
 
-const BAND_COLORS = ["#2ecc40", "#ffdc00", "#ff851b", "#0074d9", "#b10dc9"];
+// Nuancier du bleu au rouge, inversé
+const BAND_COLORS = [
+    "#e74c3c", // Rouge
+    "#ff5722", // Rouge orangé
+    "#ff9800", // Orange
+    "#ffc107", // Jaune orangé
+    "#ffeb3b", // Jaune
+    "#4caf50", // Vert
+    "#00bcd4", // Cyan
+    "#2196f3", // Bleu clair
+    "#0074d9"  // Bleu
+];
 
 const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [], analyser, isLectureActive }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    // Dimensions de départ discrètes mais lisibles
-    const defaultWidth = Math.max(220, drums.length * 56); // 56px par drum, minimum 220px
-    const defaultHeight = 240; // 160 * 1.5
+    // Dimensions fixes
+    const defaultWidth = Math.max(300, drums.length * 50);
+    const defaultHeight = 200;
 
-    const [size, setSize] = useState({ width: defaultWidth, height: defaultHeight });
-    const [resizing, setResizing] = useState(false);
+    // Rayon adapté à la hauteur (arcWidth + rayon + marges <= defaultHeight)
+    const arcGap = 5;
+    const arcWidth = 25;
+    const [size] = useState({ width: defaultWidth, height: defaultHeight }); // plus de redimensionnement
+    const radius = Math.max(30, size.height / 2 - arcWidth - 30); // rayon réduit pour tenir dans defaultHeight
+    const center = { x: size.width / 2, y: size.height / 2 };
+    const total = drums.length;
+
     const [dragging, setDragging] = useState(false);
     const [startPos, setStartPos] = useState({ x: 0, y: 0 });
-    const [startSize, setStartSize] = useState({ width: defaultWidth, height: defaultHeight });
-    const [position, setPosition] = useState({ top: 15, right: 15 });
-
-    // Redimensionnement depuis le coin inférieur gauche
-    const handleResizeMouseDown = (e: React.MouseEvent) => {
-        setResizing(true);
-        setStartPos({ x: e.clientX, y: e.clientY });
-        setStartSize({ ...size });
-        e.stopPropagation();
-    };
+    const [position, setPosition] = useState({ top: 5, right: 5 });
+    const [showPetals, setShowPetals] = useState(true);
 
     // Déplacement depuis la barre supérieure
     const handleDragMouseDown = (e: React.MouseEvent) => {
@@ -52,14 +62,6 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [], an
     };
 
     const handleMouseMove = React.useCallback((e: MouseEvent) => {
-        if (resizing) {
-            const dx = startPos.x - e.clientX;
-            const dy = e.clientY - startPos.y;
-            setSize({
-                width: Math.max(150, startSize.width + dx),
-                height: Math.max(100, startSize.height + dy),
-            });
-        }
         if (dragging) {
             setPosition(pos => ({
                 top: Math.max(0, pos.top + (e.clientY - startPos.y)),
@@ -67,14 +69,13 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [], an
             }));
             setStartPos({ x: e.clientX, y: e.clientY });
         }
-    }, [resizing, dragging, startPos, startSize]);
+    }, [dragging, startPos]);
     const handleMouseUp = React.useCallback(() => {
-        setResizing(false);
         setDragging(false);
     }, []);
 
     useEffect(() => {
-        if (resizing || dragging) {
+        if (dragging) {
             window.addEventListener('mousemove', handleMouseMove);
             window.addEventListener('mouseup', handleMouseUp);
         }
@@ -82,7 +83,7 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [], an
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [resizing, dragging, handleMouseMove, handleMouseUp]);
+    }, [dragging, handleMouseMove, handleMouseUp]);
 
     // Nettoyage éventuel de timers
     const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -93,7 +94,7 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [], an
         };
     }, []);
 
-    // Analyseur de fréquences : 1 bande par drum, alignée sur la grille
+    // Analyseur de fréquences
     useEffect(() => {
         if (!analyser || !isLectureActive || !canvasRef.current) return;
         let running = true;
@@ -109,8 +110,7 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [], an
             }
             ctx!.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Découpage en N bandes (N = drums.length)
-            const bands = drums.length;
+            const bands = BAND_COLORS.length;
             const bandWidth = Math.floor(bufferLength / bands);
             const bandValues = [];
             for (let b = 0; b < bands; b++) {
@@ -121,14 +121,13 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [], an
                 bandValues.push(sum / bandWidth);
             }
 
-            // Affichage des bandes alignées avec la grille
             for (let b = 0; b < bands; b++) {
                 const value = bandValues[b];
                 const percent = value / 255;
                 const height = canvas.height * percent;
                 const offset = canvas.height - height;
                 const barWidth = canvas.width / bands;
-                ctx!.fillStyle = DRUM_COLORS[drums[b]?.type] || BAND_COLORS[b % BAND_COLORS.length];
+                ctx!.fillStyle = BAND_COLORS[b % BAND_COLORS.length];
                 ctx!.fillRect(b * barWidth, offset, barWidth - 4, height);
             }
 
@@ -136,7 +135,41 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [], an
         }
         draw();
         return () => { running = false; };
-    }, [analyser, isLectureActive, drums, size.width, size.height]);
+    }, [analyser, isLectureActive, size.width, size.height]);
+
+    // Fonction utilitaire pour dessiner un arc SVG
+    function describeArc(cx: number, cy: number, r1: number, r2: number, startAngle: number, endAngle: number) {
+        const start1 = polarToCartesian(cx, cy, r1, endAngle);
+        const end1 = polarToCartesian(cx, cy, r1, startAngle);
+        const start2 = polarToCartesian(cx, cy, r2, endAngle);
+        const end2 = polarToCartesian(cx, cy, r2, startAngle);
+
+        return [
+            "M", start1.x, start1.y,
+            "A", r1, r1, 0, 0, 0, end1.x, end1.y,
+            "L", end2.x, end2.y,
+            "A", r2, r2, 0, 0, 1, start2.x, start2.y,
+            "Z"
+        ].join(" ");
+    }
+
+    function describeLabelArc(cx: number, cy: number, r: number, startAngle: number, endAngle: number) {
+        // Arc pour le label, 2px en dessous de la courbure extérieure
+        const start = polarToCartesian(cx, cy, r, startAngle + 2);
+        const end = polarToCartesian(cx, cy, r, endAngle - 2);
+        return [
+            "M", start.x, start.y,
+            "A", r, r, 0, 0, 1, end.x, end.y
+        ].join(" ");
+    }
+
+    function polarToCartesian(cx: number, cy: number, r: number, angle: number) {
+        const rad = (angle - 90) * Math.PI / 180.0;
+        return {
+            x: cx + (r * Math.cos(rad)),
+            y: cy + (r * Math.sin(rad))
+        };
+    }
 
     return (
         <div
@@ -147,62 +180,94 @@ const Visualizator: React.FC<VisualizatorProps> = ({ drums, activeDrums = [], an
                 height: size.height,
                 top: position.top,
                 right: position.right,
-                userSelect: resizing || dragging ? 'none' : 'auto',
-                position: 'fixed',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
+                userSelect: dragging ? 'none' : 'auto'
             }}
         >
             <div
                 className="visu-header"
                 onMouseDown={handleDragMouseDown}
-            />
-            {/* Grille sur une seule ligne, largeur identique au canvas */}
-            <div className="visu-grid" style={{ width: size.width }}>
-                {drums.map((drum) => {
+            >
+                <button
+                    className="visu-switch-btn"
+                    onClick={() => setShowPetals(v => !v)}
+                >
+                    {showPetals ? "Drum" : "Fréquence"}
+                </button>
+            </div>
+            {/* SVG pétales */}
+            <svg
+                width={size.width}
+                height={size.height}
+                className={`visu-petals-svg${showPetals ? ' petals-visible' : ' petals-hidden'}`}
+                style={{ transform: 'rotate(280deg)', transformOrigin: '50% 50%' }}
+            >
+                <defs>
+                    {drums.map((drum, i) => {
+                        const startAngle = (360 / total) * i + arcGap;
+                        const endAngle = (360 / total) * (i + 1) - arcGap;
+                        const arcId = `petal-arc-${i}`;
+                        // Arc pour le label, 2px en dessous de la courbure extérieure
+                        const arcPath = describeLabelArc(center.x, center.y, radius + arcWidth + 3, startAngle, endAngle);
+                        return (
+                            <path
+                                key={arcId}
+                                id={arcId}
+                                d={arcPath}
+                                fill="none"
+                            />
+                        );
+                    })}
+                </defs>
+                {drums.map((drum, i) => {
                     const active = activeDrums.find(d => d.type === drum.type);
-                    const opacity = active
-                        ? 0.9 - 0.6 * (active.volume ?? 0)
-                        : 0.5;
-                    const volumePercent = Math.round((active?.volume ?? 0) * 100);
+                    const startAngle = (360 / total) * i + arcGap;
+                    const endAngle = (360 / total) * (i + 1) - arcGap;
+                    const color = DRUM_COLORS[drum.type] || '#eee';
                     return (
-                        <div
-                            key={drum.type}
-                            className={`visu-grid-cell${active ? ' active' : ''}`}
-                            style={{
-                                background: DRUM_COLORS[drum.type] || '#eee',
-                                opacity: opacity,
-                                filter: active ? 'brightness(0.7)' : 'none',
-                            }}
-                        >
-                            {drum.type}
-                            <div className="visu-volume-bar-bg">
-                                <div
-                                    className="visu-volume-bar"
-                                    style={{
-                                        width: `${volumePercent}%`,
-                                        background: DRUM_COLORS[drum.type] || '#fff'
-                                    }}
-                                />
-                            </div>
-                        </div>
+                        <g key={drum.type}>
+                            <path
+                                d={describeArc(center.x, center.y, radius, radius + arcWidth, startAngle, endAngle)}
+                                fill={active ? color : "#ddd"}
+                                opacity={active ? 0.9 : 0.5}
+                                className={active ? "petal-active" : "petal"}
+                                style={{
+                                    filter: active ? `drop-shadow(0 0 8px ${color})` : undefined
+                                }}
+                            />
+                            <text
+                                className="petals-label"
+                                fill={DRUM_COLORS[drum.type] || "#fff"}
+                                fontSize={18}
+                                fontWeight="bold"
+                            >
+                                <textPath
+                                    href={`#petal-arc-${i}`}
+                                    startOffset="80%" // laissé à ta convenance
+                                    textAnchor="middle"
+                                    alignmentBaseline="middle"
+                                >
+                                    {drum.type}
+                                </textPath>
+                            </text>
+                        </g>
                     );
                 })}
-            </div>
+                {/* Cercle central */}
+                <circle
+                    cx={center.x}
+                    cy={center.y}
+                    r={radius - 10}
+                    className="petals-center"
+                />
+            </svg>
+            {/* Canvas analyzer */}
             <canvas
                 ref={canvasRef}
                 width={size.width}
                 height={size.height}
-                className="visu-analyser-canvas"
-                style={{ display: 'block', margin: 0 }}
+                className={`visu-analyser-canvas${showPetals ? ' analyser-hidden' : ' analyser-visible'}`}
             />
-            <div
-                className="resize-handle"
-                onMouseDown={handleResizeMouseDown}
-            />
-        </div>
+        </div >
     );
 };
 

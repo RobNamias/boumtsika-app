@@ -129,10 +129,13 @@
         font-size: 0.85em;
     }
 
-    .visu-analyser-canvas {
-        height: 60px;
+    .container_visu {
+        display: none !important;
     }
+
 }
+
+
 
 /* Scrollbars stylées pour mobile */
 .main_container_drumbox,
@@ -321,5 +324,9 @@
 
     .card {
         border-radius: 8px;
+    }
+
+    .container_visu {
+        display: none !important;
     }
 }
