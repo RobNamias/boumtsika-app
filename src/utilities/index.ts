@@ -5,7 +5,8 @@ export * as Delay from './delayManager';
 export * as Fill from './fillManager';
 export * as Pattern from './patternManager';
 export * from './loadDrumSet';
-export * from './saveData';
 export * from './cleanupUtils';
 export * from './playSample';
+export * from './drumboxUtils';
+export * from './drumDataIO';
 // Ajoute ici tous les autres utilitaires à centraliser

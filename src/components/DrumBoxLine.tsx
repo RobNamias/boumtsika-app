@@ -10,11 +10,12 @@ type Props = {
     drumType: string;
     index: number;
     page: number;
+    volumesRefreshKey: number; // Ajoute cette prop
 };
 
 type LayerType = 'volume' | 'delay' | 'autocomplete' | 'fill';
 
-const DrumBoxLine: React.FC<Props> = ({ drumType, index, page }) => {
+const DrumBoxLine: React.FC<Props> = ({ drumType, index, page, volumesRefreshKey }) => {
     let indexes: number[] = [];
     for (let i = 1; i <= 16; i++) {
         indexes.push(i);
@@ -24,7 +25,6 @@ const DrumBoxLine: React.FC<Props> = ({ drumType, index, page }) => {
     const [degreesOfGroove, setDegreesOfGroove] = useState(Util.Volumes.DegreesOfGroove);
     const [localDataDelay, setLocalDataDelay] = useState(Util.Delay.DelayArray);
     const [localFill, setLocalFill] = useState(Util.Fill.FillArray);
-    const [volumesRefreshKey, setVolumesRefreshKey] = useState(0);
 
     // Flipcard state
     const [isFront, setIsFront] = useState(true); // true = front visible, false = back visible
@@ -38,7 +38,7 @@ const DrumBoxLine: React.FC<Props> = ({ drumType, index, page }) => {
         setLocalVolumesBySpan([...Util.Volumes.VolumesBySpan]);
         setLocalFill([...Util.Fill.FillArray]);
         // ...autres synchronisations si besoin
-    }, [page]);
+    }, [page, volumesRefreshKey]);
 
     const FLIP_DURATION = 700 / 2; // ms, à adapter selon ta transition CSS
 

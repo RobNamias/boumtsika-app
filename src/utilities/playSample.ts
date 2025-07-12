@@ -5,6 +5,7 @@ export function playSample(
     mediaDestination?: AudioNode,
     analyser?: AnalyserNode
 ) {
+    // On garde uniquement les logs d'erreur
     if (!audioCtx) {
         console.error("playSample: audioCtx manquant");
         return;
@@ -13,13 +14,10 @@ export function playSample(
         console.error("playSample: buffer manquant");
         return;
     }
-    if (audioCtx.state !== "running") {
-        console.warn("playSample: AudioContext n'est pas running, état:", audioCtx.state);
-    }
     if (volume <= 0) {
         console.warn("playSample: volume <= 0", volume);
+        return;
     }
-    // console.log("playSample: lecture", { volume, mediaDestination, bufferDuration: buffer.duration });
 
     const source = audioCtx.createBufferSource();
     source.buffer = buffer;
@@ -42,9 +40,8 @@ export function playSample(
 
     // Nettoyage AVANT start
     source.onended = () => {
-        try { source.disconnect(); } catch {}
-        try { gain.disconnect(); } catch {}
-        // Ne pas déconnecter analyser ici, il peut être partagé !
+        try { source.disconnect(); } catch (e) { console.debug("[DEBUG] source.disconnect error", e); }
+        try { gain.disconnect(); } catch (e) { console.debug("[DEBUG] gain.disconnect error", e); }
     };
 
     source.start();

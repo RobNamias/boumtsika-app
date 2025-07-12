@@ -185,4 +185,23 @@ Cette organisation améliore la lisibilité, la maintenabilité et prépare le t
 
 **Résumé :**  
 La session du 11/07/2025 a permis de moderniser et d’optimiser le composant Visualizator, en supprimant les anciennes visualisations, en structurant le CSS, et en améliorant la logique d’affichage et de calcul des éléments graphiques.  
-Le code est désormais plus clair, plus performant et plus facile à maintenir, avec une expérience utilisateur optimisée et une visualisation audio plus esthétique
+Le code est désormais plus clair, plus performant et plus facile à maintenir, avec une expérience utilisateur optimisée et une visualisation audio plus esthétique.
+
+---
+
+## 13. Debug et fiabilisation du cycle audio DrumBox (12/07/2025)
+
+- Ajout de logs détaillés dans tous les points critiques du cycle de lecture et de déclenchement audio (Drumbox, useDrumPlayback, playSample) pour diagnostiquer les problèmes de lecture et de buffer.
+- Vérification systématique de l’état du contexte audio (`audioCtx.state`) avant chaque lecture : gestion des cas `"suspended"` (relance via `resume()`) et `"closed"` (blocage et log d’erreur).
+- Correction du nettoyage mémoire : suppression des fermetures intempestives du contexte audio lors du démontage des composants, pour éviter les blocages de lecture.
+- Refactoring des hooks et utilitaires pour ne garder que les logs d’erreur (console.error, console.warn) et supprimer les logs de debug de fonctionnement normal une fois le cycle validé.
+- Ajout de logs de vérification sur la présence et la validité des buffers audio à chaque tick de lecture, pour chaque drum.
+- Validation du bon fonctionnement du cycle audio : chaque drum joue bien son sample si le buffer est présent et le contexte audio actif.
+- Conservation des logs d’erreur pour faciliter le debug futur en cas de régression ou de bug audio.
+- Documentation des points de contrôle et des logs conservés dans le code pour la maintenance.
+
+---
+
+**Résumé :**  
+La session du 12/07/2025 a permis de fiabiliser le cycle de lecture audio de DrumBox, d’identifier et de corriger les blocages liés à l’état du contexte audio, et de nettoyer le code pour ne garder que les logs d’erreur essentiels.  
+Le système audio est désormais robuste, maintenable et prêt pour une utilisation intensive, avec une traçabilité facilitée en cas de besoin de debug ou d’analyse des performances.

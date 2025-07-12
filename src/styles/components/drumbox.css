@@ -274,3 +274,11 @@
     animation: none !important;
     transition: background 0.1s;
 }
+
+.button_menu.mute_button.is_muted {
+    background-color: rgb(138, 0, 0)
+}
+
+.button_menu.is_solo {
+    background-color: var(--button-color-active);
+}
