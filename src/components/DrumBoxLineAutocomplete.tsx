@@ -32,7 +32,6 @@ const DrumBoxLineAutocomplete: React.FC<Props> = ({ drumType, index }) => {
     return (
         <div className={"dbl_autocomplete layer card" + drumType + "_layer layer_autocomplete"} id={"card" + drumType + "_layer_autocomplete"}>
             <fieldset className='autocomplete_container'>
-                <legend>Auto-complete</legend>
                 {[1, 2, 4, 'random'].map(val => (
                     <div key={val}>
                         <input type="radio" id={drumType + "ac_" + val} name={drumType + "nb_autocomplete"} value={val} />

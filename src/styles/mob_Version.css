@@ -161,6 +161,9 @@
         display: flex;
     }
 
+    .container_visu {
+        display: none !important;
+    }
 
     .main_container_header {
         height: 10vh;
@@ -240,19 +243,44 @@
 
 
     .button_kit_menu {
-        height: 40px;
+        height: 30px;
         width: 40px;
+    }
+
+    .button_kit_menu.drum_active {
+        font-size: 15px;
+    }
+
+    .button_menu.small_button {
+        width: 20px;
+        height: 20px;
+        font-size: 0.95em;
+    }
+
+    #button_Tribe {
+        height: 30px;
+        width: 40px;
+        font-size: 18px;
+    }
+
+    #button_Tribe.drum_active {
+        font-size: 20px;
     }
 
     #button_lecture,
     #button_stop {
         height: 50px;
         width: 50px;
-        margin: 0 20px;
+        margin: 0;
     }
 
-    .button_set_nb_time {
+    #container_set_time .button_menu.button_set_nb_time {
         height: 26px;
+        font-size: 15px;
+    }
+
+    #container_set_time .button_menu.button_set_nb_time.nb_time_active {
+        font-size: 18px;
 
     }
 
@@ -267,9 +295,27 @@
         font-size: 3vh;
     }
 
-    label {
-        font-size: 15px;
+    .checkbox-labels {
+        display: flex;
+        align-items: center;
+        gap: 5px;
         width: 50px;
+        font-size: 12px;
+    }
+
+    .checkbox-switch-vertical {
+        width: 50px;
+        align-items: center;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #container_input label {
+        font-size: 15px;
+        margin-right: 5px;
+        white-space: nowrap;
+        margin: 0;
     }
 
     .container_setGroove {
@@ -326,7 +372,5 @@
         border-radius: 8px;
     }
 
-    .container_visu {
-        display: none !important;
-    }
+
 }

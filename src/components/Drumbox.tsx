@@ -29,6 +29,8 @@ type DrumBoxProps = {
 const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, activeDrums }) => {
   const [bpm, setBpm] = useState<number>(130);
   const [currentPage, setCurrentPage] = useState(1);
+  // hoveredPage supprimé, on ne gère plus le survol souris
+  const [playingPage, setPlayingPage] = useState<number | null>(null);
   const [localVolumes, setLocalVolumes] = useState(Util.Volumes.VolumeArray);
   const [volumesRefreshKey, setVolumesRefreshKey] = useState(0);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
@@ -97,7 +99,8 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
   const startRecording = () => {
     initAudio();
     chunksRef.current = [];
-    if (isLectureActive) {
+    // Ne stoppe la lecture que si le recorder n'est pas déjà actif
+    if (isLectureActive && (!recorder || recorder.state !== "recording")) {
       stopLecture();
     }
     if (loopPageOnly) {
@@ -106,7 +109,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
     } else {
       counterRef.current = 0;
     }
-    if (recorder) {
+    if (recorder && recorder.state !== "recording") {
       recorder.start();
       setIsLectureActive(true);
       intervalId.current = setInterval(Lecture, bpmInterval);
@@ -201,10 +204,11 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
   // Hooks personnalisés
   const toggle_page = usePatternPage(currentPage, setCurrentPage, drums);
 
+  // On wrap la fonction Lecture pour mettre à jour playingPage
   const {
     startLecture,
     stopLecture,
-    Lecture
+    Lecture: OriginalLecture
   } = useDrumPlayback({
     bpm,
     drums,
@@ -224,13 +228,33 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
     delayTimeouts,
   });
 
+  // Fonction Lecture modifiée pour suivre la page jouée
+  const Lecture = useCallback(() => {
+    if (typeof Util.Pattern.numeroPage === "number") {
+      setPlayingPage(Util.Pattern.numeroPage);
+    }
+    OriginalLecture();
+  }, [OriginalLecture]);
+
+  // Remet playingPage à null à l'arrêt de la lecture
+  const stopLectureWithPage = useCallback(() => {
+    setPlayingPage(null);
+    stopLecture();
+  }, [stopLecture]);
+
+  // On remplace la fonction Lecture dans startLecture
+  const startLectureWithPage = useCallback(() => {
+    setPlayingPage(Util.Pattern.numeroPage);
+    startLecture();
+  }, [startLecture]);
+
   // Effets lecture, clavier, blink
   useEffect(() => {
     if (pendingLecture && audioCtx && buffers && Object.keys(buffers).length > 0) {
       setPendingLecture(false);
-      startLecture();
+      startLectureWithPage();
     }
-  }, [audioCtx, buffers, pendingLecture, startLecture]);
+  }, [audioCtx, buffers, pendingLecture, startLectureWithPage]);
 
   useEffect(() => {
     const handleSpace = (e: KeyboardEvent) => {
@@ -397,8 +421,29 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
         <input type="file" id="loadFileInput" accept=".json" hidden onChange={handleImport} />
         <button className="button_menu" onClick={() => document.getElementById('loadFileInput')?.click()} disabled={loading}>📂 Importer</button>
         <button className="button_menu" onClick={() => clearPattern()} disabled={loading}>❌ Effacer</button>
+        {/* ENREGISTREMENT AUDIO */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          {(!recorder || recorder.state !== "recording") && (
+            <button
+              className="button_menu"
+              onClick={startRecording}
+              disabled={!recorder || loading}
+            >
+              🔴REC
+            </button>
+          )}
+          {recorder && recorder.state === "recording" && (
+            <button
+              className="button_menu lecture_en_cours"
+              onClick={stopRecording}
+              disabled={!recorder || loading}
+            >
+              Arrêter
+            </button>
+          )}
+        </div>
         {audioURL && (
-          <>
+          <div id="recording_controls" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <audio
               controls
               src={audioURL}
@@ -424,7 +469,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
             >
               Supprimer
             </button>
-          </>
+          </div>
         )}
       </div>
 
@@ -436,7 +481,8 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
               onClick={() => toggle_page(pageNum)}
               className={
                 'button_menu button_set_nb_time' +
-                (Util.Pattern.numeroPage === pageNum ? ' nb_time_active' : '')
+                (Util.Pattern.numeroPage === pageNum ? ' nb_time_active' : '') +
+                (playingPage === pageNum ? ' nb_time_hover' : '')
               }
               id={`show_page${pageNum}`}
               tabIndex={0}
@@ -450,7 +496,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {!isLectureActive &&
             <>
-              <button onClick={startLecture} className="button_menu" id="button_lecture" disabled={loading}>PLAY</button>
+              <button onClick={startLectureWithPage} className="button_menu" id="button_lecture" disabled={loading}>PLAY</button>
               <div className="checkbox-switch-vertical">
                 <label className="checkbox-switch" title="Activer pour lire tout le pattern">
                   <input
@@ -471,7 +517,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
           {isLectureActive &&
             <>
               <button
-                onClick={stopLecture}
+                onClick={stopLectureWithPage}
                 className={`button_menu lecture_en_cours${isBlinking ? " blinking-red" : ""}`}
                 id="button_stop"
               >
@@ -549,27 +595,7 @@ const DrumBox: React.FC<DrumBoxProps> = ({ drums, setDrums, setActiveDrums, acti
           <p>No drums available. Please load a drum set.</p>
         )}
       </PadsWrapper>
-      {/* ENREGISTREMENT AUDIO */}
-      <div style={{ marginTop: 16, display: 'flex', gap: 8, alignItems: 'center' }}>
-        {(!recorder || recorder.state !== "recording") && (
-          <button
-            className="button_menu"
-            onClick={startRecording}
-            disabled={!recorder || loading}
-          >
-            🔴REC
-          </button>
-        )}
-        {recorder && recorder.state === "recording" && (
-          <button
-            className="button_menu lecture_en_cours"
-            onClick={stopRecording}
-            disabled={!recorder || loading}
-          >
-            Arrêter
-          </button>
-        )}
-      </div>
+
       <Visualizator
         drums={drums}
         activeDrums={activeDrums}

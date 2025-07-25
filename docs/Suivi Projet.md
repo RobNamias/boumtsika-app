@@ -116,18 +116,18 @@ Enfin, cette version pose les bases d’une application plus maintenable, plus m
 
 ----
 
-#### Version 2.6 🟨
+#### Version 2.6 ✅
 
 - Correction de bugs suite à la refonte et implémentation de nouvelles fonctions :
   - debug du delay ✅
   - sauvegarde fichier et import fichier json ✅
 - Finition des imports ✅
 - remodelage Visualizator ✅
-- Style : autocomplete 🟥, bouton Rec 🟥
+- Style : autocomplete ✅, bouton Rec ✅, survol_page_lecture ✅
 
 #### Version 2.7 🟥
 
-- Style : Fill, Delay 🟥
+- Style : Fill, Delay 🟨
 - Corrections de bugs :
   - enregistrement audio (prévoir un delay après la fin du pattern pour ne pas couper trop sec l'enregistrement) 🟥
 
@@ -164,16 +164,15 @@ Bugs à régler suite au à la refonte de l'application :
 - 4 volets d'options différentes : Volumes, Auto-Complete, Fill, Delay ✅
 - Affichage toujours sur 16, mais possibilité de switcher entre 4 pages (4 mesures) ✅
 - Compatibilité navigateurs ✅
-
 - Faire une vraie fenetre de sauvegarde pour choisir l'emplacement et le nom du fichier de sauvegarde
 - Plus de pistes (clap, conga)
-- Dupliquer entièrement la première page sur les 3 autres pages sur demande :
-        - fill, Volume, pattern
 
 ## Version 4 🟥
 
 - Sélection du kit dans une liste ---> Création d'un composent 'Menu'
 - Possibilité de triolet
+- Dupliquer entièrement la première page sur les 3 autres pages sur demande :
+        - fill, Volume, pattern
 - ...
 
 ## Version 5 🟥

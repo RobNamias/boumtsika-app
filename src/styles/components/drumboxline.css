@@ -181,6 +181,7 @@ datalist {
     display: flex;
     align-items: center;
     margin: none;
+    border: none;
     font-family: 'Gothic';
     /* color: var(--scnd-bg-color); */
 }
@@ -188,6 +189,10 @@ datalist {
 
 .autocomplete_container label {
     color: var(--font-color-light);
+}
+
+.autocomplete_container input:hover {
+    cursor: pointer
 }
 
 .autocomplete_submit {
