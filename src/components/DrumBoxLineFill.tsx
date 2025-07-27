@@ -26,7 +26,7 @@ const DrumBoxLineFill: React.FC<Props> = ({ drumType, index, page, localFill, se
     useEffect(() => {
         // Synchronise les fills à chaque changement de page
         setLocalFill([...Fill.FillArray]);
-    }, [page]);
+    }, [page, setLocalFill]);
 
     return (
         <div className={"dbl_fill layer card" + drumType + "_layer layer_fill"} id={"card" + drumType + "_layer_fill"}>
@@ -40,7 +40,7 @@ const DrumBoxLineFill: React.FC<Props> = ({ drumType, index, page, localFill, se
                                 id={'spanFillInput_' + drumType + '_' + idx}
                                 name={'spanFillInput_' + drumType + '_' + idx}
                                 min="1"
-                                max="10"
+                                max="9"
                                 onChange={setFillBySpan}
                                 value={localFill[idx - 1] ?? 1}
                                 placeholder="Sélectionner la probabilité de lire le sample"

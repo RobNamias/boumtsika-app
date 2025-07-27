@@ -46,7 +46,7 @@ const DrumBoxLineDelay: React.FC<Props> = ({
                 <datalist id="markers_stepDelay">
                     {[1, 2, 3, 4].map(v => <option key={v} value={v} label={v.toString()} />)}
                 </datalist>
-                Step
+                <p>Step</p>
             </div>
             <div className="container_setter_Delay">
                 <input
@@ -64,7 +64,7 @@ const DrumBoxLineDelay: React.FC<Props> = ({
                 <datalist id="markers_feedbackDelay">
                     {[1, 2, 3, 4].map(v => <option key={v} value={v} label={v.toString()} />)}
                 </datalist>
-                Feedback
+                <p>Feedback</p>
             </div>
             <div className='vertical-wrapper'>
                 <input
@@ -76,7 +76,7 @@ const DrumBoxLineDelay: React.FC<Props> = ({
                     onChange={changeInputVolumeDelay}
                 />
             </div>
-            VOLUME
+            <p>Volume</p>
             {Delay.DelayArray[index].is_active ? (
                 <button onClick={() => switchIsActiveDelay(false)} className="button_menu button_Delay button_inactive_delay">ON</button>
             ) : (

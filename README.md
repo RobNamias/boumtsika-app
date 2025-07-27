@@ -10,8 +10,8 @@ Une version deployée de la branche gh-pages est accessible sur GitHub Page : <h
 
 Elle peut par conséquent différer de la version disponible sur le repository : <https://github.com/RobNamias/boumtsika-app>
 
-- Branche "gh-pages" : Version 2.6 25/07/2025
-- Branche "main" : Version 2.6 : travail Css 25/07/2025
+- Branche "gh-pages" : Version 2.6.9 27/07/2025
+- Branche "main" : Version 2.6.9 27/07/2025
 
 ## Documentation
 
@@ -40,7 +40,7 @@ In the project directory, you can run:
 #### `npm start`
 
 Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Open [http://localhost:3000] to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.

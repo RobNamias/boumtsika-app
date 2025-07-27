@@ -201,8 +201,22 @@ datalist {
 
 
 /* DELAY */
+
+.layer_delay {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .delay_container {
     display: flex;
+}
+
+.layer_delay p {
+    font-family: 'Gothic';
+    height: 20px;
+    margin: 0;
 }
 
 .container_setter_Delay {
@@ -215,7 +229,9 @@ datalist {
 
 
 .layer_delay datalist {
-    width: 50px
+    width: 50px;
+    height: 25px;
+    align-items: center;
 }
 
 .setters_Delay:hover {
@@ -260,27 +276,49 @@ datalist {
     align-items: center;
     justify-content: center;
     height: 80px;
-    overflow: hidden;
     width: 80px;
-    margin: 0 1px;
-    border-radius: 5px;
+    margin: 2px 1px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px #0001;
+    transition: box-shadow 0.2s;
 }
 
 .spanFill label {
-    font-family: 'Gothic';
-    color: var(--font-color-light);
+    font-family: 'Gothic', Arial, sans-serif;
+    color: var(--font-color-medium, #333);
+    font-size: 0.9em;
+    margin-right: 6px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
-.spanFill input {
-    color: var(--font-color-light);
-    width: 30px;
-    height: 16px;
+.spanFill input[type="number"] {
+    width: 25px;
+    height: 22px;
     border-radius: 4px;
-    border: 0;
-    background-color: inherit;
-    color: inherit;
-    font-size: 15px;
-    margin-left: 5px;
+    border: 1px solid #bbb;
+    background: #fff;
+    color: #222;
+    font-size: 0.9 em;
+    text-align: center;
+    box-shadow: 0 1px 2px #0001;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+.spanFill input[type="number"]:focus {
+    border-color: #1976d2;
+    box-shadow: 0 2px 8px #1976d233;
+}
+
+.spanFill input[type="number"]::-webkit-input-placeholder {
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+.spanFill input[type="number"]::placeholder {
+    color: #aaa;
+    font-size: 0.9em;
 }
 
 .container_option_active {

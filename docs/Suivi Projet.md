@@ -125,15 +125,15 @@ Enfin, cette version pose les bases d’une application plus maintenable, plus m
 - remodelage Visualizator ✅
 - Style : autocomplete ✅, bouton Rec ✅, survol_page_lecture ✅
 
-#### Version 2.7 🟥
+#### Version 2.7 ✅
 
-- Style : Fill, Delay 🟨
-- Corrections de bugs :
-  - enregistrement audio (prévoir un delay après la fin du pattern pour ne pas couper trop sec l'enregistrement) 🟥
+- Style : Fill, Delay ✅ Organisation des container de choix de kit, option, et recording ✅
+- Corrections de bugs enregistrement audio ✅ (extertalisation du composant, conversion direct du fichier audio au format wav pour l'exportation)
 
 #### Version 2.8 🟥
 
-- Style : Responsive 🟧
+- Style : Responsive 🟨
+- Rajout fenetre pour les sauvegardes de fichiers permettant de choisir le nom et la destination 🟥
 
 ----
 
@@ -145,13 +145,13 @@ Bugs à régler suite au à la refonte de l'application :
 
 - ajout d'un bouton pause (stocker la valeur de current. current, ajout d'un statut Started Paused Stop)
 - delay : vérifier qu'on joue soit le sample sans delay, soit le sample avec le delay, mais pas les deux. ✅
-- enregistrement
-- sauvegarde/import
+- enregistrement ✅
+- sauvegarde/import ✅
 - style :
-        - options
-        - enregistrement
-        - selecteur LoopPatternOnly
-        - mute/solo
+        - options 🟧
+        - enregistrement ✅
+        - selecteur LoopPatternOnly ✅
+        - mute/solo ✅
 
 - Finir la visualizator ✅
 
@@ -169,6 +169,7 @@ Bugs à régler suite au à la refonte de l'application :
 
 ## Version 4 🟥
 
+- Equalizer
 - Sélection du kit dans une liste ---> Création d'un composent 'Menu'
 - Possibilité de triolet
 - Dupliquer entièrement la première page sur les 3 autres pages sur demande :

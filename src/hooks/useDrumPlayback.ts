@@ -9,7 +9,6 @@ type UseDrumPlaybackParams = {
     loopPageOnly: boolean;
     setIsLectureActive: (v: boolean) => void;
     analyser: any;
-    recorder: MediaRecorder | null;
     mediaDestination: any;
     buffers: Record<string, AudioBuffer>;
     audioCtx: AudioContext | null;
@@ -28,7 +27,6 @@ export function useDrumPlayback({
     loopPageOnly,
     setIsLectureActive,
     analyser,
-    recorder,
     mediaDestination,
     buffers,
     audioCtx,

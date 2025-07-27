@@ -23,18 +23,52 @@
     display: flex;
     float: left;
     align-items: center;
-    justify-content: center;
-    margin-left: 1%;
+    /* justify-content: center; */
+    /* margin-left: 1%; */
+    /* background-color: #ff2222; */
+    width: 55%;
+}
+
+#container_kit_choice {
+    /* background-color: green; */
+    display: grid;
+    grid-template-columns: 50px 50px;
+    grid-row: auto auto;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+}
+
+#container_kit_choice .button_kit_menu {
+    height: 45px;
+    width: 45px;
+    font-size: 18px;
+}
+
+#container_kit_choice #button_Tribe {
+    font-family: 'Traffic';
+    font-size: 20px;
+}
+
+#container_kit_info {
+    /* background-color: rgb(255, 239, 8); */
+    margin: 0 5%;
+    display: flex;
+    float: left;
+}
+
+#container_recording_controls {
+    /* background-color: #4caf50; */
+    display: flex;
+    align-items: center;
 }
 
 #container_input {
     height: 20vh;
-    width: 40%;
     display: flex;
     float: right;
     align-items: center;
     justify-content: right;
-    margin-right: 4%;
+    margin-right: 2%;
     /* background-color: blue; */
 }
 
@@ -105,14 +139,13 @@
     box-shadow: 0 2px 8px #0002;
 }
 
-#button_Tribe {
-    font-family: 'Traffic';
-    font-size: 26px;
-}
+
 
 #button_Tribe.drum_active {
     font-size: 28px;
 }
+
+
 
 .button_menu:active {
     transform: scale(0.97);
